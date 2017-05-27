@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href='redux-mixin.html'>
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="my-icons.html">
@@ -19,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host {
             display: flex;
             flex-direction: column;
-            padding: 12px;
+            padding: 16px;
             padding-bottom: 24px;
             margin-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
@@ -41,12 +42,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             font-size: 16px;
             font-weight: 400;
             line-height: 24px;
-            /*color: var(--text-secondary-color);*/
         }
         .text-container {
             display: flex;
             align-items: baseline;
-            padding: 4px 8px;
+            padding: 4px 0px;
         }
         .label {
             font-size: 12px;
@@ -66,31 +66,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     <iron-icon id='pan-icon' icon='my-icons:pan-front-fill'></iron-icon>
     
-    <div class='subtitle'>O'Hara</div>
+    <div class='subtitle'>[[pan.vendorName]]</div>
     
-    <div class='title'>Fastcoat (48" Pan)</div>
+    <div class='title'>[[pan.equipmentName]]</div>
+    
+    <div class='text-container'>
+        <div class='label'>Nickname:</div>
+        <div class='text'>[[pan.nickname]]</div>
+    </div>
     
     <div class='text-container'>
         <div class='label'>Company:</div>
-        <div class='text'>Colorcon</div>
+        <div class='text'>[[pan.companyName]]</div>
     </div>
     
     <div class='text-container'>
         <div class='label'>Location:</div>
-        <div class='text'>West Point, PA</div>
+        <div class='text'>[[pan.locationName]]</div>
     </div>
     
     <div class='text-container'>
         <div class='label'>Contact:</div>
-        <div class='text'>Jason Hansell</div>
+        <div class='text'>[[pan.contactName]]</div>
     </div>
       
   </template>
 
   <script>
-    class PanInformationCard extends Polymer.Element {
+    class PanInformationCard extends ReduxMixin(Polymer.Element) {
 
       static get is() { return 'pan-information-card'; }
+      
+      static get properties() {
+          return {
+              pan: {type: Object, statePath: 'pan'}
+          };
+      }
     }
 
     window.customElements.define(PanInformationCard.is, PanInformationCard);

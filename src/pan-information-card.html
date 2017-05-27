@@ -1,0 +1,98 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="my-icons.html">
+
+<dom-module id="pan-information-card">
+  <template>
+    <style>
+        :host {
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            padding-bottom: 24px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .title {
+          font-size: 26px;
+          font-weight: 400;
+          letter-spacing: -.01em;
+          line-height: 40px;
+          padding-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24px;
+            color: var(--app-primary-color);
+        }
+        .text {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            /*color: var(--text-secondary-color);*/
+        }
+        .text-container {
+            display: flex;
+            align-items: baseline;
+            padding: 4px 8px;
+        }
+        .label {
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.011em;
+            line-height: 20px;
+            text-transform: uppercase;
+            color: var(--text-secondary-color);
+            width: 72px;
+        }
+        #pan-icon {
+            width: 124px;
+            height: 124px;
+            align-self: center;
+        }
+    </style>
+    
+    <iron-icon id='pan-icon' icon='my-icons:pan-front-fill'></iron-icon>
+    
+    <div class='subtitle'>O'Hara</div>
+    
+    <div class='title'>Fastcoat (48" Pan)</div>
+    
+    <div class='text-container'>
+        <div class='label'>Company:</div>
+        <div class='text'>Colorcon</div>
+    </div>
+    
+    <div class='text-container'>
+        <div class='label'>Location:</div>
+        <div class='text'>West Point, PA</div>
+    </div>
+    
+    <div class='text-container'>
+        <div class='label'>Contact:</div>
+        <div class='text'>Jason Hansell</div>
+    </div>
+      
+  </template>
+
+  <script>
+    class PanInformationCard extends Polymer.Element {
+
+      static get is() { return 'pan-information-card'; }
+    }
+
+    window.customElements.define(PanInformationCard.is, PanInformationCard);
+  </script>
+</dom-module>

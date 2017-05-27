@@ -1,0 +1,215 @@
+<script>
+
+class CoatingPan { 
+  
+  constructor(panDiameter = 1.2192, openingDiameter = 0.4826, wallWidth = 0.508, brimWidth = 0.93345) {
+    this.panDiameter = panDiameter;
+    this.openingDiameter = openingDiameter;
+    this.wallWidth = wallWidth;
+    this.brimWidth = brimWidth;
+  }
+  
+  get fillWidth() {
+    //the "run" or Width that we moved on one side of the pan side wall
+    let dist = this.fillHeight / this.sideWallSlope;
+    return this.wallWidth + dist + dist;
+  }
+  
+  get fillToBrim() {
+    return (this.fillHeight < this.brimHeight) ? this.brimHeight - this.fillHeight : 0;
+  } 
+  
+  get fillHeight(){ 
+    //we estimate the heigh that will match our fill volume
+    let saggita = 0;
+    let step = this.brimHeight / 200;
+    for(let i=0; i<this.brimHeight; i = i + step){
+      saggita = this.brimHeight - i;
+      let volume = this.calcVolume(saggita, this.wallWidth, this.panDiameter, this.sideWallSlope);
+      if(volume <= this.fillVolume){
+        break;
+      }
+    }
+    return saggita;
+  }
+  
+  get brimHeight() {
+    return (this.panDiameter - this.openingDiameter) / 2;
+  }
+  
+  get brimLength() {
+    return this.calcChordLength(this.radius, this.brimHeight);
+  }
+  
+  get fillLength() {
+    return this.calcChordLength(this.radius, this.fillHeight);
+  }
+  
+  get brimVolume() {
+    return this.calcVolume(this.brimHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
+  }
+  
+  get maxFillHeight() {
+    let limit = 0.0254;
+    if(this.brimHeight < 0.0254 * 4) {
+      limit = 0.0254 / 2;
+    }
+    return this.brimHeight - limit;
+  }
+  
+  get minFillHeight() {
+    return this.brimHeight * 0.6;
+  }
+  
+  get maxFillVolume() {
+    
+    return this.calcVolume(this.maxFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
+    
+  }
+  
+  get minFillVolume() {
+    
+    return this.calcVolume(this.minFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
+    
+  }
+  
+  get fillVolumePercent() {
+    return this.fillVolume / this.brimVolume;
+  }
+  
+  get radius() {
+    return this.panDiameter / 2;
+  }
+  
+  get sideWallSlope() {
+    // slope = rise / run
+    // run = the distance on one side
+    return this.brimHeight / ((this.brimWidth - this.wallWidth) / 2);
+  }
+  
+  get sideWallLength() {
+    // pythogrean theroem
+    // a2 + b2 = c2
+    // run = the distance on one side
+    let a2 = Math.pow(((this.brimWidth - this.wallWidth) / 2), 2);
+    let b2 = Math.pow(this.brimHeight, 2);
+    return Math.sqrt(a2 + b2);
+  }
+  
+  get isUnderFilled() {
+    return (this.minFillVolume > this.fillVolume);
+  }
+  
+  get isOverFilled() {
+    return (this.maxFillVolume < this.fillVolume);
+  }
+  
+  calcChordLength(radius, saggita) {
+    //brim width... the chord length at the brim height
+    //typically close to the full diameter as the brim height is near the center
+    //determined from pythogrean therom of a triangle from the brim height chord and radius
+    return 2 * Math.sqrt(Math.pow(radius, 2) - Math.pow((radius - saggita), 2)); 
+  }
+  
+  calcSphereSectionArea(radius, chord, saggita){
+    //see link for more details
+    // http://mathworld.wolfram.com/CircularSegment.html
+    
+    //the total area of a circle with the diameter
+    let fullCircleArea = Math.PI * Math.pow(radius, 2);
+    
+    //split the width in half making a right angle triangle
+    //determine the angle using sin (opposite / hypoteneus)
+    //times two since we need both sides
+    let centralAngle = 2 * Math.asin((chord / 2) / radius);
+    
+    //the area of the sphere from the central angle
+    //the central angle divided by 2 x PI in radians is the fraction of the area we need
+    // central angle is in radians
+    let sectionArea = centralAngle / (2 * Math.PI) * fullCircleArea;
+    
+    //we determine the area of a the triangle to be removed
+    // base * height / 2
+    //base is the width or brimWidth
+    // height is the radius - brimHeight aka height
+    let triangleArea = chord * (radius - saggita) / 2;
+    
+    //remove the triangle area leaving the area of the circle segment
+    return sectionArea - triangleArea;
+  }
+  
+  calcSideWallVolume(radius, height, slope) {
+    //the volume of the side wall is estimated by using incremental
+    //distances along the side wall and calculated how the differences in height
+    
+    // create a letiable to hold total volume
+    let volume = 0;
+    
+    //the number of increments
+    let inc = 100;
+    
+    // Determine the incremental rise or height
+    let heightInc = height / inc;
+    //determine the incremental run or Width change
+    let depthInc = heightInc / slope;
+    
+    //we use small area section along the slop and add them together
+    for(let i=0; i < inc; i++) {
+      //first we correct for the new height along the side wall slope
+      
+      //this is the loss in height along the sloped side wall
+      let h = heightInc * i;
+      
+      // the new radius after we account for the change in height along the slope
+      let smallerRadius = radius - h;
+      
+      // the new saggita is also reduced by the change in height
+      let smallerSaggita = height - h;
+      
+      // next we determine the new chord length created from the smaller circle segment
+      let smallerChord = this.calcChordLength(smallerRadius, smallerSaggita);
+      
+      //from this we get the segment area 
+      let smallerArea = this.calcSphereSectionArea(smallerRadius, smallerChord, smallerSaggita);
+      
+      //we turn area into volume by multiplying by our depth increment and
+      // we add this section to the total volume
+      volume = volume + smallerArea * depthInc;
+    }
+    return volume;
+  }
+  
+  /**
+   * The calculated brim volume based on pan dimensions.
+   * 
+   * @param {number} brimWidth The width of the pan at the brim inches.
+   * @param {number} brimHeight The height to the brim in inches.
+   * @param {number} wallDeth The Width of the pan wall (perforated portion) in inches.
+   * @param {number} radius The radius of the pan in inches.
+   * @param {number} sideWallSlope The slope along the side wall.
+   * @return {number} The volume of the pan upto the brim.
+   */ 
+  calcVolume(brimHeight, wallWidth, panDiameter, sideWallSlope) {
+        
+      //two section to get the volume
+      // 1. main cylinder along the flat pan wall
+      // 2. two sides along the sloped side walls
+      let radius = panDiameter / 2;
+        
+        // at this height determine the width / chord;
+      let brimLength = this.calcChordLength(radius, brimHeight);
+      // to get the main cylinder volume we calculate the area of the sphere segment 
+      // times the width of the pan wall
+      let center = this.calcSphereSectionArea(radius, brimLength, brimHeight) * wallWidth;
+      
+      //side wall volume is like a cone
+      let cone = this.calcSideWallVolume(radius, brimHeight, sideWallSlope);
+      
+      //to get the total volume we use the center and two cones;
+      // value is in meters ^3
+      return center + cone + cone;
+      
+    }
+      
+  }
+</script>

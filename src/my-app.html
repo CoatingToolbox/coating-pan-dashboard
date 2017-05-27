@@ -21,8 +21,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="my-icons.html">
 
+<link rel="import" href="my-icons.html">
+<link rel="import" href="pan-information-card.html">
 <!--<link rel="lazy-import" href="my-view1.html">-->
 
 <dom-module id="my-app">
@@ -76,6 +77,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           min-height: 48px;
           min-width: 48px;
         }
+        .button-container {
+            display: flex;
+            height: 48px;
+            align-items: center;
+            color: var(--text-secondary-color);
+            padding: 0px 8px;
+            /*border: 1px solid;*/
+        }
+        .button-container.iron-selected {
+          color: var(--text-primary-color);
+        }
+        .button-container iron-icon {
+            margin: 8px;
+            height: 24px;
+            width: 24px;
+        }
       }
     </style>
 
@@ -100,8 +117,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
     
         <app-drawer id="drawer">
+          
           <app-toolbar class='toolbar'>Menu</app-toolbar>
-          <app-toolbar>Hello</app-toolbar>
+          
+          <pan-information-card></pan-information-card>
+          
+          <iron-selector selected='{{page}}'>
+            
+            <div class='button-container'>
+                <iron-icon icon='my-icons:dashboard'></iron-icon>
+                <div>Dashboard</div>
+            </div>
+            
+            <div class='button-container'>
+                <iron-icon icon='my-icons:edit'></iron-icon>
+                <div>Editor</div>
+            </div>
+            
+            <div class='button-container'>
+                <iron-icon icon='my-icons:library'></iron-icon>
+                <div>Library</div>
+            </div>
+            
+          </iron-selector>
+          
         </app-drawer>
   
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">

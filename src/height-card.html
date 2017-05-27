@@ -1,0 +1,89 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href='redux-mixin.html'>
+<link rel="import" href="coating-pan-graphic.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+
+<dom-module id="height-card">
+  <template>
+    <style>
+        :host {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--app-light-color);
+            border-radius: 4px;
+            margin: 8px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
+        :host([horizontal-layout]) {
+            flex-direction: row;
+        }
+        
+        #title {
+            display: none;
+        }
+        :host([horizontal-layout]) #title {
+            display: block;
+            padding: 16px;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+        
+        .container {
+            background-color: white;
+            min-height: 48px;
+            border-radius: 0px 0px 4px 4px;
+        }
+        :host([horizontal-layout]) .container {
+            width: 65%;
+            border-radius: 0px 4px 4px 0px;
+        }
+        :host([horizontal-layout]) coating-pan-graphic {
+            width: 35%;
+            min-height: 224px;
+            min-width: 224px;
+        }
+    </style>
+    
+    <coating-pan-graphic pan='[[pan]]' line-type='[[selected]]'></coating-pan-graphic>
+    
+    <div class='container'>
+        <div id='title'>Pan Height</div>
+        <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
+            <div class='value' dimen='pan-diameter'>Diameter</div>
+            <div class='value' dimen='opening-diameter'>Opening</div>
+            <div class='value' dimen='brim-height'>Brim</div>
+        </iron-selector>
+    </div>
+    
+  </template>
+
+  <script>
+    class HeightCard extends ReduxMixin(Polymer.Element) {
+
+      static get is() { return 'height-card'; }
+      
+      static get properties() {
+          return {
+              pan: {type: Object, statePath: 'pan'},
+              horizontalLayout: {type: Boolean, reflectToAttribute: true}
+          };
+      }
+    }
+
+    window.customElements.define(HeightCard.is, HeightCard);
+  </script>
+</dom-module>

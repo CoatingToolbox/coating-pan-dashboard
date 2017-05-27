@@ -24,7 +24,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="my-icons.html">
 <link rel="import" href="pan-information-card.html">
-<!--<link rel="lazy-import" href="my-view1.html">-->
+
+<link rel="lazy-import" href="overview-page.html">
 
 <dom-module id="my-app">
   <template>
@@ -108,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-header class='toolbar' slot="header" fixed effects="waterfall">
         <app-toolbar>
           <paper-icon-button id='menu-button' icon="my-icons:menu" on-tap='_toggleDrawer'></paper-icon-button>
-          <iron-icon id='app-icon' icon='my-icons:pan-front-fill'></iron-icon>
+          <!--<iron-icon id='app-icon' icon='my-icons:pan-front-fill'></iron-icon>-->
           <div main-title>Coating Pan Dashboard</div>
         </app-toolbar>  
       </app-header>
@@ -121,19 +122,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           
           <pan-information-card></pan-information-card>
           
-          <iron-selector selected='{{page}}'>
+          <iron-selector selected='{{page}}' attr-for-selected='name'>
             
-            <div class='button-container'>
+            <div class='button-container' name='overview'>
                 <iron-icon icon='my-icons:dashboard'></iron-icon>
-                <div>Dashboard</div>
+                <div>Overview</div>
             </div>
             
-            <div class='button-container'>
+            <div class='button-container' name='editor'>
                 <iron-icon icon='my-icons:edit'></iron-icon>
                 <div>Editor</div>
             </div>
             
-            <div class='button-container'>
+            <div class='button-container' name='library'>
                 <iron-icon icon='my-icons:library'></iron-icon>
                 <div>Library</div>
             </div>
@@ -142,8 +143,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           
         </app-drawer>
   
-        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-        
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="overview" role="main">
+          <overview-page name='overview'></overview-page>
         </iron-pages>
         
       </div>
@@ -193,7 +194,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'view1' in that case.
-        this.page = page || 'view1';
+        this.page = page || 'overview';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -203,12 +204,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
-        // var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
-        // Polymer.importHref(
-        //     resolvedPageUrl,
-        //     null,
-        //     this._showPage404.bind(this),
-        //     true);
+        var resolvedPageUrl = this.resolveUrl(page + '-page.html');
+        Polymer.importHref(
+            resolvedPageUrl,
+            null,
+            null,
+            true);
       }
 
       _showPage404() {

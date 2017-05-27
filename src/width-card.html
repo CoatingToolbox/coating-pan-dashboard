@@ -1,0 +1,93 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href='redux-mixin.html'>
+<link rel="import" href="coating-pan-graphic.html">
+
+<dom-module id="width-card">
+  <template>
+    <style>
+        :host {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--app-light-color);
+            border-radius: 4px;
+            margin: 8px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            background-color: white;
+            min-height: 48px;
+            border-radius: 0px 0px 4px 4px;
+        }
+        #title {
+            display: none;
+        }
+        @media(min-width: 480px) {
+            :host {
+                /*margin: 16px;*/
+                flex-direction: row;
+            }
+            #title { 
+                display: block;
+                padding: 16px;
+                font-size: 20px;
+                font-weight: 500;
+                line-height: 28px;
+            }
+            .container {
+                flex-grow: 2;
+                width: 55%;
+                border-radius: 0px 4px 4px 0px;
+            }
+            coating-pan-graphic {
+                max-width: calc(45%);
+            }
+        }
+        @media(min-width: 1200px) {
+            :host {
+                max-width: calc(50% - 32px);
+            }
+        }
+    </style>
+    
+    
+    
+    <coating-pan-graphic view='side' pan='[[pan]]'></coating-pan-graphic>
+    
+    <div class='container'>
+        <div id='title'>Pan Width</div>
+        <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
+            <div class='value' dimen='brim-width'>At Brim</div>
+            <div class='value' dimen='wall-width'>Perforated Wall</div>
+            <div class='value' dimen='side-wall'>Side Wall</div>
+        </iron-selector>
+    </div>
+  </template>
+
+  <script>
+    class WidthCard extends ReduxMixin(Polymer.Element) {
+
+      static get is() { return 'width-card'; }
+      
+      static get properties() {
+          return {
+              pan: {type: Object, statePath: 'pan'}
+          };
+      }
+    }
+
+    window.customElements.define(WidthCard.is, WidthCard);
+  </script>
+</dom-module>

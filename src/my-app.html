@@ -50,12 +50,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--text-primary-color);
         height: 100vh;
       }
-      #toolbar {
+      .toolbar {
         color: #fff;
         background-color: var(--app-primary-color);
         white-space: nowrap;
       }
-      #toolbar iron-icon {
+      #app-icon {
         display: none;
       }
       iron-pages {
@@ -63,10 +63,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       
       @media(min-width: 840px) {
+        iron-pages {
+          position: absolute;
+          left: 256px;
+          width: calc(100% - 256px);
+        }
         #menu-button {
           display: none;
         }
-        #toolbar iron-icon {
+        #app-icon {
           display: flex;
           min-height: 48px;
           min-width: 48px;
@@ -81,24 +86,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         pattern="[[rootPattern]]:page"
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
-        
-    <app-drawer id="drawer">
-      <app-toolbar></app-toolbar>
-    </app-drawer>
     
     <app-header-layout has-scrolling-region>
 
-      <app-header class='toolbar' slot="header" condenses reveals effects="waterfall">
-        <app-toolbar id='toolbar'>
+      <app-header class='toolbar' slot="header" fixed effects="waterfall">
+        <app-toolbar>
           <paper-icon-button id='menu-button' icon="my-icons:menu" on-tap='_toggleDrawer'></paper-icon-button>
-          <iron-icon icon='my-icons:pan-front-fill'></iron-icon>
+          <iron-icon id='app-icon' icon='my-icons:pan-front-fill'></iron-icon>
           <div main-title>Coating Pan Dashboard</div>
         </app-toolbar>  
       </app-header>
-
-      <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
       
-      </iron-pages>
+      <div>
+    
+        <app-drawer id="drawer">
+          <app-toolbar class='toolbar'>Menu</app-toolbar>
+          <app-toolbar>Hello</app-toolbar>
+        </app-drawer>
+  
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+        
+        </iron-pages>
+        
+      </div>
       
     </app-header-layout>
       

@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
-<link rel="import" href='redux-mixin.html'>
 <link rel="import" href="height-card.html">
 <link rel="import" href="width-card.html">
 
@@ -28,6 +27,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           .dimensions-container {
             display: flex;
           }
+          .dimensions-container > * {
+            max-width: calc(50% - 16px);
+          }
         }
     </style>
     
@@ -35,24 +37,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   
     <div class='dimensions-container'>
       <height-card horizontal-layout='[[_desktopView]]'></height-card>
-      <height-card horizontal-layout='[[_desktopView]]'></height-card>
+      <width-card horizontal-layout='[[_desktopView]]'></width-card>
     </div>
-    
-    <!--<width-card></width-card>-->
       
   </template>
 
   <script>
-    class OverviewPage extends ReduxMixin(Polymer.Element) {
+    class OverviewPage extends Polymer.Element {
 
       static get is() { return 'overview-page'; }
       
-      
-      static get properties() {
-          return {
-              pan: {type: Object, statePath: 'pan'}
-          };
-      }
     }
 
     window.customElements.define(OverviewPage.is, OverviewPage);

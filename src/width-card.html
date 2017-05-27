@@ -11,6 +11,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href='redux-mixin.html'>
 <link rel="import" href="coating-pan-graphic.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="unit-input.html">
 
 <dom-module id="width-card">
   <template>
@@ -19,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            max-height: calc(100vh - 2px - 64px);
             background-color: var(--app-light-color);
             border-radius: 4px;
             margin: 8px;
@@ -26,52 +29,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     0 1px 5px 0 rgba(0, 0, 0, 0.12),
                     0 3px 1px -2px rgba(0, 0, 0, 0.2);
         }
+        :host([horizontal-layout]) {
+            flex-direction: row;
+        }
+        #title {
+            display: block;
+            padding: 16px;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+        
         .container {
             background-color: white;
             min-height: 48px;
             border-radius: 0px 0px 4px 4px;
+            padding-bottom: 8px;
         }
-        #title {
-            display: none;
+        :host([horizontal-layout]) .container {
+            flex-grow: 1;
+            border-radius: 4px 0px 0px 4px;
+            padding-bottom: 16px;
         }
-        @media(min-width: 480px) {
-            :host {
-                /*margin: 16px;*/
-                flex-direction: row;
-            }
-            #title { 
-                display: block;
-                padding: 16px;
-                font-size: 20px;
-                font-weight: 500;
-                line-height: 28px;
-            }
-            .container {
-                flex-grow: 2;
-                width: 55%;
-                border-radius: 0px 4px 4px 0px;
-            }
-            coating-pan-graphic {
-                max-width: calc(45%);
-            }
+        :host([horizontal-layout]) coating-pan-graphic {
+            order: 2;
+            flex-grow: 1;
+            min-height: 224px;
+            min-width: 224px;
+            max-width: 45%;
         }
-        @media(min-width: 1200px) {
-            :host {
-                max-width: calc(50% - 32px);
-            }
+        unit-input {
+            border-left: 3px solid white;
+        }
+        .iron-selected {
+            border-left: 3px solid var(--app-primary-color);
+            background-color: rgba(189, 212, 222, 0.15);
         }
     </style>
     
-    
-    
-    <coating-pan-graphic view='side' pan='[[pan]]'></coating-pan-graphic>
+    <coating-pan-graphic view='side' line-type='[[selected]]' pan='[[pan]]'></coating-pan-graphic>
     
     <div class='container'>
         <div id='title'>Pan Width</div>
         <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
-            <div class='value' dimen='brim-width'>At Brim</div>
-            <div class='value' dimen='wall-width'>Perforated Wall</div>
-            <div class='value' dimen='side-wall'>Side Wall</div>
+            <unit-input 
+                dimen='brim-width'
+                value='[[pan.brimWidth]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Brim Width' 
+                details='The width of the pan at the brim height.'>
+            </unit-input>
+            <unit-input 
+                dimen='wall-width'
+                value='[[pan.wallWidth]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Perforate Wall' 
+                details='The width of the perforated pan wall.'>
+            </unit-input>
+            <unit-input 
+                dimen='side-wall'
+                value='[[pan.sideWallLength]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input title='Side Wall' 
+                details='The length of the solid side wall.'>
+            </unit-input>
         </iron-selector>
     </div>
   </template>
@@ -83,7 +109,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       static get properties() {
           return {
-              pan: {type: Object, statePath: 'pan'}
+              pan: {type: Object, statePath: 'pan'},
+              horizontalLayout: {type: Boolean, reflectToAttribute: true},
+              selected: {type: String, value: 'brim-width'},
+              lengthUnits: {type: String, value: 'in'}
           };
       }
     }

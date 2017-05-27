@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href='redux-mixin.html'>
 <link rel="import" href="coating-pan-graphic.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="unit-input.html">
 
 <dom-module id="height-card">
   <template>
@@ -20,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            max-height: calc(100vh - 2px - 64px);
             background-color: var(--app-light-color);
             border-radius: 4px;
             margin: 8px;
@@ -30,11 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host([horizontal-layout]) {
             flex-direction: row;
         }
-        
         #title {
-            display: none;
-        }
-        :host([horizontal-layout]) #title {
             display: block;
             padding: 16px;
             font-size: 20px;
@@ -46,15 +44,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             background-color: white;
             min-height: 48px;
             border-radius: 0px 0px 4px 4px;
+            padding-bottom: 8px;
         }
         :host([horizontal-layout]) .container {
-            width: 65%;
-            border-radius: 0px 4px 4px 0px;
+            flex-grow: 1;
+            border-radius: 4px 0px 0px 4px;
+            padding-bottom: 16px;
         }
         :host([horizontal-layout]) coating-pan-graphic {
-            width: 35%;
+            order: 2;
+            flex-grow: 1;
             min-height: 224px;
             min-width: 224px;
+            max-width: 45%;
+        }
+        unit-input {
+            border-left: 3px solid white;
+        }
+        .iron-selected {
+            border-left: 3px solid var(--app-primary-color);
+            background-color: rgba(189, 212, 222, 0.15);
         }
     </style>
     
@@ -63,9 +72,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class='container'>
         <div id='title'>Pan Height</div>
         <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
-            <div class='value' dimen='pan-diameter'>Diameter</div>
-            <div class='value' dimen='opening-diameter'>Opening</div>
-            <div class='value' dimen='brim-height'>Brim</div>
+            <unit-input 
+                dimen='pan-diameter'
+                value='[[pan.panDiameter]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Diameter' 
+                details='The diameter of the coating pan drum.'>
+            </unit-input>
+            <unit-input 
+                dimen='opening-diameter'
+                value='[[pan.openingDiameter]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Opening' 
+                details='The diameter of the opening.'>
+            </unit-input>
+            <unit-input 
+                dimen='brim-height'
+                value='[[pan.brimHeight]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input title='Brim Height' 
+                details='The height to the brim (pan opening).'>
+            </unit-input>
         </iron-selector>
     </div>
     
@@ -79,7 +111,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       static get properties() {
           return {
               pan: {type: Object, statePath: 'pan'},
-              horizontalLayout: {type: Boolean, reflectToAttribute: true}
+              horizontalLayout: {type: Boolean, reflectToAttribute: true},
+              selected: {type: String, value: 'pan-diameter'},
+              lengthUnits: {type: String, value: 'in'}
           };
       }
     }

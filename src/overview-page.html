@@ -1,0 +1,54 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="height-card.html">
+<link rel="import" href="width-card.html">
+
+<dom-module id="overview-page">
+  <template>
+    <style>
+        :host {
+            display: flex;
+            flex-direction: column;
+        }
+        @media (min-width: 1280px) {
+          :host {
+            padding: 8px;
+          }
+          .dimensions-container {
+            display: flex;
+          }
+          .dimensions-container > * {
+            max-width: calc(50% - 16px);
+          }
+        }
+    </style>
+    
+    <iron-media-query query='(min-width: 480px)' query-matches='{{_desktopView}}'></iron-media-query>
+  
+    <div class='dimensions-container'>
+      <height-card horizontal-layout='[[_desktopView]]'></height-card>
+      <width-card horizontal-layout='[[_desktopView]]'></width-card>
+    </div>
+      
+  </template>
+
+  <script>
+    class OverviewPage extends Polymer.Element {
+
+      static get is() { return 'overview-page'; }
+      
+    }
+
+    window.customElements.define(OverviewPage.is, OverviewPage);
+  </script>
+</dom-module>

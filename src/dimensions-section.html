@@ -1,0 +1,190 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href='redux-mixin.html'>
+<link rel="import" href="graphic-input-card.html">
+<link rel="import" href="coating-pan-graphic.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="unit-input.html">
+
+<dom-module id="dimensions-section">
+  <template>
+    <style>
+        :host {
+            display: block;
+        }
+        
+        #section-title {
+          font-size: 20px;
+          font-weight: 500;
+          line-height: 28px;
+          padding: 16px 8px 0px 8px;
+        }
+        
+        .card-title {
+            padding: 16px;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+        
+        unit-input {
+            border-left: 3px solid white;
+        }
+        
+        .iron-selected {
+            border-left: 3px solid var(--app-primary-color);
+            background-color: rgba(189, 212, 222, 0.15);
+        }
+        
+        @media (min-width: 1024px) {
+          
+          #section-title {
+              padding: 0px 16px;
+          }
+          
+          #card-containier {
+              display: flex;
+          }
+          
+          graphic-input-card {
+              margin: 16px;
+          }
+          
+        }
+        
+        @media (min-width: 1280px) {
+          
+          #section-title {
+              padding: 0px 16px;
+          }
+          
+          #card-containier {
+              display: flex;
+          }
+          
+        }
+        
+        @media (min-width: 1440px) {
+            
+          #section-title {
+              padding: 0px 32px;
+          }
+          
+        }
+    </style>
+    
+    <iron-media-query query='(min-width: 480px)' query-matches='{{_horizontalLayout}}'></iron-media-query>
+    
+    <div id='section-title'>Coating Pan Dimensions</div>
+    
+    <div id='card-containier'>
+    
+        <graphic-input-card horizontal-layout='[[_horizontalLayout]]'>
+            
+            <coating-pan-graphic slot='graphic' pan='[[pan]]' line-type='[[heightSelected]]'></coating-pan-graphic>
+        
+            <div slot='input' class='input-container'>
+                <div class='card-title'>Pan Height</div>
+                <iron-selector selected='{{heightSelected}}' attr-for-selected='dimen'>
+                    <unit-input 
+                        dimen='pan-diameter'
+                        value='[[pan.panDiameter]]' 
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        no-input 
+                        title='Diameter' 
+                        details='The diameter of the coating pan drum.'>
+                    </unit-input>
+                    <unit-input 
+                        dimen='opening-diameter'
+                        value='[[pan.openingDiameter]]' 
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        no-input 
+                        title='Opening' 
+                        details='The diameter of the opening.'>
+                    </unit-input>
+                    <unit-input 
+                        dimen='brim-height'
+                        value='[[pan.brimHeight]]' 
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        no-input title='Brim Height' 
+                        details='The height to the brim (pan opening).'>
+                    </unit-input>
+                </iron-selector>
+            </div>
+        
+        </graphic-input-card>
+        
+        <graphic-input-card horizontal-layout='[[_horizontalLayout]]'>
+            
+            <coating-pan-graphic slot='graphic' view='side' line-type='[[widthSelected]]' pan='[[pan]]'></coating-pan-graphic>
+    
+            <div slot='input' class='input-container'>
+                <div class='card-title'>Pan Width</div>
+                <iron-selector selected='{{widthSelected}}' attr-for-selected='dimen'>
+                    <unit-input 
+                        dimen='brim-width'
+                        value='[[pan.brimWidth]]' 
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        no-input 
+                        title='Brim Width' 
+                        details='The width of the pan at the brim height.'>
+                    </unit-input>
+                    <unit-input 
+                        dimen='wall-width'
+                        value='[[pan.wallWidth]]' 
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        no-input 
+                        title='Perforate Wall' 
+                        details='The width of the perforated pan wall.'>
+                    </unit-input>
+                    <unit-input 
+                        dimen='side-wall'
+                        value='[[pan.sideWallLength]]' 
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        no-input title='Side Wall' 
+                        details='The length of the solid side wall.'>
+                    </unit-input>
+                </iron-selector>
+            </div>
+        
+        </graphic-input-card>
+        
+    </div>
+    
+  </template>
+
+  <script>
+    class DimensionsSection extends ReduxMixin(Polymer.Element) {
+
+      static get is() { return 'dimensions-section'; }
+      
+      static get properties() {
+          return {
+              pan: {type: Object, statePath: 'pan'},
+              heightSelected: {type: String, value: 'pan-diameter'},
+              widthSelected: {type: String, value: 'brim-width'},
+              lengthUnits: {type: String, value: 'in'},
+              _horizontalLayout: {type: Boolean, value: false}
+          };
+      }
+    }
+
+    window.customElements.define(DimensionsSection.is, DimensionsSection);
+  </script>
+</dom-module>

@@ -2,12 +2,16 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
+    "src/dashboard-page.html"
   ],
   "sources": [
     "src/**/*",
     "images/**/*",
     "bower.json"
   ],
+  "builds": [{
+    "preset": "es6-unbundled"
+  }],
   "extraDependencies": [
     "manifest.json",
     "bower_components/webcomponentsjs/*.js"

@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="pan-height-card.html">
 <link rel="import" href="pan-width-card.html">
 <link rel="import" href="pan-volume-card.html">
+<link rel="import" href="pan-fill-card.html">
 
 <dom-module id="dashboard-page">
   <template>
@@ -20,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host {
             display: flex;
             flex-direction: column;
+            margin: 8px 0px;
         }
         
         #intro-container {
@@ -50,7 +52,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           color: var(--text-primary-color);
         }
         
-        
         .section-title {
           font-size: 20px;
           font-weight: 500;
@@ -58,6 +59,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         
         @media (min-width: 480px) {
+          
+          :host {
+            padding: 8px;
+          }
           
           #intro-container {
             background-color: initial;
@@ -85,23 +90,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @media (min-width: 1024px) {
           :host {
             max-width: 1150px;
-            margin: auto;
+            margin: 8px 16px;
           }
           .section-title {
             padding-top: 24px;
           }
-          #dimensions-section {
+          #dimensions-section,
+          #fill-section {
             display: flex;
           }
           pan-height-card, 
-          pan-width-card {
+          pan-width-card,
+          pan-fill-card {
             max-width: calc(50% - 16px);
           }
-          pan-height-card {
+          pan-height-card,
+          pan-fill-card {
             margin-right: 16px;
           }
           pan-width-card {
             margin-left: 16px;
+          }
+        }
+        
+        @media (min-width: 1480px) {
+          :host {
+            max-width: 1200px;
+            margin: auto;
           }
         }
         
@@ -126,7 +141,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     <div class='section-title'>Pan and Fill Volumes</div>
     <pan-volume-card horizontal-layout='[[!mobileView]]'></pan-volume-card>
-      
+    <div id='fill-section'>
+      <pan-fill-card horizontal-layout='[[!mobileView]]'></pan-fill-card>
+    </div>
   </template>
 
   <script>

@@ -1,0 +1,74 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href='redux-mixin.html'>
+<link rel="import" href="shared-card-style-module.html">
+<link rel="import" href="coating-pan-graphic.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="unit-input.html">
+
+<dom-module id="pan-fill-card">
+  <template>
+    <style include='shared-card-style-module'>
+        :host([horizontal-layout]) #graphic-container {
+            order: 2;
+            border-radius: 0px 4px 4px 0px;
+        }
+    </style>
+    
+    <div id='graphic-container'>
+        <coating-pan-graphic pan='[[pan]]' view='side' line-type='[[fillSelected]]'></coating-pan-graphic>
+    </div>
+    
+    <div id='value-container'>
+        <div id='card-title'>Product Fill</div>
+        <iron-selector selected='{{fillSelected}}' attr-for-selected='dimen'>
+            <unit-input 
+                dimen='fill-height'
+                value='[[pan.fillHeight]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Product Bed Height' 
+                details='The fill height or depth of the product in the pan.'>
+            </unit-input>
+            <unit-input 
+                dimen='fill-width'
+                value='[[pan.fillWidth]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Product Bed Width' 
+                details='The width along the surface of the product.'>
+            </unit-input>
+        </iron-selector>
+    </div>
+      
+  </template>
+
+  <script>
+    class PanFillCard extends ReduxMixin(Polymer.Element) {
+
+      static get is() { return 'pan-fill-card'; }
+      
+      static get properties() {
+          return {
+              pan: {type: Object, statePath: 'pan'},
+              fillSelected: {type: String, value: 'fill-height'},
+              lengthUnits: {type: String, value: 'in'},
+              horizontalLayout: {type: Boolean, value: false, reflectToAttribute: true}
+          };
+      }
+    }
+
+    window.customElements.define(PanFillCard.is, PanFillCard);
+  </script>
+</dom-module>

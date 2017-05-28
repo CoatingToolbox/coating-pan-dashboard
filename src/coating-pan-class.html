@@ -7,11 +7,12 @@ class CoatingPan {
     this.openingDiameter = openingDiameter;
     this.wallWidth = wallWidth;
     this.brimWidth = brimWidth;
+    this.fillVolume = 0;
   }
   
   get fillWidth() {
     //the "run" or Width that we moved on one side of the pan side wall
-    let dist = this.fillHeight / this.sideWallSlope;
+    let disbrimt = this.fillHeight / this.sideWallSlope;
     return this.wallWidth + dist + dist;
   }
   

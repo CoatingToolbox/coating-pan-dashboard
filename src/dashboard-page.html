@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="dimensions-section.html">
+<link rel="import" href="volume-section.html">
 
 <dom-module id="dashboard-page">
   <template>
@@ -39,7 +40,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           font-weight: 400;
           letter-spacing: -.01em;
           line-height: 40px;
-          color: var(--app-primary-color);
           padding-bottom: 16px;
         }
         
@@ -48,11 +48,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           text-align: justify;
           color: var(--text-primary-color);
         }
-        
-        @media (min-width: 840px) {
-          :host {
-            padding: 8px;
-          }
+        @media (min-width: 480px) {
           
           #intro-container {
             background-color: initial;
@@ -67,7 +63,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             letter-spacing: -.018em;
             line-height: 48px;
             padding: 16px;
-            color: var(--text-primary-color);
           }
           
           #page-description {
@@ -76,7 +71,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             font-weight: 400;
             line-height: 24px;
           }
-          
+        }
+        
+        @media (min-width: 1024px) {
+          :host {
+            max-width: 1150px;
+            margin: auto;
+          }
         }
         
     </style>
@@ -91,7 +92,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         from the library or you can customize your own. 
       </div>
     </div>
+    
     <dimensions-section></dimensions-section>
+    
+    <volume-section></volume-section>
       
   </template>
 

@@ -1,0 +1,68 @@
+<dom-module id="shared-card-style-module">
+  <template>
+    <style>
+        :host {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 2px - 64px);
+            margin: 16px 0px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+            
+            -webkit-user-select: none;  /* Chrome all / Safari all */
+              -moz-user-select: none;     /* Firefox all */
+              -ms-user-select: none;      /* IE 10+ */
+              user-select: none; 
+        }
+        
+        :host([horizontal-layout]) {
+            flex-direction: row;
+        }
+        
+        #value-container {
+            min-height: 48px;
+            border-radius: 0px 0px 4px 4px;
+            padding-bottom: 8px;
+        }
+        
+        :host([horizontal-layout]) #value-container {
+            flex-grow: 1;
+            border-radius: 4px 0px 0px 4px;
+            padding-bottom: 16px;
+        }
+        
+        #graphic-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--app-light-color);
+        }
+        
+        :host([horizontal-layout]) #graphic-container {
+            flex-grow: 1;
+            max-width: 45%;
+        }
+        
+        #card-title {
+            padding: 16px;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+        
+        iron-selector > unit-input {
+            border-left: 3px solid white;
+        }
+        
+        iron-selector > unit-input.iron-selected {
+            border-left: 3px solid var(--app-primary-color);
+            background-color: rgba(189, 212, 222, 0.15);
+        }
+    </style>
+  </template>
+</dom-module>

@@ -1,50 +1,32 @@
 
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="redux-mixin.html">
+<link rel="import" href="shared-card-style-module.html">
 <link rel="import" href="../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="unit-input.html">
-<link rel="import" href="d3-import.html">
-<link rel="import" href="redux-mixin.html">
 
-<dom-module id='volume-chart'>
+<dom-module id='pan-volume-card'>
     <template>
-        <style>
+        <style include='shared-card-style-module'>
             :host {
-                display: flex;
-                flex-direction: row;
-                flex-grow: 1;
                 position: relative;
-                background-color: white;
-                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
-                border-radius: 4px;
-                margin: 8px;
-                -webkit-user-select: none;  /* Chrome all / Safari all */
-                  -moz-user-select: none;     /* Firefox all */
-                  -ms-user-select: none;      /* IE 10+ */
-                  user-select: none; 
             }
             
             #value-container {
                 background-color: #f5f5f5;
-                border-radius: 0px 4px 4px 0px;
-                padding: 8px 16px 8px 0px;
-                flex-grow: 1;
             }
-            #chart-container {
+            
+            #graphic-container {
                 background-color: white;
-                border-radius: 4px 0px 0px 4px;
+                padding: 16px;
+            }
+            
+            :host([horizontal-layout]) #graphic-container {
                 flex-grow: 3;
                 max-width: 75%;
-                padding: 16px;
-            }
-            .card-title {
-                padding: 16px;
-                font-size: 20px;
-                font-weight: 500;
-                line-height: 28px;
             }
             
             #chart {
@@ -73,7 +55,6 @@
             .axis .domain {
                 stroke: var(--text-secondary-color);
             }
-            
             .line {
               fill: none;
               stroke: var(--app-light-color);
@@ -123,30 +104,10 @@
                 opacity: 1;
                 transition: opacity 0.2s;	
             }
-            unit-input {
-            border-left: 3px solid white;
-        }
         
-        .iron-selected {
-            border-left: 3px solid var(--app-primary-color);
-            background-color: rgba(189, 212, 222, 0.15);
-        }
-            
-            @media (min-width: 480px) {
-                :host {
-                    margin: 16px 32px;
-                }
-            }
-            
-            @media (min-width: 1024px) {
-                :host {
-                    margin: 16px;
-                }
-                
-            }
         </style>
         
-        <div id='chart-container'>
+        <div id='graphic-container'>
             <div id='tooltip' class='hide'>
                 <div>Batch Volume</div>
                 <div>[[_convertToLitersString(pan.fillVolume)]] L</div>
@@ -169,59 +130,59 @@
         </div>
         
         <div id='value-container'>
-        <div class='card-title'>Pan and Fill Volume</div>
-        <iron-selector selected='{{volumeSelected}}' attr-for-selected='volume'>
-            <unit-input 
-                volume='brim'
-                value='[[pan.brimVolume]]' 
-                type='volume'
-                selected-units='{{volumeUnits}}' 
-                no-input 
-                title='Brim Volume' 
-                details='The volume when filled to the pan opening.'>
-            </unit-input>
-            <unit-input 
-                volume='max'
-                value='[[pan.maxFillVolume]]' 
-                type='volume'
-                selected-units='{{volumeUnits}}' 
-                no-input 
-                title='Max Working Volume' 
-                details='The recommended maximum volume to fill pan.'>
-            </unit-input>
-            <unit-input 
-                volume='min'
-                value='[[pan.minFillVolume]]' 
-                type='volume'
-                selected-units='{{volumeUnits}}' 
-                no-input 
-                title='Min Working Volume' 
-                details='The recommended minimum volume to fill pan.'>
-            </unit-input>
-            <unit-input 
-                volume='product'
-                value='[[pan.fillVolume]]' 
-                type='volume'
-                selected-units='{{volumeUnits}}' 
-                no-input 
-                title='Product Volume' 
-                details='The volume of product to fill the pan.'>
-            </unit-input>
-        </iron-selector>
-    </div>
+            <div id='card-title'>Pan and Fill Volume</div>
+            <iron-selector selected='{{volumeSelected}}' attr-for-selected='volume'>
+                <unit-input 
+                    volume='brim'
+                    value='[[pan.brimVolume]]' 
+                    type='volume'
+                    selected-units='{{volumeUnits}}' 
+                    no-input 
+                    title='Brim Volume' 
+                    details='The volume when filled to the pan opening.'>
+                </unit-input>
+                <unit-input 
+                    volume='max'
+                    value='[[pan.maxFillVolume]]' 
+                    type='volume'
+                    selected-units='{{volumeUnits}}' 
+                    no-input 
+                    title='Max Working Volume' 
+                    details='The recommended maximum volume to fill pan.'>
+                </unit-input>
+                <unit-input 
+                    volume='min'
+                    value='[[pan.minFillVolume]]' 
+                    type='volume'
+                    selected-units='{{volumeUnits}}' 
+                    no-input 
+                    title='Min Working Volume' 
+                    details='The recommended minimum volume to fill pan.'>
+                </unit-input>
+                <unit-input 
+                    volume='product'
+                    value='[[pan.fillVolume]]' 
+                    type='volume'
+                    selected-units='{{volumeUnits}}' 
+                    no-input 
+                    title='Product Volume' 
+                    details='The volume of product to fill the pan.'>
+                </unit-input>
+            </iron-selector>
+        </div>
         
     </template>
     
     <script>
         
         /*global ReduxMixin Polymer */
-        class VolumeChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+        class PanVolumeCard extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
             
-            static get is() { return 'volume-chart'; }
+            static get is() { return 'pan-volume-card'; }
             
             ready() {
                 super.ready();
-                window.addEventListener('resize', e => this._setChartDimensions());
+                window.addEventListener('resize', () => this._setChartDimensions());
                 this._setChartDimensions();
             }
             
@@ -239,7 +200,7 @@
                     pan: {type: Object, statePath: 'pan'},
                     volumeUnits: {type: String, value: "l"},
                     volumeSelected: {type: String, value: "brim"},
-                    
+                    horizontalLayout: {type: Boolean, value: true, reflectToAttribute: true},
                     chart: {type: Object},
                     margin: {type: Object, value: function() {
                         return {top: 20, right: 20, bottom: 50, left: 50};
@@ -581,7 +542,7 @@
             }
         }
         
-        window.customElements.define(VolumeChart.is, VolumeChart);
+        window.customElements.define(PanVolumeCard.is, PanVolumeCard);
         
     </script>
 </dom-module>

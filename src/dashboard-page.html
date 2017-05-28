@@ -10,8 +10,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
-<link rel="import" href="dimensions-section.html">
-<link rel="import" href="volume-section.html">
+<link rel="import" href="pan-height-card.html">
+<link rel="import" href="pan-width-card.html">
+<link rel="import" href="pan-volume-card.html">
 
 <dom-module id="dashboard-page">
   <template>
@@ -48,6 +49,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           text-align: justify;
           color: var(--text-primary-color);
         }
+        
+        
+        .section-title {
+          font-size: 20px;
+          font-weight: 500;
+          line-height: 28px;
+        }
+        
         @media (min-width: 480px) {
           
           #intro-container {
@@ -78,11 +87,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             max-width: 1150px;
             margin: auto;
           }
+          .section-title {
+            padding-top: 24px;
+          }
+          #dimensions-section {
+            display: flex;
+          }
+          pan-height-card, 
+          pan-width-card {
+            max-width: calc(50% - 16px);
+          }
+          pan-height-card {
+            margin-right: 16px;
+          }
+          pan-width-card {
+            margin-left: 16px;
+          }
         }
         
     </style>
     
-    <iron-media-query query='(min-width: 480px)' query-matches='{{_desktopView}}'></iron-media-query>
+    <iron-media-query query='(max-width: 480px)' query-matches='{{mobileView}}'></iron-media-query>
   
     <div id='intro-container'>
       <div id='page-title'>Coating Pan Dashboard</div>
@@ -93,9 +118,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </div>
     
-    <dimensions-section></dimensions-section>
+    <div class='section-title'>Coating Pan Dimensions</div>
+    <div id='dimensions-section'>
+      <pan-height-card horizontal-layout='[[!mobileView]]'></pan-height-card>
+      <pan-width-card horizontal-layout='[[!mobileView]]'></pan-width-card>
+    </div>
     
-    <volume-section></volume-section>
+    <div class='section-title'>Pan and Fill Volumes</div>
+    <pan-volume-card></pan-volume-card>
       
   </template>
 

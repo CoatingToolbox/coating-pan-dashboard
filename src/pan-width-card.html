@@ -1,0 +1,82 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href='redux-mixin.html'>
+<link rel="import" href="shared-card-style-module.html">
+<link rel="import" href="coating-pan-graphic.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="unit-input.html">
+
+<dom-module id="pan-width-card">
+  <template>
+    <style include='shared-card-style-module'>
+        :host([horizontal-layout]) #graphic-container {
+            order: 2;
+            border-radius: 0px 4px 4px 0px;
+        }
+    </style>
+    
+    <div id='graphic-container'>
+        <coating-pan-graphic view='side' line-type='[[widthSelected]]' pan='[[pan]]'></coating-pan-graphic>
+    </div>
+    
+    <div id='value-container'>
+        <div id='card-title'>Pan Width</div>
+        <iron-selector selected='{{widthSelected}}' attr-for-selected='dimen'>
+            <unit-input 
+                dimen='brim-width'
+                value='[[pan.brimWidth]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Brim Width' 
+                details='The width of the pan at the brim height.'>
+            </unit-input>
+            <unit-input 
+                dimen='wall-width'
+                value='[[pan.wallWidth]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Perforate Wall' 
+                details='The width of the perforated pan wall.'>
+            </unit-input>
+            <unit-input 
+                dimen='side-wall'
+                value='[[pan.sideWallLength]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input title='Side Wall' 
+                details='The length of the solid side wall.'>
+            </unit-input>
+        </iron-selector>
+    </div>
+      
+  </template>
+
+  <script>
+    class PanWidthCard extends ReduxMixin(Polymer.Element) {
+
+      static get is() { return 'pan-width-card'; }
+      
+      static get properties() {
+          return {
+              pan: {type: Object, statePath: 'pan'},
+              widthSelected: {type: String, value: 'brim-width'},
+              lengthUnits: {type: String, value: 'in'},
+              horizontalLayout: {type: Boolean, value: false, reflectToAttribute: true}
+          };
+      }
+    }
+
+    window.customElements.define(PanWidthCard.is, PanWidthCard);
+  </script>
+</dom-module>

@@ -1,0 +1,129 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="height-card.html">
+<link rel="import" href="width-card.html">
+
+<dom-module id="dashboard-page">
+  <template>
+    <style>
+        :host {
+            display: flex;
+            flex-direction: column;
+        }
+        #intro-container {
+          align-self: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background-color: white;
+          border-radius: 4px;
+          margin: 8px;
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          padding: 16px;
+        }
+        #page-title {
+          font-size: 34px;
+          font-weight: 400;
+          letter-spacing: -.01em;
+          line-height: 40px;
+          color: var(--app-primary-color);
+          padding-bottom: 16px;
+        }
+        #page-description {
+          max-width: 600px;
+          text-align: justify;
+          color: var(--text-primary-color);
+        }
+        .section-title {
+          font-size: 20px;
+          font-weight: 500;
+          line-height: 28px;
+          padding: 16px 8px 0px 8px;
+        }
+        @media (min-width: 840px) {
+          :host {
+            padding: 8px;
+          }
+          #intro-container {
+            background-color: initial;
+            margin: 16px;
+            padding: 32px;
+            box-shadow: none;
+          }
+          #page-title {
+            font-size: 45px;
+            font-weight: 400;
+            letter-spacing: -.018em;
+            line-height: 48px;
+            padding: 16px;
+            color: var(--text-primary-color);
+          }
+          #page-description {
+            max-width: 800px;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+          }
+        }
+        @media (min-width: 1280px) {
+          #dimensions-container {
+            display: flex;
+          }
+          #dimensions-container > * {
+            max-width: calc(50% - 16px);
+            margin: 8px 16px;
+          }
+          .section-title {
+            padding: 0px 16px;
+          }
+        }
+        @media (min-width: 1440px) {
+          #dimensions-container > * {
+            margin: 8px 32px;
+          }
+          .section-title {
+            padding: 0px 32px;
+          }
+        }
+    </style>
+    
+    <iron-media-query query='(min-width: 480px)' query-matches='{{_desktopView}}'></iron-media-query>
+  
+    <div id='intro-container'>
+      <div id='page-title'>Coating Pan Dashboard</div>
+      <div id='page-description'>
+        The Coating Pan Dashboard allows you to create, compare and investigate different coating pans. You 
+        can see a range of coating pan volumes, determine coating pan speed, and optimize the pan fill. You can do this with a coating pan 
+        from the library or you can customize your own. 
+      </div>
+    </div>
+    <div class='section-title'>Coating Pan Dimensions</div>
+    <div id='dimensions-container'>
+      <height-card horizontal-layout='[[_desktopView]]'></height-card>
+      <width-card horizontal-layout='[[_desktopView]]'></width-card>
+    </div>
+      
+  </template>
+
+  <script>
+    class DashboardPage extends Polymer.Element {
+
+      static get is() { return 'dashboard-page'; }
+      
+    }
+
+    window.customElements.define(DashboardPage.is, DashboardPage);
+  </script>
+</dom-module>

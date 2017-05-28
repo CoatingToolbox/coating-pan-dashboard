@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="my-icons.html">
 <link rel="import" href="pan-information-card.html">
 
-<link rel="lazy-import" href="overview-page.html">
+<link rel="lazy-import" href="dashboard-page.html">
 
 <dom-module id="my-app">
   <template>
@@ -124,9 +124,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           
           <iron-selector selected='{{page}}' attr-for-selected='name'>
             
-            <div class='button-container' name='overview'>
+            <div class='button-container' name='dashboard'>
                 <iron-icon icon='my-icons:dashboard'></iron-icon>
-                <div>Overview</div>
+                <div>Dashboard</div>
             </div>
             
             <div class='button-container' name='editor'>
@@ -143,8 +143,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           
         </app-drawer>
   
-        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="overview" role="main">
-          <overview-page name='overview'></overview-page>
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="dashboard" role="main">
+          <dashboard-page name='dashboard'></dashboard-page>
         </iron-pages>
         
       </div>
@@ -194,7 +194,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'view1' in that case.
-        this.page = page || 'overview';
+        this.page = page || 'dashboard';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {

@@ -1,0 +1,135 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href='redux-mixin.html'>
+<link rel="import" href="volume-chart.html">
+
+<dom-module id="volume-section">
+  <template>
+    <style>
+        :host {
+            display: block;
+        }
+        
+        #section-title {
+          font-size: 20px;
+          font-weight: 500;
+          line-height: 28px;
+          padding: 16px 8px 0px 8px;
+        }
+        
+        .card-title {
+            padding: 16px;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+        
+        unit-input {
+            border-left: 3px solid white;
+        }
+        
+        .iron-selected {
+            border-left: 3px solid var(--app-primary-color);
+            background-color: rgba(189, 212, 222, 0.15);
+        }
+        
+        @media (min-width: 480px) {
+            
+            graphic-input-card {
+                margin: 16px 32px;
+            }
+            
+            graphic-input-card + graphic-input-card {
+                margin-top: 32px;
+            }
+            
+            #section-title {
+                margin: 0px 32px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+          
+            graphic-input-card {
+                margin: 16px;
+                max-width: calc(30% - 32px);
+            }
+            
+            graphic-input-card + graphic-input-card {
+                margin-top: 16px;
+            }
+            
+            #section-title {
+                margin: 0px 16px;
+            }
+          
+            #card-containier {
+                display: flex;
+            }
+          
+        }
+    </style>
+    
+    <div id='section-title'>Pan and Fill Volumes</div>
+    
+      <volume-chart></volume-chart>
+    
+      <!--<graphic-input-card horizontal-layout='[[_horizontalLayout]]'>-->
+            
+      <!--      <coating-pan-graphic slot='graphic' view='side' pan='[[pan]]' line-type='[[dimensionSelected]]'></coating-pan-graphic>-->
+        
+      <!--      <div slot='input' class='input-container'>-->
+      <!--          <div class='card-title'>Product Fill</div>-->
+      <!--          <iron-selector selected='{{dimensionSelected}}' attr-for-selected='dimen'>-->
+      <!--              <unit-input -->
+      <!--                  dimen='fill-height'-->
+      <!--                  value='[[pan.fillHeight]]' -->
+      <!--                  type='length'-->
+      <!--                  selected-units='{{lengthUnits}}' -->
+      <!--                  no-input -->
+      <!--                  title='Product Height' -->
+      <!--                  details='The maximum height of the product bed.'>-->
+      <!--              </unit-input>-->
+      <!--              <unit-input -->
+      <!--                  dimen='fill-width'-->
+      <!--                  value='[[pan.fillWidth]]' -->
+      <!--                  type='length'-->
+      <!--                  selected-units='{{lengthUnits}}' -->
+      <!--                  no-input -->
+      <!--                  title='Product Width' -->
+      <!--                  details='The maximu width at the product surface.'>-->
+      <!--              </unit-input>-->
+      <!--          </iron-selector>-->
+      <!--      </div>-->
+        
+      <!--  </graphic-input-card>-->
+        
+    
+  </template>
+
+  <script>
+    class VolumeSection extends ReduxMixin(Polymer.Element) {
+
+      static get is() { return 'volume-section'; }
+      
+      static get properties() {
+          return {
+              pan: {type: Object, statePath: 'pan'},
+              dimensionSelected: {type: String, value: 'fill-height'},
+              lengthUnits: {type: String, value: 'in'},
+          };
+      }
+    }
+
+    window.customElements.define(VolumeSection.is, VolumeSection);
+  </script>
+</dom-module>

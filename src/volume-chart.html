@@ -1,0 +1,587 @@
+
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="unit-input.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="redux-mixin.html">
+
+<dom-module id='volume-chart'>
+    <template>
+        <style>
+            :host {
+                display: flex;
+                flex-direction: row;
+                flex-grow: 1;
+                position: relative;
+                background-color: white;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                border-radius: 4px;
+                margin: 8px;
+                -webkit-user-select: none;  /* Chrome all / Safari all */
+                  -moz-user-select: none;     /* Firefox all */
+                  -ms-user-select: none;      /* IE 10+ */
+                  user-select: none; 
+            }
+            
+            #value-container {
+                background-color: #f5f5f5;
+                border-radius: 0px 4px 4px 0px;
+                padding: 8px 16px 8px 0px;
+                flex-grow: 1;
+            }
+            #chart-container {
+                background-color: white;
+                border-radius: 4px 0px 0px 4px;
+                flex-grow: 3;
+                max-width: 75%;
+                padding: 16px;
+            }
+            .card-title {
+                padding: 16px;
+                font-size: 20px;
+                font-weight: 500;
+                line-height: 28px;
+            }
+            
+            #chart {
+                height: 100%;
+                width: 100%;
+                max-height: 350px;
+                font-family: inherit;
+                font-size: 14px;
+                font-weight: 400;
+                letter-spacing: 0.011em;
+                line-height: 20px;
+                fill: var(--text-secondary-color);
+            }
+            .title {
+                text-anchor: middle;
+            }
+            .y.title {
+                transform: rotate(-90deg);
+            }
+            .axis text {
+                font-size: 12px;
+                font-weight: 200;
+                fill: var(--text-secondary-color);
+            }
+            .axis line,
+            .axis .domain {
+                stroke: var(--text-secondary-color);
+            }
+            
+            .line {
+              fill: none;
+              stroke: var(--app-light-color);
+              /*stroke: #abd4ef;*/
+              stroke-dasharray: 10;
+              stroke-width: 3px;
+              stroke-linecap: 'round';
+            }
+            .area {
+                fill: var(--app-light-color);
+                fill-opacity: 0.1;
+            }
+            .working-volume.line {
+                stroke: var(--app-primary-color);
+                stroke-dasharray: 0;
+            }
+            .working-volume.area {
+                fill: var(--app-primary-color);
+                /*fill: #eeeeee;*/
+            }
+            circle {
+                stroke: var(--app-primary-color);
+                stroke-width: 4px;
+                fill: white;
+            }
+            .batch-volume {
+                stroke: var(--app-accent-color);
+            }
+            #tooltip.hide {
+                opacity: 0;
+                transition: opacity 0.5s 0.5s;
+            }
+            #tooltip {		
+                position: absolute;
+                text-align: center;			
+                width: 96px;					
+                height: 40px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0.011em;
+                line-height: 20px;
+                padding: 4px;	
+                background: white;	
+                border: 3px solid var(--app-accent-color);		
+                border-radius: 4px;			
+                pointer-events: none;
+                opacity: 1;
+                transition: opacity 0.2s;	
+            }
+            unit-input {
+            border-left: 3px solid white;
+        }
+        
+        .iron-selected {
+            border-left: 3px solid var(--app-primary-color);
+            background-color: rgba(189, 212, 222, 0.15);
+        }
+            
+            @media (min-width: 480px) {
+                :host {
+                    margin: 16px 32px;
+                }
+            }
+            
+            @media (min-width: 1024px) {
+                :host {
+                    margin: 16px;
+                }
+                
+            }
+        </style>
+        
+        <div id='chart-container'>
+            <div id='tooltip' class='hide'>
+                <div>Batch Volume</div>
+                <div>[[_convertToLitersString(pan.fillVolume)]] L</div>
+            </div>
+            
+            <svg id='chart'>
+                <g class='chart'>
+                    <g class='x axis'></g>
+                    <g class='y axis'></g>
+                    <text class='x title'>Product Volume (liters)</text>
+                    <text class='y title'>Product Depth (inches)</text>
+                    <path class='total-volume area'></path>
+                    <path class='total-volume line'></path>
+                    <path class='working-volume area'></path>
+                    <path class='working-volume line'></path>
+                    <g class='volume-circles'></g>
+                    <circle r='7' class='batch-volume' on-track='_trackBatch'></circle>
+                </g>
+            </svg>
+        </div>
+        
+        <div id='value-container'>
+        <div class='card-title'>Pan and Fill Volume</div>
+        <iron-selector selected='{{volumeSelected}}' attr-for-selected='volume'>
+            <unit-input 
+                volume='brim'
+                value='[[pan.brimVolume]]' 
+                type='volume'
+                selected-units='{{volumeUnits}}' 
+                no-input 
+                title='Brim Volume' 
+                details='The volume when filled to the pan opening.'>
+            </unit-input>
+            <unit-input 
+                volume='max'
+                value='[[pan.maxFillVolume]]' 
+                type='volume'
+                selected-units='{{volumeUnits}}' 
+                no-input 
+                title='Max Working Volume' 
+                details='The recommended maximum volume to fill pan.'>
+            </unit-input>
+            <unit-input 
+                volume='min'
+                value='[[pan.minFillVolume]]' 
+                type='volume'
+                selected-units='{{volumeUnits}}' 
+                no-input 
+                title='Min Working Volume' 
+                details='The recommended minimum volume to fill pan.'>
+            </unit-input>
+            <unit-input 
+                volume='product'
+                value='[[pan.fillVolume]]' 
+                type='volume'
+                selected-units='{{volumeUnits}}' 
+                no-input 
+                title='Product Volume' 
+                details='The volume of product to fill the pan.'>
+            </unit-input>
+        </iron-selector>
+    </div>
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer */
+        class VolumeChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+            
+            static get is() { return 'volume-chart'; }
+            
+            ready() {
+                super.ready();
+                window.addEventListener('resize', e => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                this.height = this.$.chart.clientHeight - this.margin.top - this.margin.bottom;
+                this.width = this.$.chart.clientWidth - this.margin.left - this.margin.right;
+            }
+            
+            static get properties() {
+                return {
+                    pan: {type: Object, statePath: 'pan'},
+                    volumeUnits: {type: String, value: "l"},
+                    volumeSelected: {type: String, value: "brim"},
+                    
+                    chart: {type: Object},
+                    margin: {type: Object, value: function() {
+                        return {top: 20, right: 20, bottom: 50, left: 50};
+                    }},
+                    height: {type: Number},
+                    width: {type: Number},
+                    xScale: {type: Object, computed: '_computeXScale(width, pan.brimVolume)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, pan.brimHeight)'},
+                    d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
+                    d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
+                };
+            }
+            _computeXScale(chartWidth, brimVolume) {
+                let max = this._convertToLiters(brimVolume) * 1.1;
+                return d3.scaleLinear().range([0, chartWidth]).domain([0, max]).nice();
+            }
+            _computeYScale(chartHeight, brimHeight) {
+                let max = this._convertToInches(brimHeight) * 1.1;
+                return d3.scaleLinear().range([chartHeight, 0]).domain([0, max]).nice();
+            }
+            _computeD3Line(xScale, yScale) {
+                return d3.line()
+                    .x(function(d) { return xScale(d.x); })
+                    .y(function(d) { return yScale(d.y); })
+                    .curve(d3.curveNatural);
+            }
+            _computeD3Area(xScale, yScale, height) {
+                return d3.area()
+                         .x(function(d) { return xScale(d.x); })
+                         .y0(height)
+                         .y1(function(d) { return yScale(d.y); }); 
+            }
+        
+            static get observers() {
+                return [
+                    '_initChart(margin, height, width)',
+                    '_updateAxis(xScale, yScale, chart)',
+                    '_updateTotalVolume(pan, chart, d3Line, d3Area)',
+                    '_updateWorkingVolume(pan, chart, d3Line, d3Area)',
+                    '_updateVolumePoints(pan, chart, xScale, yScale)',
+                    '_updateBatchPoint(pan, pan.fillVolume, chart, xScale, yScale)'
+                ];
+            }
+            
+            _initChart(margin, height, width) {
+                if(!margin || !height || !width) {
+                    return;
+                }
+                let chart = d3.select(this.$.chart)
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                .select(".chart")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                                
+                chart.select(".x.axis").attr("transform", "translate(0," + height + ")");
+                chart.select(".x.title").attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 25) + ")");
+                chart.select(".y.title").attr("y", 0 - margin.left).attr("x",0 - (height / 2)).attr("dy", "1em");      
+                
+                // set the chart object
+                this.chart = chart;
+            }
+            _updateAxis(xScale, yScale, chart) {
+                if(!xScale || !yScale || !chart) {
+                    return;
+                }
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+                chart.select(".y.axis").call(d3.axisLeft(yScale));  
+            }
+            _updateTotalVolume(pan, chart, line, area) {
+                if(!pan || !chart || !line || !area) {
+                    return;
+                }
+                
+                // create a new coating pan object to make changes to
+                let p = Object.assign(new CoatingPan(), pan);
+                
+                // initiate an empty array to store values in for loop
+                let vals = [];
+                let step = pan.brimVolume / 25;
+                
+                // loop through different volumes and store the volume and height values
+                for(var i=0; i < pan.brimVolume; i = i + step) {
+                    p.fillVolume = i;
+                    vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+                }
+                // finally store the max values 
+                vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+                
+                // Add the line
+                let lines = chart.select('.total-volume.line').data([vals]);
+                lines.enter()
+                    .merge(lines)
+                        .attr("d", line);  
+                lines.exit().remove();
+                                
+                // Add the area
+                let areas = chart.select('.total-volume.area').data([vals]);
+                areas.enter()
+                    .merge(areas)
+                        .attr("d", area);  
+                areas.exit().remove();
+            }
+            _updateWorkingVolume(pan, chart, line, area) {
+                if(!pan || !chart || !line || !area) {
+                    return;
+                }
+                
+                // create a new coating pan object to make changes to
+                let p = Object.assign(new CoatingPan(), pan);
+                
+                // initiate an empty array to store values in for loop
+                let vals = [];
+                let step = (pan.maxFillVolume - pan.minFillVolume) / 10;
+                
+                // loop through different volumes and store the volume and height values
+                for(var i=pan.minFillVolume; i < pan.maxFillVolume; i = i + step) {
+                    p.fillVolume = i;
+                    vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+                }
+                // finally store the max values 
+                vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+                
+                // Add the line
+                let lines = chart.select('.working-volume.line').data([vals]);
+                lines.enter()
+                    .merge(lines)
+                        .attr("d", line);  
+                lines.exit().remove();
+                                
+                // Add the area
+                let areas = chart.select('.working-volume.area').data([vals]);
+                areas.enter()
+                    .merge(areas)
+                        .attr("d", area);  
+                areas.exit().remove();
+            }
+            _updateVolumePoints(pan, chart, xScale, yScale) {
+                if(!pan || !chart || !xScale || !yScale) {
+                    return;
+                }
+                let vals = [];
+                vals.push({x: this._convertToLiters(pan.minFillVolume), y: this._convertToInches(pan.minFillHeight)});
+                vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+                vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+                
+                // Add the dots
+                let circles = chart.select('.volume-circles').selectAll('circle').data(vals);
+                
+                circles.enter()
+                        .append('circle')
+                            .attr('r', 7)
+                        .merge(circles)
+                          .attr('cx', function(d) { return xScale(d.x);})
+                          .attr('cy', function(d) { return yScale(d.y);});
+                
+                circles.exit().remove();
+            }
+            _updateBatchPoint(pan, fillVolume, chart, xScale, yScale) {
+                if(!pan || !chart || !xScale || !yScale) {
+                    return;
+                }
+                let vals = [];
+                vals.push({x: this._convertToLiters(fillVolume), y: this._convertToInches(pan.fillHeight)});
+                
+                // Add the dots
+                let circles = chart.selectAll('circle.batch-volume').data(vals);
+                
+                circles.enter()
+                        .append('circle')
+                            .attr('class', 'batch-volume')
+                            .attr('r', 7)
+                        .merge(circles)
+                          .attr('cx', function(d) { return xScale(d.x);})
+                          .attr('cy', function(d) { return yScale(d.y);});
+                    
+                circles.exit().remove();
+                
+                
+                let tooltip = d3.select(this.$.tooltip)
+                                .data(vals)
+                                    .style('transform', function(d) { return 'translateX(' + xScale(d.x) + 'px) translateY(' + (yScale(d.y) - 48) + 'px)';});
+                
+            }
+            
+            _trackBatch(e) {
+                switch(e.detail.state) {
+                    case 'start':
+                        this.startFill = this.pan.fillVolume;
+                        this.$.tooltip.classList.remove('hide');
+                        break;
+                    case 'track':
+                        let fill = this.startFill + (this.xScale.invert(e.detail.dx) * 0.001);
+                        this.set('pan.fillVolume', fill);
+                        break;
+                    case 'end':
+                        this.$.tooltip.classList.add('hide');
+                        this.dispatch({
+                            type: "SET_PAN", 
+                            value: this.pan
+                        });
+                        break;
+                }
+            }
+            
+            _updateChart(pan, chart) {
+                if(!chart || !pan) {
+                    return;
+                }
+                
+                let margin = {top: 20, right: 20, bottom: 50, left: 50};
+                let width = 900 - margin.left - margin.right;
+                let height = 450 - margin.top - margin.bottom;
+                
+                let xMax = this._convertToLiters(pan.brimVolume) * 1.1;
+                let yMax = this._convertToInches(pan.brimHeight) * 1.1;
+                let xScale = this.xScale.domain([0, xMax]).nice();
+                let yScale = this.yScale.domain([0, yMax]).nice();
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+                chart.select(".y.axis").call(d3.axisLeft(yScale)); 
+                
+                // create a new coating pan object to make changes to
+                let p = Object.assign(new CoatingPan(), pan);
+                // initiate an empty array to store values in for loop
+                let vals = [];
+                let step = pan.brimVolume / 25;
+                // loop through different volumes and store the volume and height values
+                for(var i=0; i < pan.brimVolume; i = i + step) {
+                    p.fillVolume = i;
+                    vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+                }
+                // finally store the max values 
+                vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+                
+                let highlightVals = [];
+                highlightVals.push({x: this._convertToLiters(pan.minFillVolume), y: this._convertToInches(pan.minFillHeight)});
+                highlightVals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+                highlightVals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+                
+                // define the line
+                let valueline = d3.line()
+                    .x(function(d) { return xScale(d.x); })
+                    .y(function(d) { return yScale(d.y); })
+                    .curve(d3.curveNatural);
+                
+                // Add the line
+                chart.select('.line')
+                        .data([vals])
+                          .attr("d", valueline);  
+                          
+                let area = d3.area()
+                                .x(function(d) { return xScale(d.x); })
+                                .y0(height)
+                                .y1(function(d) { return yScale(d.y); });        
+                                
+                // Add the line
+                chart.select('.area')
+                        .data([vals])
+                          .attr("d", area);  
+                          
+                // initiate an empty array to store values in for loop
+                let areavals = [];
+                let step2 = (pan.maxFillVolume - pan.minFillVolume) / 15;
+                // loop through different volumes and store the volume and height values
+                for(var j=pan.minFillVolume; j <= pan.maxFillVolume; j = j + step2) {
+                    p.fillVolume = j;
+                    areavals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+                }
+                // finally store the max values 
+                areavals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+                
+                // Add the line
+                chart.select('.highlight-area')
+                        .data([areavals])
+                          .attr("d", area); 
+                          
+                chart.select('.highlight-line')
+                        .data([areavals])
+                          .attr("d", valueline); 
+                
+                // Add the dots
+                let highlightCircles = chart.selectAll('.highlight-dot').data(highlightVals)
+                          .attr('class', 'highlight-dot')
+                          .attr("r", 5)
+                          .attr('cx', function(d) { return xScale(d.x)})
+                          .attr('cy', function(d) { return yScale(d.y)});
+                
+                highlightCircles.enter()
+                        .append('circle')
+                          .attr('class', 'highlight-dot')
+                          .attr("r", 5)
+                          .attr('cx', function(d) { return xScale(d.x)})
+                          .attr('cy', function(d) { return yScale(d.y)});
+                highlightCircles.exit().remove();
+                
+                let batchData = [];
+                batchData.push({x: this._convertToLiters(pan.fillVolume), y: this._convertToInches(pan.fillHeight)});
+                let batchCircle = chart.select('.batch-dot').data(batchData);
+                    
+                batchCircle.enter()
+                            .append('circle')
+                            .classed('batch-dot', true)
+                            .merge(batchCircle)
+                            .attr('r', 5)
+                            .attr('cx', function(d) { return xScale(d.x)})
+                            .attr('cy', function(d) {return yScale(d.y)})
+                            .call(d3.drag()
+                                .on("start", dragstarted)
+                                .on("drag", dragged)
+                                .on("end", dragended));
+    
+                    function dragstarted(d) {
+                    //   d3.select(this).raise().classed("active", true);
+                    }
+                    
+                    function dragged(d) {
+                        console.log(d);
+                        console.log(d3.event);
+                        let v = d3.event.x;
+                        console.log('value ' + v);
+                        console.log('scaled value ' + xScale(v));
+                        console.log('inverted value ' + xScale.invert(v));
+                        pan.fillVolume = xScale(d3.event.x);
+                    //   d3.select(this).attr("cx", d.x = d3.event.x);
+                    }
+                    
+                    function dragended(d) {
+                    //   d3.select(this).classed("active", false);
+                    }            
+            }
+            
+            _convertToInches(val) {
+                return val * 39.37;
+            }
+            _convertToLiters(val) {
+                return (val / 0.001) ;
+          }
+            _convertToLitersString(val) {
+                return this._convertToLiters(val).toFixed(1);
+            }
+        }
+        
+        window.customElements.define(VolumeChart.is, VolumeChart);
+        
+    </script>
+</dom-module>

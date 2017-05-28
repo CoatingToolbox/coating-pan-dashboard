@@ -46,39 +46,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             background-color: rgba(189, 212, 222, 0.15);
         }
         
+        @media (min-width: 480px) {
+            
+            graphic-input-card {
+                margin: 16px 32px;
+            }
+            
+            graphic-input-card + graphic-input-card {
+                margin-top: 32px;
+            }
+            
+            #section-title {
+                margin: 0px 32px;
+            }
+        }
+        
         @media (min-width: 1024px) {
           
-          #section-title {
-              padding: 0px 16px;
-          }
-          
-          #card-containier {
-              display: flex;
-          }
-          
-          graphic-input-card {
-              margin: 16px;
-          }
-          
-        }
-        
-        @media (min-width: 1280px) {
-          
-          #section-title {
-              padding: 0px 16px;
-          }
-          
-          #card-containier {
-              display: flex;
-          }
-          
-        }
-        
-        @media (min-width: 1440px) {
+            graphic-input-card {
+                margin: 16px;
+            }
             
-          #section-title {
-              padding: 0px 32px;
-          }
+            graphic-input-card + graphic-input-card {
+                margin-top: 16px;
+            }
+            
+            #section-title {
+                margin: 0px 16px;
+            }
+          
+            #card-containier {
+                display: flex;
+            }
           
         }
     </style>

@@ -16,6 +16,18 @@ class CoatingPan {
     return this.wallWidth + dist + dist;
   }
   
+  get minFillWidth() {
+    //the "run" or Width that we moved on one side of the pan side wall
+    let dist = this.minFillHeight / this.sideWallSlope;
+    return this.wallWidth + dist + dist;
+  }
+  
+  get maxFillWidth() {
+    //the "run" or Width that we moved on one side of the pan side wall
+    let dist = this.maxFillHeight / this.sideWallSlope;
+    return this.wallWidth + dist + dist;
+  }
+  
   get fillToBrim() {
     return (this.fillHeight < this.brimHeight) ? this.brimHeight - this.fillHeight : 0;
   } 

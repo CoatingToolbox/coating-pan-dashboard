@@ -1,0 +1,84 @@
+
+<dom-module id='shared-chart-style-module'>
+    <template>
+        <style>
+                 
+            #chart {
+                height: 100%;
+                min-height: 300px;
+                width: 100%;
+                max-height: 350px;
+                font-family: inherit;
+                font-size: 14px;
+                font-weight: 400;
+                letter-spacing: 0.011em;
+                line-height: 20px;
+                fill: var(--text-secondary-color);
+            }
+            .title {
+                text-anchor: middle;
+            }
+            .y.title {
+                transform: rotate(-90deg);
+            }
+            .axis text {
+                font-size: 12px;
+                font-weight: 200;
+                fill: var(--text-secondary-color);
+            }
+            .axis line,
+            .axis .domain {
+                stroke: var(--text-secondary-color);
+            }
+            .line {
+              fill: none;
+              stroke: var(--app-light-color);
+              stroke-dasharray: 10;
+              stroke-width: 3px;
+              stroke-linecap: 'round';
+            }
+            .area {
+                fill: var(--app-light-color);
+                fill-opacity: 0.1;
+            }
+            .working-volume.line {
+                stroke: var(--app-primary-color);
+                stroke-dasharray: 0;
+            }
+            .working-volume.area {
+                fill: var(--app-primary-color);
+                /*fill: #eeeeee;*/
+            }
+            circle {
+                stroke: var(--app-primary-color);
+                stroke-width: 4px;
+                fill: white;
+            }
+            .batch-volume,
+            .highlight-stroke {
+                stroke: var(--app-accent-color);
+            }
+            #tooltip.hide {
+                opacity: 0;
+                transition: opacity 0.5s 0.5s;
+            }
+            #tooltip {		
+                position: absolute;
+                text-align: center;			
+                width: 96px;					
+                height: 40px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0.011em;
+                line-height: 20px;
+                padding: 4px;	
+                background: white;	
+                border: 3px solid var(--app-accent-color);		
+                border-radius: 4px;			
+                pointer-events: none;
+                opacity: 1;
+                transition: opacity 0.2s;	
+            }
+        </style>
+    </template>
+</dom-module>

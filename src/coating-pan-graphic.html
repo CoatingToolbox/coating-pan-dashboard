@@ -152,12 +152,22 @@
           switch(lineType) {
             case 'brim-width':
               return this.getSideWidthLine(pan.panDiameter, pan.brimWidth);
-            case 'wall-width':
-              return this.getSideWidthLine(pan.panDiameter, pan.wallWidth);
             case 'fill-width':
               return this.getSideWidthLine(pan.panDiameter, pan.fillWidth);
+            case 'min-width':
+              return this.getSideWidthLine(pan.panDiameter, pan.minFillWidth);
+            case 'max-width':
+              return this.getSideWidthLine(pan.panDiameter, pan.maxFillWidth);
+            case 'wall-width':
+              return this.getSideWidthLine(pan.panDiameter, pan.wallWidth);
             case 'fill-height':
               return this.getSideFillHeightLine(pan.panDiameter, pan.fillHeight, pan.brimWidth);
+            case 'brim-height':
+              return this.getSideFillHeightLine(pan.panDiameter, pan.brimHeight, pan.brimWidth);
+            case 'max-height':
+              return this.getSideFillHeightLine(pan.panDiameter, pan.maxFillHeight, pan.brimWidth);
+            case 'min-height':
+              return this.getSideFillHeightLine(pan.panDiameter, pan.minFillHeight, pan.brimWidth);
             case 'side-wall':
               return this.getSideWallLine(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth);
           }

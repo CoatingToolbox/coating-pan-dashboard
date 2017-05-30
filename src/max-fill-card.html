@@ -15,39 +15,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="unit-input.html">
 
-<dom-module id="pan-fill-card">
+<dom-module id="max-fill-card">
   <template>
     <style include='shared-card-style-module'>
         :host([horizontal-layout]) #graphic-container {
             order: 2;
             border-radius: 0px 4px 4px 0px;
         }
+        
+        coating-pan-graphic {
+            --pan-fill-color: var(--app-dark-color);
+        }
     </style>
     
     <div id='graphic-container'>
-        <coating-pan-graphic pan='[[pan]]' view='side' line-type='[[fillSelected]]'></coating-pan-graphic>
+        <coating-pan-graphic pan='[[pan]]' view='side' volume-type='max' line-type='[[fillSelected]]'></coating-pan-graphic>
     </div>
     
     <div id='value-container'>
-        <div id='card-title'>Product Fill</div>
+        <div id='card-title'>Maximum Fill</div>
         <iron-selector selected='{{fillSelected}}' attr-for-selected='dimen'>
             <unit-input 
-                dimen='fill-height'
-                value='[[pan.fillHeight]]' 
+                dimen='max-width'
+                value='[[pan.maxFillWidth]]' 
                 type='length'
                 selected-units='{{lengthUnits}}' 
                 no-input 
-                title='Product Bed Height' 
-                details='The fill height or depth of the product in the pan.'>
+                title='Fill Width' 
+                details='The width along the surface of the batch.'>
             </unit-input>
             <unit-input 
-                dimen='fill-width'
-                value='[[pan.fillWidth]]' 
+                dimen='max-height'
+                value='[[pan.maxFillHeight]]' 
                 type='length'
                 selected-units='{{lengthUnits}}' 
                 no-input 
-                title='Product Bed Width' 
-                details='The width along the surface of the product.'>
+                title='Fill Height' 
+                details='The fill height.'>
             </unit-input>
         </iron-selector>
     </div>
@@ -55,20 +59,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    class PanFillCard extends ReduxMixin(Polymer.Element) {
+    class MaxFillCard extends ReduxMixin(Polymer.Element) {
 
-      static get is() { return 'pan-fill-card'; }
+      static get is() { return 'max-fill-card'; }
       
       static get properties() {
           return {
               pan: {type: Object, statePath: 'pan'},
-              fillSelected: {type: String, value: 'fill-height'},
-              lengthUnits: {type: String, value: 'in'},
-              horizontalLayout: {type: Boolean, value: false, reflectToAttribute: true}
+              fillSelected: {type: String, value: 'max-width'},
+              lengthUnits: {type: String, value: 'in'}
           };
       }
     }
 
-    window.customElements.define(PanFillCard.is, PanFillCard);
+    window.customElements.define(MaxFillCard.is, MaxFillCard);
   </script>
 </dom-module>

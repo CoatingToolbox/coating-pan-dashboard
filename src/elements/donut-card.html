@@ -1,0 +1,137 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../elements/d3-import.html">
+
+<dom-module id='donut-card'>
+    <template>
+        <style>
+            :host {
+                display: flex;
+                background-color: white;
+                border-radius: 4px;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                          0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                          0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                padding: 16px;
+                align-items: center;
+                flex-grow: 1;
+            }
+            #text-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 8px 16px;
+                
+                @apply --paper-font-title;
+            }
+            #chart {
+                width: 124px;
+                fill: var(--divider-color);
+            }
+            #full {
+            }
+            #partial {
+                fill: var(--app-primary-color);
+            }
+            :host(.iron-selected) #partial {
+                fill: var(--app-accent-color);
+                fill-opacity: 0.75;
+            }
+            #value {
+                stroke: var(--text-primary-color);
+                fill: var(--text-primary-color);
+                stroke-width: 0.25px;
+            }
+            
+        </style>
+    
+        <svg id='chart'>
+            <g id='container'>
+                <text id='value'></text>
+                <path id='partial'></path>
+                <path id='full'></path>
+            </g>
+        </svg>
+        <div id='text-container'>
+            <div>[[label]]</div>
+            <div>Volume</div>
+        </div>
+        
+    </template>
+    
+    <script>
+        class DonutCard extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'donut-card';}
+            
+            static get properties() { 
+                return {
+                    pan: {type: Object, statePath: 'pan'},
+                    type: {type: String, value: 'brim'},
+                    label: {type: String},
+                    details: {type: String, value: 'Details Go Here'},
+                    value: {type: Number, value: 15.0},
+                    chart: {type: Object},
+                    height: {type: Number, value: 124},
+                    width: {type: Number, value: 124}, 
+                    arc: {type: Object, computed: "_computeArc(height, width)"},
+                    
+                };
+            }
+            
+            static get observers() {
+                return [
+                    '_initChart(height, width)',
+                    '_updateChart(pan.brimVolume, pan.minFillVolume, pan.maxFillVolume, arc)'
+                ];
+            }
+            
+            _initChart(h, w) {
+                this.chart = d3.select(this.$.chart)
+                                .attr('height', h)
+                                .attr('width', w)
+                                .select('#container')
+                                .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
+            }
+            
+            _updateChart(brim, min, max, arc) {
+                let pie = d3.pie().sort(null);
+                
+                let val;
+                switch (this.type) {
+                    case 'min': 
+                        val = min;
+                        break;
+                    case 'max': 
+                        val = max;
+                        break;
+                    default: 
+                        val = brim;
+                        break;
+                }
+                this.chart.selectAll('path').data(pie([val, brim - val])).attr('d', arc);
+                
+                this.chart.select('#value')
+                    	   .attr("text-anchor", "middle")
+                    	   .attr('font-size', '1.1em')
+                    	   .attr('y', 6)
+                           .text(this._convertToLiters(val));
+                
+            }
+            
+            _computeArc(h, w) {
+                if(!w || !h) { return; }
+                
+                let radius = Math.min(h, w) / 2; 
+                return d3.arc().outerRadius(radius * 0.99).innerRadius(radius * 0.63);
+            }
+            
+            _convertToLiters(val) {
+                return (val / 0.001).toFixed(1) + ' L';
+            }
+            
+        }
+        window.customElements.define(DonutCard.is, DonutCard);
+    </script>
+    
+</dom-module>

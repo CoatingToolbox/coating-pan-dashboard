@@ -19,6 +19,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="dimensions-section">
   <template>
     <style include='section-styles'>
+      :host {
+        display: flex;
+      }
       .dimension-label {
         flex-grow: 1;
       }
@@ -31,13 +34,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: flex;
         flex-grow: 1;
       }
+      .card + .card {
+        margin-left: var(--card-margin);
+      }
       #info-container {
         display: flex;
         margin-left: 16px;
         flex-direction: column;
       }
       #info-container .card + .card {
-        margin: 16px 0px 0px 0px;
+        margin: var(--card-margin) 0px 0px 0px;
       }
       paper-button {
         margin: 8px;
@@ -53,7 +59,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
         
       <div class='card'>
-        <div class='title'>Coating Pan Diagram</div>
+        <div class='title'>Coating Pan Dimensions</div>
         <div class='graphic-container'>
           <coating-pan-graphic line-type='[[lineSelected]]'></coating-pan-graphic>
           <coating-pan-graphic view='side' line-type='[[lineSelected]]'></coating-pan-graphic>
@@ -61,7 +67,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-selector selected='{{lineSelected}}' attr-for-selected='dimen'>
               <unit-input 
                   dimen='pan-diameter'
-                  value='[[pan.panDiameter]]' 
+                  value='[[diameter]]' 
                   type='length'
                   selected-units='{{lengthUnits}}' 
                   no-input 
@@ -70,7 +76,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </unit-input>
               <unit-input 
                   dimen='brim-width'
-                  value='[[pan.brimWidth]]' 
+                  value='[[depth]]' 
                   type='length'
                   selected-units='{{lengthUnits}}' 
                   no-input 
@@ -79,7 +85,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </unit-input>
               <unit-input 
                   dimen='brim-height'
-                  value='[[pan.brimHeight]]' 
+                  value='[[brimHeight]]' 
                   type='length'
                   selected-units='{{lengthUnits}}' 
                   no-input title='Brim Height' 
@@ -91,15 +97,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       <div id='info-container'>
           
-          <div class='card'>
-            <div class='title'>Pan Dimensions</div>
+          <div class='card text'>
+            <div class='title'>Dimensions</div>
             <div class='description'>
               A coating pan is often described by the main diameter but other dimensions
               are useful in determining the maximum pan fill and optimizing spray distribution.
             </div>
           </div>
           
-          <div class='card highlight'>
+          <div class='card highlight text'>
             <div class='title'>Editor</div>
             <div class='description'>
               A coating pan is often described by the main diameter but other dimensions
@@ -120,7 +126,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       static get properties() {
         return {
-          pan: {type: Object, statePath: 'pan'},
           diameter: { type: Number, statePath: 'pan.panDiameter'},
           depth: { type: Number, statePath: 'pan.brimWidth'},
           brimHeight: { type: Number, statePath: 'pan.brimHeight'},

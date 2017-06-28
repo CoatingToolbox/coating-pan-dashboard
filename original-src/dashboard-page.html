@@ -1,0 +1,188 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="pan-height-card.html">
+<link rel="import" href="pan-width-card.html">
+<link rel="import" href="pan-volume-card.html">
+<link rel="import" href="fill-density-card.html">
+<link rel="import" href="batch-fill-card.html">
+<link rel="import" href="min-fill-card.html">
+<link rel="import" href="max-fill-card.html">
+<link rel="import" href="pan-speed-card.html">
+
+<dom-module id="dashboard-page">
+  <template>
+    <style>
+        :host {
+            display: flex;
+            flex-direction: column;
+            margin: 8px 0px;
+        }
+        
+        #intro-container {
+          align-self: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background-color: white;
+          border-radius: 4px;
+          margin: 8px;
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          padding: 16px;
+        }
+        
+        #page-title {
+          font-size: 34px;
+          font-weight: 400;
+          letter-spacing: -.01em;
+          line-height: 40px;
+          padding-bottom: 16px;
+        }
+        
+        #page-description {
+          max-width: 600px;
+          text-align: justify;
+          color: var(--text-primary-color);
+        }
+        
+        .section-title {
+          font-size: 20px;
+          font-weight: 500;
+          line-height: 28px;
+        }
+        
+        @media (min-width: 480px) {
+          
+          :host {
+            padding: 8px;
+          }
+          
+          #intro-container {
+            background-color: initial;
+            margin: 16px;
+            padding: 32px;
+            box-shadow: none;
+          }
+          
+          #page-title {
+            font-size: 45px;
+            font-weight: 400;
+            letter-spacing: -.018em;
+            line-height: 48px;
+            padding: 16px;
+          }
+          
+          #page-description {
+            max-width: 800px;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+          }
+        }
+        
+        @media (min-width: 1024px) {
+          :host {
+            max-width: 1150px;
+            margin: 8px 16px;
+          }
+          .section-title {
+            padding-top: 24px;
+          }
+          #dimensions-section,
+          #fill-section {
+            display: flex;
+          }
+          pan-height-card, 
+          pan-width-card {
+            max-width: calc(50% - 16px);
+          }
+          pan-height-card {
+            margin-right: 16px;
+          }
+          pan-width-card {
+            margin-left: 16px;
+          }
+        }
+        
+        @media(min-width: 840px) {
+          
+          .fill-card {
+            max-width: calc(33.3% - 16px);
+          }
+          .fill-card + .fill-card {
+            margin-left: 32px;
+          }
+        }
+        
+        @media (min-width: 1480px) {
+          :host {
+            max-width: 1200px;
+            margin: auto;
+          }
+        }
+        
+    </style>
+    
+    <iron-media-query query='(max-width: 480px)' query-matches='{{mobileView}}'></iron-media-query>
+  
+    <div id='intro-container'>
+      <div id='page-title'>Coating Pan Dashboard</div>
+      <div id='page-description'>
+        The Coating Pan Dashboard allows you to create, compare and investigate different coating pans. You 
+        can see a range of coating pan volumes, determine coating pan speed, and optimize the pan fill. You can do this with a coating pan 
+        from the library or you can customize your own. 
+      </div>
+    </div>
+    
+    <div class='section-title'>Coating Pan Dimensions</div>
+    <div id='dimensions-section'>
+      <pan-height-card horizontal-layout='[[!mobileView]]'></pan-height-card>
+      <pan-width-card horizontal-layout='[[!mobileView]]'></pan-width-card>
+    </div>
+    
+    <div class='section-title'>Pan and Fill Volumes</div>
+    <pan-volume-card horizontal-layout='[[!mobileView]]'></pan-volume-card>
+    
+    
+    <div class='section-title'>Batch Fill Dimensions</div>
+    <div id='fill-section'>
+      <min-fill-card class='fill-card'></min-fill-card>
+      <batch-fill-card class='fill-card'></batch-fill-card>
+      <max-fill-card class='fill-card'></max-fill-card>
+    </div>
+    
+    <div class='section-title'>Batch Density and Weight</div>
+    <fill-density-card horizontal-layout='[[!mobileView]]'></fill-density-card>
+    
+    <div class='section-title'>Pan Speed</div>
+    <pan-speed-card horizontal-layout='[[!mobileView]]'></pan-speed-card>
+    
+  </template>
+
+  <script>
+    class DashboardPage extends Polymer.Element {
+
+      static get is() { return 'dashboard-page'; }
+      
+      static get properties() {
+        return {
+          
+        };
+      }
+      
+    }
+
+    window.customElements.define(DashboardPage.is, DashboardPage);
+  </script>
+</dom-module>

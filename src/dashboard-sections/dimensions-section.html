@@ -1,0 +1,140 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id="dimensions-section">
+  <template>
+    <style include='section-styles'>
+      :host {
+        display: flex;
+      }
+      .dimension-label {
+        flex-grow: 1;
+      }
+      .description {
+        padding: 8px 16px;
+        text-align: justify;
+        max-width: 360px;
+      }
+      .graphic-container {
+        display: flex;
+        flex-grow: 1;
+      }
+      .card + .card {
+        margin-left: var(--card-margin);
+      }
+      #info-container {
+        display: flex;
+        margin-left: 16px;
+        flex-direction: column;
+      }
+      #info-container .card + .card {
+        margin: var(--card-margin) 0px 0px 0px;
+      }
+      paper-button {
+        margin: 8px;
+      }
+      paper-button:hover {
+        color: var(--app-primary-color);
+        background-color: white;
+      }
+      unit-input {
+        border-top: 1px solid var(--divider-color);
+      }
+    
+    </style>
+        
+      <div class='card'>
+        <div class='title'>Coating Pan Dimensions</div>
+        <div class='graphic-container'>
+          <coating-pan-graphic line-type='[[lineSelected]]'></coating-pan-graphic>
+          <coating-pan-graphic view='side' line-type='[[lineSelected]]'></coating-pan-graphic>
+        </div>
+        <iron-selector selected='{{lineSelected}}' attr-for-selected='dimen'>
+              <unit-input 
+                  dimen='pan-diameter'
+                  value='[[diameter]]' 
+                  type='length'
+                  selected-units='{{lengthUnits}}' 
+                  no-input 
+                  title='Diameter' 
+                  details='The diameter of the coating pan drum.'>
+              </unit-input>
+              <unit-input 
+                  dimen='brim-width'
+                  value='[[depth]]' 
+                  type='length'
+                  selected-units='{{lengthUnits}}' 
+                  no-input 
+                  title='Brim Width' 
+                  details='The width of the pan at the brim height.'>
+              </unit-input>
+              <unit-input 
+                  dimen='brim-height'
+                  value='[[brimHeight]]' 
+                  type='length'
+                  selected-units='{{lengthUnits}}' 
+                  no-input title='Brim Height' 
+                  details='The height to the brim (pan opening).'>
+              </unit-input>
+          </iron-selector>
+      
+      </div>
+      
+      <div id='info-container'>
+          
+          <div class='card text'>
+            <div class='title'>Dimensions</div>
+            <div class='description'>
+              A coating pan is often described by the main diameter but other dimensions
+              are useful in determining the maximum pan fill and optimizing spray distribution.
+            </div>
+          </div>
+          
+          <div class='card highlight text'>
+            <div class='title'>Editor</div>
+            <div class='description'>
+              A coating pan is often described by the main diameter but other dimensions
+              are useful in determining the maximum pan fill and optimizing spray distribution.
+            </div>
+            <paper-button>Editor</paper-button>
+          </div>
+          
+        </div>
+      
+    </div>
+    
+  </template>
+
+  <script>
+    class DimensionsSection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'dimensions-section'; }
+      
+      static get properties() {
+        return {
+          diameter: { type: Number, statePath: 'pan.panDiameter'},
+          depth: { type: Number, statePath: 'pan.brimWidth'},
+          brimHeight: { type: Number, statePath: 'pan.brimHeight'},
+          lengthUnits: {type: String, value: 'in'},
+          lineSelected: {type: String, value: "pan-diameter"}
+        };
+      }
+    }
+
+    window.customElements.define(DimensionsSection.is, DimensionsSection);
+  </script>
+</dom-module>

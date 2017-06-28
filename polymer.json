@@ -4,6 +4,9 @@
   "fragments": [
     "src/dashboard-page.html"
   ],
+  "builds": [
+    { "preset": "es6-unbundled" }
+  ],
   "sources": [
     "src/**/*",
     "images/**/*",

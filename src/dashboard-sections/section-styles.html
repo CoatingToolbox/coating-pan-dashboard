@@ -19,8 +19,9 @@
         color: white;
       }
       .card.text {
+        display: flex;
+        flex-direction: column;
         text-align: justify;
-        max-width: 400px;
       }
       .card .title {
         display: flex;
@@ -28,12 +29,36 @@
         font-weight: 500;
         padding: 16px;
       }
+      .section-title {
+        @apply --paper-font-subhead;
+        font-weight: 500;
+        color: var(--text-secondary-color);
+        padding: 8px 0px;
+        margin-top: 16px;
+      }
+      .card .description {
+        padding: 8px 16px;
+        margin-bottom: 16px;
+        text-align: justify;
+      }
+      .card paper-button {
+        margin: 0px 24px 8px 24px;
+        align-self: flex-end;
+        @apply --paper-font-button;
+      }
+      .card.highlight paper-button:hover {
+        color: var(--app-primary-color);
+        background-color: white;
+      }
       unit-input {
         border-left: 3px solid white;
         min-width: 300px;
       }
       unit-input.iron-selected {
         border-left: 3px solid var(--app-primary-color);
+      }
+      unit-input {
+        border-top: 1px solid var(--divider-color);
       }
     </style>
   </template>

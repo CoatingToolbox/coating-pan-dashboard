@@ -119,7 +119,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   
     <iron-pages selected='[[selectedSection]]'>
       <dimensions-section></dimensions-section>
-      <volume-section></volume-section>
+      <volume-section id='volumeSection'></volume-section>
     </iron-pages>
     
   </template>
@@ -136,8 +136,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           company: { type: Object, statePath: 'pan.companyName'},
           location: { type: Object, statePath: 'pan.locationName'},
           contact: { type: Object, statePath: 'pan.contactName'},
-          selectedSection: {type: Number, value: 1}
+          selectedSection: {type: Number, value: 0, observer: '_sectionChanged'}
         };
+      }
+      
+      _sectionChanged(newValue) {
+        switch(newValue) {
+          case 1:
+            this.$.volumeSection._setChartDimensions();
+        }
       }
     }
 

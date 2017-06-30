@@ -17,16 +17,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../elements/coating-pan-graphic.html">
 <link rel="import" href="../elements/d3-import.html">
 <link rel="import" href="../elements/donut-card.html">
+<link rel="import" href="../elements/volume-card.html">
 <link rel="import" href="section-styles.html">
 
 <dom-module id="volume-section">
   <template>
     <style include='section-styles'>
-
       :host {
         display: flex;
         flex-direction: column;
       }
+      #volume-card-container {
+        display: flex;
+      }
+      #second-section {
+        display: flex;
+        margin-bottom: 16px;
+        align-items: flex-start;
+      } 
+      #info-container {
+        display: flex;
+        flex-direction: column;
+        margin-left: 16px;
+        max-width: calc(50% - 8px);
+        flex-grow: 1;
+      }
+      .chart-card {
+        flex-grow: 1;
+      }
+      #chart-container {
+        margin: 0px 16px;
+      }
+      .card + .card {
+        margin-top: var(--card-margin);
+      }
+      volume-card {
+        max-width: calc(33.33% - 10.66px);
+      }
+      volume-card + volume-card{
+        margin-left: 16px;
+      }
+      .volume-selector {
+        display: flex;
+        align-self: flex-end;
+        margin: 16px 24px;
+      }
+      .volume-tab {
+        padding: 8px 16px;
+        color: var(--text-secondary-color);
+        @apply --paper-font-body2;
+      }
+      .volume-tab.iron-selected {
+        color: white;
+        background-color: var(--app-dark-color);
+        border-radius: 4px;
+        font-weigth: 500;
+      }
+    </style>
+    
+    <style>
       #chart {
           height: 100%;
           min-height: 300px;
@@ -65,94 +114,108 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         stroke: var(--divider-color);
       }
       .area {
-          fill: var(--app-light-color);
+          fill: var(--divider-color);
           fill-opacity: 0.1;
       }
       .working-volume.line {
           stroke: var(--app-primary-color);
       }
       .working-volume.area {
-          fill: var(--app-primary-color);
+          fill: var(--text-primary-color);
       }
       circle {
           stroke: var(--app-primary-color);
           stroke-width: 4px;
           fill: white;
       }
-      .card {
-        flex-grow: 1;
-      }
-      
     </style>
     
-    <style>
-      .volume-selector {
-        display: flex;
-      }
-      .volume {
-        padding: 16px;
-        color: var(--text-secondary-color);
-        @apply --paper-font-body2;
-      }
-      .volume.iron-selected {
-        color: var(--app-accent-color);
-        font-weigth: 500;
-      }
-      .card + .card {
-        margin-top: var(--card-margin);
-      }
-      .horizontal {
-        display: flex;
-        margin-bottom: 16px;
-      }
-      donut-card {
-        max-width: calc(33.3% - 44px);
-      }
-      donut-card + donut-card {
-        margin-left: 16px;
-      }
-      .flex {
-        flex-grow: 1;
-      }
-      .chart-container {
-        margin: 16px;
-      }
-    </style>
-    
-    <iron-selector class='horizontal' selected='{{volumeSelected}}' attr-for-selected='type'>
-      <donut-card label='Brim' type='brim'></donut-card>
-      <donut-card label='Max Working' type='max'></donut-card>
-      <donut-card label='Min Working' type='min'></donut-card>
+    <div class='section-title'>Coating Pan Volume</div>
+    <iron-selector id='volume-card-container' selected='{{volumeSelected}}' attr-for-selected='type'>
+      <volume-card label='Min Working' type='min'></volume-card>
+      <volume-card label='Max Working' type='max'></volume-card>
+      <volume-card label='Brim' type='brim'></volume-card>
     </iron-selector>
-        
-    <div class='card'>
-      <div class='horizontal'>
-        <div class='title flex'>Coating Pan Volume</div>
-      <iron-selector class='volume-selector' selected='{{volumeSelected}}' attr-for-selected='volume'>
-        <div class='volume' volume='range'>Range</div>
-        <div class='volume' volume='brim'>Brim</div>
-        <div class='volume' volume='max'>Max</div>
-        <div class='volume' volume='min'>Min</div>
-      </iron-selector>
-      </div>
-      <div class='chart-container'>
-        <svg id='chart'>
-          <g class='chart'>
-              <g class='x axis'></g>
-              <g class='y axis'></g>
-              <text class='x title'>Product Volume (liters)</text>
-              <text class='y title'>Fill Height (inches)</text>
-              <path class='total-volume area'></path>
-              <path class='total-volume line'></path>
-              <path class='height line'></path>
-              <path class='working-volume area'></path>
-              <path class='working-volume line'></path>
-              <g class='volume-circles'></g>
-          </g>
-        </svg>
-      </div>
-    </div>  
+    
+    
+    <div class='section-title'>Coating Pan Fill Height</div>
+    
+    <div id='second-section'>
       
+      <div class='card chart-card'>
+          <div id='chart-container'>
+            <svg id='chart'>
+              <g class='chart'>
+                  <g class='x axis'></g>
+                  <g class='y axis'></g>
+                  <text class='x title'>Product Fill Height (inches)</text>
+                  <text class='y title'>Volume (liters)</text>
+                  <path class='total-volume area'></path>
+                  <path class='total-volume line'></path>
+                  <path class='height line'></path>
+                  <path class='working-volume area'></path>
+                  <path class='working-volume line'></path>
+                  <g class='volume-circles'></g>
+              </g>
+            </svg>
+          </div>
+          <iron-selector selected='{{volumeSelected}}' attr-for-selected='type'>
+            <unit-input 
+                type='min'
+                value='[[pan.minFillHeight]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Min Fill Height' 
+                details='Baffle height or 70% of brim height.'>
+            </unit-input>
+            <unit-input 
+                type='max'
+                value='[[pan.maxFillHeight]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Max Fill Height' 
+                details='1" from brim opening.'>
+            </unit-input>
+            <unit-input 
+                type='brim'
+                value='[[pan.brimHeight]]' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                no-input 
+                title='Brim Height' 
+                details='The overfilled limit.'>
+            </unit-input>
+        </iron-selector>
+        </div>
+      
+      <div id='info-container'>
+        
+        <div class='card text'>
+          <div class='title'>Fill Height</div>
+          <div class='description'>
+            The Fill Height of the coating pan is used to determine the range of volumes. The brim height sets the maxiumu volume
+            of product before material falls out of the pan. The max working volume is estimated as 1" from the brim height. This allows
+            room for the tablets to tumble without falling out. The min working volume is estimated based on the baffle height. It is recommend
+            the product fill be higher than the baffle.
+          </div>
+        </div>
+       
+        <div class='card text highlight'>
+          <div class='title'>Batch Weight</div>
+          <div class='description'>
+            To convert coating pan volumes to batch weight checkout the 
+            batch size section. In this section provide a bulk density and you 
+            can see the recommend range of batch weight and more.
+          </div>
+          <paper-button>Batch Size</paper-button>
+        </div>
+        
+      </div> 
+      
+      
+    </div>  
     
   </template>
 
@@ -181,26 +244,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return {
           pan: {type: Object, statePath: 'pan'},
           volumeUnits: {type: String, value: "l"},
-          volumeSelected: {type: String, value: "range"},
+          lengthUnits: {type: String, value: 'in'},
+          volumeSelected: {type: String, value: "max"},
           chart: {type: Object},
           margin: {type: Object, value: function() {
               return {top: 20, right: 20, bottom: 50, left: 50};
           }},
           chartHeight: {type: Number},
           chartWidth: {type: Number},
-          xScale: {type: Object, computed: '_computeXScale(chartWidth, pan.brimVolume)'},
-          yScale: {type: Object, computed: '_computeYScale(chartHeight, pan.brimHeight)'},
+          xScale: {type: Object, computed: '_computeXScale(chartWidth, pan.brimHeight)'},
+          yScale: {type: Object, computed: '_computeYScale(chartHeight, pan.brimVolume)'},
           d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
           d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, chartHeight)'}
         };
       }
       
-      _computeXScale(chartWidth, brimVolume) {
-          let max = this._convertToLiters(brimVolume) * 1.1;
+      _computeXScale(chartWidth, brim) {
+          let max = this._convertToInches(brim) * 1.1;
           return d3.scaleLinear().range([0, chartWidth]).domain([0, max]).nice();
       }
-      _computeYScale(chartHeight, brimHeight) {
-          let max = this._convertToInches(brimHeight) * 1.1;
+      _computeYScale(chartHeight, brim) {
+          let max = this._convertToLiters(brim) * 1.1;
           return d3.scaleLinear().range([chartHeight, 0]).domain([0, max]).nice();
       }
       _computeD3Line(xScale, yScale) {
@@ -226,6 +290,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ];
       }
       
+      upateChart() {
+        
+      }
       _initChart(margin, height, width) {
           if(!margin || !height || !width) {
               return;
@@ -265,10 +332,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // loop through different volumes and store the volume and height values
           for(var i=0; i < pan.brimVolume; i = i + step) {
               p.fillVolume = i;
-              vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+              vals.push({y: this._convertToLiters(p.fillVolume), x: this._convertToInches(p.fillHeight)});
           }
           // finally store the max values 
-          vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+          vals.push({y: this._convertToLiters(pan.brimVolume), x: this._convertToInches(pan.brimHeight)});
           
           // Add the line
           let lines = chart.select('.total-volume.line').data([vals]);
@@ -294,19 +361,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           
           switch(volumeSelected) {
             case 'min': 
-              vals.push({x: 0, y: this._convertToInches(pan.minFillHeight)});
-              vals.push({x: this._convertToLiters(pan.minFillVolume), y: this._convertToInches(pan.minFillHeight)});
+              vals.push({y: 0, x: this._convertToInches(pan.minFillHeight)});
+              vals.push({y: this._convertToLiters(pan.minFillVolume), x: this._convertToInches(pan.minFillHeight)});
               break;
             case 'max':
-              vals.push({x: 0, y: this._convertToInches(pan.maxFillHeight)});
-              vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+              vals.push({y: 0, x: this._convertToInches(pan.maxFillHeight)});
+              vals.push({y: this._convertToLiters(pan.maxFillVolume), x: this._convertToInches(pan.maxFillHeight)});
               break;
             case 'brim':
-              vals.push({x: 0, y: this._convertToInches(pan.brimHeight)});
-              vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+              vals.push({y: 0, x: this._convertToInches(pan.brimHeight)});
+              vals.push({y: this._convertToLiters(pan.brimVolume), x: this._convertToInches(pan.brimHeight)});
               break;
             default: 
-              vals.push({x: 0, y: 0});
+              vals.push({y: 0, x: 0});
               break;
           }
           
@@ -361,10 +428,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // loop through different volumes and store the volume and height values
           for(var i=limitLowVolume; i < limitVolume; i = i + step) {
               p.fillVolume = i;
-              vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+              vals.push({y: this._convertToLiters(p.fillVolume), x: this._convertToInches(p.fillHeight)});
           }
           // finally store the max values 
-          vals.push({x: this._convertToLiters(limitVolume), y: this._convertToInches(limitHeight)});
+          vals.push({y: this._convertToLiters(limitVolume), x: this._convertToInches(limitHeight)});
           
           // Add the line
           let lines = chart.select('.working-volume.line').data([vals]);
@@ -389,20 +456,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           
           switch(volumeSelected) {
             case 'min': 
-              vals.push({x: this._convertToLiters(pan.minFillVolume), y: this._convertToInches(pan.minFillHeight)});
+              vals.push({y: this._convertToLiters(pan.minFillVolume), x: this._convertToInches(pan.minFillHeight)});
               break;
             case 'max':
-              vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+              vals.push({y: this._convertToLiters(pan.maxFillVolume), x: this._convertToInches(pan.maxFillHeight)});
               break;
             case 'brim':
-              vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+              vals.push({y: this._convertToLiters(pan.brimVolume), x: this._convertToInches(pan.brimHeight)});
               break;
             case 'range':
-              vals.push({x: this._convertToLiters(pan.minFillVolume), y: this._convertToInches(pan.minFillHeight)});
-              vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+              vals.push({y: this._convertToLiters(pan.minFillVolume), x: this._convertToInches(pan.minFillHeight)});
+              vals.push({y: this._convertToLiters(pan.maxFillVolume), x: this._convertToInches(pan.maxFillHeight)});
               break;
             default: 
-              vals.push({x: 0, y: 0});
+              vals.push({y: 0, x: 0});
               break;
           }
           

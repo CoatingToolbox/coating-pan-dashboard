@@ -25,6 +25,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .dimension-label {
         flex-grow: 1;
       }
+      .chart {
+        flex-grow: 1;
+      }
       .graphic-container {
         display: flex;
         flex-grow: 1;
@@ -34,6 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #info-container {
         display: flex;
+        flex-grow: 1;
         margin-left: 16px;
         flex-direction: column;
         max-width: calc(33.33% - 8px);
@@ -47,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     </style>
         
-    <div class='card'>
+    <div class='card chart'>
       <div class='title'>Coating Pan Dimensions</div>
       <div class='graphic-container'>
         <coating-pan-graphic line-type='[[lineSelected]]'></coating-pan-graphic>

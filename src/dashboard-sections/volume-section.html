@@ -39,7 +39,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: flex;
         flex-direction: column;
         margin-left: 16px;
-        max-width: calc(50% - 8px);
+        max-width: calc(33.33% - 8px);
         flex-grow: 1;
       }
       .chart-card {
@@ -159,9 +159,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </g>
             </svg>
           </div>
-          <iron-selector selected='{{volumeSelected}}' attr-for-selected='type'>
+          <iron-selector selected='{{volumeSelected}}' attr-for-selected='volume'>
             <unit-input 
-                type='min'
+                volume='min'
                 value='[[pan.minFillHeight]]' 
                 type='length'
                 selected-units='{{lengthUnits}}' 
@@ -170,7 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 details='Baffle height or 70% of brim height.'>
             </unit-input>
             <unit-input 
-                type='max'
+                volume='max'
                 value='[[pan.maxFillHeight]]' 
                 type='length'
                 selected-units='{{lengthUnits}}' 
@@ -179,7 +179,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 details='1" from brim opening.'>
             </unit-input>
             <unit-input 
-                type='brim'
+                volume='brim'
                 value='[[pan.brimHeight]]' 
                 type='length'
                 selected-units='{{lengthUnits}}' 
@@ -290,9 +290,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ];
       }
       
-      upateChart() {
-        
-      }
       _initChart(margin, height, width) {
           if(!margin || !height || !width) {
               return;

@@ -14,8 +14,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="redux-mixin.html">
-<link rel="import" href="dashboard-sections/dimensions-section.html">
-<link rel="import" href="dashboard-sections/volume-section.html">
+<link rel="lazy-import" href="dashboard-sections/dimensions-section.html">
+<link rel="lazy-import" href="dashboard-sections/volume-section.html">
 
 <dom-module id="dashboard-page">
   <template>
@@ -108,18 +108,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class='text'>[[contact]]</div>
         </div>
         
-        <paper-tabs selected="{{selectedSection}}" scrollable hide-scroll-buttons>
-          <paper-tab>Dimensions</paper-tab>
-          <paper-tab>Volume</paper-tab>
-          <paper-tab>Batch Size</paper-tab>
-          <paper-tab>Pan Speed</paper-tab>
+        <paper-tabs selected="{{selectedSection}}" scrollable hide-scroll-buttons attr-for-selected='section'>
+          <paper-tab section='dimensions'>Dimensions</paper-tab>
+          <paper-tab section='volume'>Volume</paper-tab>
+          <paper-tab section='batch-size'>Batch Size</paper-tab>
+          <paper-tab section='pan-speed'>Pan Speed</paper-tab>
         </paper-tabs>
       </div>
     </div>
   
-    <iron-pages selected='[[selectedSection]]'>
-      <dimensions-section></dimensions-section>
-      <volume-section id='volumeSection'></volume-section>
+    <iron-pages selected='[[selectedSection]]' attr-for-selected='id'>
+      <dimensions-section id='dimensions'></dimensions-section>
+      <volume-section id='volume'></volume-section>
     </iron-pages>
     
   </template>
@@ -136,14 +136,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           company: { type: Object, statePath: 'pan.companyName'},
           location: { type: Object, statePath: 'pan.locationName'},
           contact: { type: Object, statePath: 'pan.contactName'},
-          selectedSection: {type: Number, value: 0, observer: '_sectionChanged'}
+          selectedSection: {type: Number, value: 'dimensions', observer: '_sectionChanged'}
         };
       }
       
-      _sectionChanged(newValue) {
-        switch(newValue) {
-          case 1:
-            this.$.volumeSection._setChartDimensions();
+      _sectionChanged(section) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('dashboard-sections/' + section + '-section.html');
+        Polymer.importHref(
+            resolvedPageUrl,
+            null,
+            null,
+            true);
+        switch(section) {
+          case 'volume':
+            this.$.volume._setChartDimensions();
+            break;
         }
       }
     }

@@ -9,19 +9,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="redux-mixin.html">
-<link rel="lazy-import" href="dashboard-sections/dimensions-section.html">
-<link rel="lazy-import" href="dashboard-sections/volume-section.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="elements/header-card.html">
+<link rel="lazy-import" href="dimension-page.html">
+<link rel="lazy-import" href="volume-page.html">
 
 <dom-module id="dashboard-page">
   <template>
     <style>
       :host {
         display: block;
+        padding-bottom: 48px;
       }
       #header {
         display: block;
@@ -34,125 +33,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                       var(--app-background-color) 0%,
                       var(--app-background-color) 100%);
       }
-      #card {
-        background-color: white;
-        border-radius: 4px;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
-        margin: 0px 32px;
-        padding: 16px 24px 0px 24px;
-      }
-      .title {
-        @apply --paper-font-display3;
+      #spinner-container {
         display: flex;
-        align-items: baseline;
-        margin-bottom: 24px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: 960px;
+        margin: 0px auto;
       }
-      .nickname {
-        margin-left: 16px;
+      paper-spinner {
+        margin: 48px;
+        display: none;
       }
-      .subtitle {
-        @apply --paper-font-subhead;
-        color: var(--app-primary-color);
-        margin-bottom: 8px;
-      }
-      .label {
-        display: flex;
-        align-items: baseline;
-        margin-left: 24px;
-      }
-      .label .description {
-        @apply --paper-font-body1;
-        color: var(--text-secondary-color);
-      }
-      .label .text {
-        @apply --paper-font-body2;
-        margin-left: 12px;
-      }
-      paper-tabs {
-        padding-top: 24px;
-        --paper-tabs-selection-bar-color: var(--app-primary-color);
-      }
-      @media(min-width: 960px) {
-        #card {
-          max-width: 960px;
-          margin: 0px auto;
-        }
-        iron-pages {
-          max-width: 1008px;
-          margin: 0px auto;
-        }
+      paper-spinner[active] {
+        display: inline-block;
+        --paper-spinner-color: var(--app-accent-color);
+        --paper-spinner-stroke-width: 5px;
       }
     </style>
     
     <div id='header'>
-      <div id='card'>
-        <div class='subtitle'>[[vendor]]</div>
-        
-        <div class='title'>
-          <div>[[equipment]]</div>
-          <div class='nickname'> - [[nickname]]</div>
-        </div>
-        
-        <div class='label'>
-          <div class='description'>COMPANY: </div>
-          <div class='text'>[[company]]</div>
-        </div>
-        <div class='label'>
-          <div class='description'>LOCATION: </div>
-          <div class='text'>[[location]]</div>
-        </div>
-        <div class='label'>
-          <div class='description'>CONTACT: </div>
-          <div class='text'>[[contact]]</div>
-        </div>
-        
-        <paper-tabs selected="{{selectedSection}}" scrollable hide-scroll-buttons attr-for-selected='section'>
-          <paper-tab section='dimensions'>Dimensions</paper-tab>
-          <paper-tab section='volume'>Volume</paper-tab>
-          <paper-tab section='batch-size'>Batch Size</paper-tab>
-          <paper-tab section='pan-speed'>Pan Speed</paper-tab>
-        </paper-tabs>
-      </div>
+      <header-card selected-page='{{page}}'></header-card>
     </div>
-  
-    <iron-pages selected='[[selectedSection]]' attr-for-selected='id'>
-      <dimensions-section id='dimensions'></dimensions-section>
-      <volume-section id='volume'></volume-section>
+    
+    <div id='spinner-container'>
+      <paper-spinner-lite id='spinner' active></paper-spinner-lite>
+    </div>
+    
+    <iron-pages selected='[[page]]' attr-for-selected='id'>
+      <dimension-page id='dimension'></dimension-page>
+      <volume-page id='volume'></volume-page>
     </iron-pages>
     
   </template>
 
   <script>
-    class DashboardPage extends ReduxMixin(Polymer.Element) {
+    class DashboardPage extends Polymer.Element {
       static get is() { return 'dashboard-page'; }
       
       static get properties() {
         return {
-          equipment: { type: Object, statePath: 'pan.equipmentName'},
-          vendor: { type: Object, statePath: 'pan.vendorName'},
-          nickname: { type: Object, statePath: 'pan.nickname'},
-          company: { type: Object, statePath: 'pan.companyName'},
-          location: { type: Object, statePath: 'pan.locationName'},
-          contact: { type: Object, statePath: 'pan.contactName'},
-          selectedSection: {type: Number, value: 'dimensions', observer: '_sectionChanged'}
+          page: {type: String, value: 'dimension', observer: '_pageChanged'}
         };
       }
-      
-      _sectionChanged(section) {
+      _pageChanged(page) {
+        let spin = this.$.spinner;
+        let off = () => {};
+        if(spin) {
+          spin.toggleAttribute('active', true);
+          off = () => {
+            spin.toggleAttribute('active', false);
+          };
+        } 
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('dashboard-sections/' + section + '-section.html');
+        let resolvedPageUrl = this.resolveUrl(page + '-page.html');
         Polymer.importHref(
-            resolvedPageUrl,
-            null,
-            null,
-            true);
-        switch(section) {
-          case 'volume':
-            this.$.volume._setChartDimensions();
-            break;
-        }
+          resolvedPageUrl, 
+          off, 
+          null, 
+          true);
       }
     }
 

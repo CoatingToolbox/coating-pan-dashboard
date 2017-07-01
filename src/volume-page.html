@@ -1,0 +1,75 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="elements/fill-height-card.html">
+<link rel="import" href="elements/volume-card.html">
+<link rel="import" href="elements/text-card.html">
+<link rel="import" href="elements/section-styles.html">
+
+<dom-module id="volume-page">
+  <template>
+    <style include='section-styles'>
+      
+      .vertical-layout {
+        margin-right: 16px;
+        max-width: calc(33.33% - 8px);
+      }
+      volume-card {
+        max-width: calc(33.33% - 10.66px);
+      }
+      volume-card + volume-card {
+        margin-left: 16px;
+      }
+      fill-height-card {
+        max-width: calc(66.66% - 8px);
+      }
+    </style>
+    
+    <div class='section-title'>Coating Pan Volume</div>
+    <div class='horizontal-layout' selected='{{volumeSelected}}'>
+      <volume-card label='Min Working' type='min'></volume-card>
+      <volume-card label='Max Working' type='max'></volume-card>
+      <volume-card label='Brim' type='brim'></volume-card>
+    </div>
+    
+    <div class='section-title'>Pan Heights</div>
+    <div class='horizontal-layout'>
+      <div class='vertical-layout'>
+        <text-card title='Heights and Volumes'>
+            <div class='text'>
+              The Fill Height of the coating pan is used to determine the range of volumes. The brim height sets the maxiumu volume
+              of product before material falls out of the pan. The max working volume is estimated as 1" from the brim height. This allows
+              room for the tablets to tumble without falling out. The min working volume is estimated based on the baffle height. It is recommend
+              the product fill be higher than the baffle.
+            </div>
+          </text-card>
+        <text-card class='highlight' title='Product Weight'>
+          <div class='text'>
+            To convert coating pan volumes to batch weight checkout the 
+            batch size section. In this section provide a bulk density and you 
+            can see the recommend range of batch weight and more.
+          </div>
+        </text-card>
+      </div>
+      <fill-height-card></fill-height-card>
+    </div>
+    
+  </template>
+
+  <script>
+    class VolumePage extends Polymer.Element {
+      static get is() { return 'volume-page'; }
+      
+    }
+
+    window.customElements.define(VolumePage.is, VolumePage);
+  </script>
+</dom-module>

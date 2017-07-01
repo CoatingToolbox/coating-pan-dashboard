@@ -1,0 +1,34 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="card-styles">
+  <template>
+    <style>
+      :host {
+        display: block;
+        flex-grow: 1;
+        background-color: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+      #title {
+        display: flex;
+        @apply --paper-font-subhead;
+        font-weight: 500;
+        padding: 16px;
+      }
+      unit-input {
+        border-left: 3px solid white;
+        min-width: 300px;
+      }
+      unit-input.iron-selected {
+        border-left: 3px solid var(--app-primary-color);
+      }
+      unit-input {
+        border-top: 1px solid var(--divider-color);
+      }
+    </style>
+  </template>
+</dom-module>

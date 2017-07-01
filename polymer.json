@@ -2,7 +2,9 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/dashboard-page.html"
+    "src/dashboard-page.html",
+    "src/dimension-page.html",
+    "src/volume-page.html"
   ],
   "builds": [
     { "preset": "es6-unbundled" }

@@ -1,0 +1,130 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../redux-mixin.html">
+
+<dom-module id='header-card'>
+    <template>
+        <style>
+            :host {
+                display: block;
+                background-color: white;
+                border-radius: 4px;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                            0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                            0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                margin: 0px 32px;
+            }
+              .title {
+                  @apply --paper-font-display3;
+                  display: flex;
+                  align-items: baseline;
+                  padding: 0px 24px 24px 24px;
+              }
+              .nickname {
+                  margin-left: 16px;
+              }
+              .subtitle {
+                  padding: 16px 24px 8px 24px;
+                  @apply --paper-font-subhead;
+                  color: var(--app-primary-color);
+                  margin-bottom: 8px;
+              }
+              .label {
+                  display: flex;
+                  align-items: baseline;
+                  padding: 0px 24px;
+                  margin-left: 24px;
+              }
+              .label .description {
+                  @apply --paper-font-body1;
+                  color: var(--text-secondary-color);
+              }
+              .label .text {
+                  @apply --paper-font-body2;
+                  margin-left: 12px;
+              }
+              paper-tabs {
+                  padding: 24px 24px 0px;
+                  --paper-tabs-selection-bar-color: var(--app-primary-color);
+              }
+              @media(min-width: 960px) {
+                :host {
+                  max-width: 960px;
+                  margin: 0px auto;
+                }
+              }
+        </style>
+        
+        <div class='subtitle'>[[vendor]]</div>
+        
+        <div class='title'>
+          <div>[[equipment]]</div>
+          <div class='nickname'> - [[nickname]]</div>
+        </div>
+        
+        <div class='label'>
+          <div class='description'>COMPANY: </div>
+          <div class='text'>[[company]]</div>
+        </div>
+        <div class='label'>
+          <div class='description'>LOCATION: </div>
+          <div class='text'>[[location]]</div>
+        </div>
+        <div class='label'>
+          <div class='description'>CONTACT: </div>
+          <div class='text'>[[contact]]</div>
+        </div>
+        
+        <paper-tabs selected="{{selectedPage}}" scrollable hide-scroll-buttons attr-for-selected='section'>
+          <paper-tab section='dimension'>Dimensions</paper-tab>
+          <paper-tab section='volume'>Volume</paper-tab>
+          <paper-tab section='batch-size'>Batch Size</paper-tab>
+          <paper-tab section='pan-speed'>Pan Speed</paper-tab>
+        </paper-tabs>
+        
+    </template>
+
+    <script>
+        class HeaderCard extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'header-card';
+            }
+
+            static get properties() {
+                return {
+                    equipment: {
+                        type: Object,
+                        statePath: 'pan.equipmentName'
+                    },
+                    vendor: {
+                        type: Object,
+                        statePath: 'pan.vendorName'
+                    },
+                    nickname: {
+                        type: Object,
+                        statePath: 'pan.nickname'
+                    },
+                    company: {
+                        type: Object,
+                        statePath: 'pan.companyName'
+                    },
+                    location: {
+                        type: Object,
+                        statePath: 'pan.locationName'
+                    },
+                    contact: {
+                        type: Object,
+                        statePath: 'pan.contactName'
+                    },
+                    selectedPage: {
+                        type: Number, 
+                        notify: true
+                    }
+                };
+            }
+        }
+        window.customElements.define(HeaderCard.is, HeaderCard);
+    </script>
+
+</dom-module>

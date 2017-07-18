@@ -9,25 +9,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="elements/batch-details-card.html">
+<link rel="import" href="elements/dimensions-card.html">
 <link rel="import" href="elements/section-styles.html">
 
-<dom-module id="batch-size-page">
+<dom-module id="design-page">
   <template>
-    <style include='section-styles'>
-      
-    </style>
+    <style include='section-styles'></style>
     
-    <batch-details-card></batch-details-card>
+    
+    <!--<div class='section-title'>Coating Pan Diagram</div>-->
+    <dimensions-card></dimensions-card>
+        
     
   </template>
 
   <script>
-    class BatchSizePage extends Polymer.Element {
-      static get is() { return 'batch-size-page'; }
-      
+    class DesignPage extends Polymer.Element {
+      static get is() { return 'design-page'; }
     }
 
-    window.customElements.define(BatchSizePage.is, BatchSizePage);
+    window.customElements.define(DesignPage.is, DesignPage);
   </script>
 </dom-module>

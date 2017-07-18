@@ -12,79 +12,98 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../redux-mixin.html">
 <link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
 <link rel="import" href="card-styles.html">
 
 <dom-module id="dimensions-card">
   <template>
     
     <style include='card-styles'>
-      
-      unit-input {
-        border-left: 3px solid white;
-        border-top: 1px solid var(--divider-color);
+      :host {
+        display: flex;
+        flex-direction: column;
       }
-      unit-input.iron-selected {
-        border-left: 3px solid var(--app-primary-color);
+      
+      #graphic-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-grow: 1;
+      }
+      #input-container {
+        margin: 8px 16px 16px 32px;
       }
     </style>
         
-    <div id='title'>Dimensions</div>
-    
-    <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
-      <unit-input 
-          dimen='pan-diameter'
-          value='[[diameter]]' 
-          type='length'
-          selected-units='{{lengthUnits}}' 
-          no-input 
-          title='Diameter' 
-          details='The diameter of the coating pan drum.'>
-      </unit-input>
-      <unit-input 
-          dimen='opening-diameter'
-          value='[[diameter]]' 
-          type='length'
-          selected-units='{{lengthUnits}}' 
-          no-input 
-          title='Opening' 
-          details='The diameter of the coating pan drum.'>
-      </unit-input>
-      <unit-input 
-          dimen='brim-height'
-          value='[[brimHeight]]' 
-          type='length'
-          selected-units='{{lengthUnits}}' 
-          no-input title='Brim Height' 
-          details='The height to the brim (pan opening).'>
-      </unit-input>
-      <unit-input 
-          dimen='brim-width'
-          value='[[brimWidth]]' 
-          type='length'
-          selected-units='{{lengthUnits}}' 
-          no-input 
-          title='Brim Width' 
-          details='The width of the pan at the brim height.'>
-      </unit-input>
-      <unit-input 
-          dimen='wall-width'
-          value='[[wallWidth]]' 
-          type='length'
-          selected-units='{{lengthUnits}}' 
-          no-input 
-          title='Wall Width' 
-          details='The width of the pan at the perforated wall.'>
-      </unit-input>
-      <unit-input 
-          dimen='side-wall'
-          value='[[sideWallLength]]' 
-          type='length'
-          selected-units='{{lengthUnits}}' 
-          no-input 
-          title='Side Wall' 
-          details='The width of the pan along the side wall.'>
-      </unit-input>
-    </iron-selector>
+    <div id='title'>Shape & Size</div>
+    <div id='description'>
+      A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
+      the diameter does not provide a useful way to compare the shape and size of different coating pans.
+      Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+      From these dimensions we can later explore batch size, pan speed and more.
+    </div>
+    <div id='content-container'>
+      <iron-selector id='input-container' selected='{{selected}}' attr-for-selected='dimen'>
+        <div id='subtitle-container'>
+          <!--<div>Dimensions - </div>-->
+          <i>Inputs</i>
+        </div>
+        <unit-input 
+            dimen='pan-diameter'
+            value='[[diameter]]' 
+            type='length'
+            selected-units='{{lengthUnits}}' 
+            title='Main Diameter' 
+            details='The diameter of the coating pan drum.'>
+        </unit-input>
+        <unit-input 
+            dimen='opening-diameter'
+            value='[[diameter]]' 
+            type='length'
+            selected-units='{{lengthUnits}}' 
+            title='Opening Diameter' 
+            details='The diameter of the coating pan drum.'>
+        </unit-input>
+        <unit-input 
+            dimen='brim-width'
+            value='[[brimWidth]]' 
+            type='length'
+            selected-units='{{lengthUnits}}' 
+            title='Brim Width' 
+            details='The width of the pan at the brim height.'>
+        </unit-input>
+        <unit-input 
+            dimen='wall-width'
+            value='[[wallWidth]]' 
+            type='length'
+            selected-units='{{lengthUnits}}' 
+            title='Wall Width' 
+            details='The width of the pan at the perforated wall.'>
+        </unit-input>
+        <!--<div class='subtitle'>Calculated</div>-->
+        <!--<unit-input -->
+        <!--    dimen='brim-height'-->
+        <!--    value='[[brimHeight]]' -->
+        <!--    type='length'-->
+        <!--    selected-units='{{lengthUnits}}' -->
+        <!--    no-input title='Brim Height' -->
+        <!--    details='The height to the brim (pan opening).'>-->
+        <!--</unit-input>-->
+        <!--<unit-input -->
+        <!--    dimen='side-wall'-->
+        <!--    value='[[sideWallLength]]' -->
+        <!--    type='length'-->
+        <!--    selected-units='{{lengthUnits}}' -->
+        <!--    no-input -->
+        <!--    title='Side Wall' -->
+        <!--    details='The width of the pan along the side wall.'>-->
+        <!--</unit-input>-->
+      </iron-selector>
+      <div id='graphic-container'>
+        <coating-pan-graphic line-type='[[selected]]'></coating-pan-graphic>
+        <coating-pan-graphic view='side' line-type='[[selected]]'></coating-pan-graphic>
+      </div>  
+    </div>
     
   </template>
 
@@ -98,8 +117,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           opening: {type: Number, statePath: 'pan.openingDiameter'},
           brimWidth: { type: Number, statePath: 'pan.brimWidth'},
           wallWidth: { type: Number, statePath: 'pan.wallWidth'},
-          sideWallLength: { type: Number, statePath: 'pan.brsideWallLengthimWidth'},
-          brimHeight: { type: Number, statePath: 'pan.brimHeight'},
           lengthUnits: {type: String, value: 'in'},
           selected: {type: String, notify: true, value: "pan-diameter"}
         };

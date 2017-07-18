@@ -12,7 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="elements/header-card.html">
-<link rel="lazy-import" href="overview-page.html">
+<link rel="lazy-import" href="design-page.html">
 <link rel="lazy-import" href="volume-page.html">
 <link rel="lazy-import" href="batch-size-page.html">
 
@@ -64,7 +64,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     
     <iron-pages selected='[[page]]' attr-for-selected='id'>
-      <overview-page id='overview'></overview-page>
+      <design-page id='design'></design-page>
       <volume-page id='volume'></volume-page>
       <batch-size-page id='batch-size'></batch-size-page>
     </iron-pages>
@@ -77,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       static get properties() {
         return {
-          page: {type: String, value: 'overview', observer: '_pageChanged'},
+          page: {type: String, value: 'design', observer: '_pageChanged'},
         };
       }
       

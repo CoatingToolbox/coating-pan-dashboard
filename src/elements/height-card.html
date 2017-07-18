@@ -1,0 +1,72 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="card-styles.html">
+
+<dom-module id="height-card">
+  <template>
+    
+    <style include='card-styles'></style>
+        
+    <div id='title'>Pan Height</div>
+    
+    <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
+      <unit-input 
+          dimen='pan-diameter'
+          value='[[diameter]]' 
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          no-input 
+          title='Diameter' 
+          details='The diameter of the coating pan drum.'>
+      </unit-input>
+      <unit-input 
+          dimen='opening-diameter'
+          value='[[diameter]]' 
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          no-input 
+          title='Opening' 
+          details='The diameter of the coating pan drum.'>
+      </unit-input>
+      <unit-input 
+          dimen='brim-height'
+          value='[[brimHeight]]' 
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          no-input title='Brim Height' 
+          details='The height to the brim (pan opening).'>
+      </unit-input>
+    </iron-selector>
+    
+  </template>
+
+  <script>
+    class HeightCard extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'height-card'; }
+      
+      static get properties() {
+        return {
+          diameter: { type: Number, statePath: 'pan.panDiameter'},
+          opening: {type: Number, statePath: 'pan.openingDiameter'},
+          brimHeight: { type: Number, statePath: 'pan.brimHeight'},
+          lengthUnits: {type: String, value: 'in'},
+          selected: {type: String, notify: true, value: ""}
+        };
+      }
+    }
+
+    window.customElements.define(HeightCard.is, HeightCard);
+  </script>
+</dom-module>

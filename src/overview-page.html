@@ -1,0 +1,78 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="elements/height-card.html">
+<link rel="import" href="elements/depth-card.html">
+<link rel="import" href="elements/pan-diagram-card.html">
+<link rel="import" href="elements/volume-card.html">
+<link rel="import" href="elements/section-styles.html">
+
+<dom-module id="overview-page">
+  <template>
+    <style include='section-styles'>
+      :host {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .main-column {
+        max-width: calc(66.6% - 8px);
+      }
+      .side-column {
+        max-width: calc(33.3% - 8px);
+      }
+      .flex-grow {
+        flex-grow: 1;
+      }
+      height-card,
+      depth-card{
+        max-width: calc(50% - 8px);
+      }
+      volume-card{
+        margin-bottom: var(--card-margin);
+      }
+    </style>
+    
+    <div class='vertical-layout main-column flex-grow'>
+        <div class='section-title'>Coating Pan Diagram</div>
+        <pan-diagram-card line-selected='[[lineSelected]]'></pan-diagram-card>
+        
+        <div class='section-title'>Dimensions</div>
+        <div class='horizontal-layout'>
+          <height-card selected='{{lineSelected}}'></height-card>
+          <depth-card selected='{{lineSelected}}'></depth-card>
+        </div>
+      </div>
+    
+    <div class='vertical-layout side-column flex-grow'>
+      <div class='section-title'>Estimated Volume</div>
+      <volume-card label='Min Working' type='min'></volume-card>
+      <volume-card label='Max Working' type='max'></volume-card>
+      <volume-card label='Brim' type='brim'></volume-card>
+    </div>
+    
+  </template>
+
+  <script>
+    class OverviewPage extends Polymer.Element {
+      static get is() { return 'overview-page'; }
+      
+      static get properties() {
+        return {
+          lineSelected: {type: String, value: 'pan-diameter'}
+        };
+      }
+      
+    }
+
+    window.customElements.define(OverviewPage.is, OverviewPage);
+  </script>
+</dom-module>

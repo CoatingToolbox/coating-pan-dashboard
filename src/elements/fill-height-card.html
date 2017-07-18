@@ -15,65 +15,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="unit-input.html">
 <link rel="import" href="d3-import.html">
 <link rel="import" href="card-styles.html">
+<link rel="import" href="chart-styles.html">
 
 <dom-module id="fill-height-card">
   <template>
     <style include='card-styles'></style>
     
-    <style>
-      #chart {
-          height: 100%;
-          min-height: 300px;
-          width: 100%;
-          max-height: 350px;
-          font-family: inherit;
-          font-size: 14px;
-          font-weight: 400;
-          letter-spacing: 0.011em;
-          line-height: 20px;
-          fill: var(--text-secondary-color);
-      }
-      .title {
-          text-anchor: middle;
-      }
-      .y.title {
-          transform: rotate(-90deg);
-      }
-      .axis text {
-          font-size: 12px;
-          font-weight: 200;
-          fill: var(--text-secondary-color);
-      }
-      .axis line,
-      .axis .domain {
-          stroke: var(--text-secondary-color);
-      }
-      .line {
-        fill: none;
-        stroke: var(--app-light-color);
-        stroke-width: 3px;
-        stroke-linecap: 'round';
-      }
-      .height.line {
-        stroke-dasharray: 10;
-        stroke: var(--divider-color);
-      }
-      .area {
-          fill: var(--divider-color);
-          fill-opacity: 0.1;
-      }
-      .working-volume.line {
-          stroke: var(--app-primary-color);
-      }
-      .working-volume.area {
-          fill: var(--text-primary-color);
-      }
-      circle {
-          stroke: var(--app-primary-color);
-          stroke-width: 4px;
-          fill: white;
-      }
-    </style>
+    <style include='chart-styles'></style>
     
     <svg id='chart'>
       <g class='chart'>
@@ -81,12 +29,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <g class='y axis'></g>
           <text class='x title'>Product Fill Height (inches)</text>
           <text class='y title'>Volume (liters)</text>
-          <path class='total-volume area'></path>
-          <path class='total-volume line'></path>
-          <path class='height line'></path>
-          <path class='working-volume area'></path>
-          <path class='working-volume line'></path>
-          <g class='volume-circles'></g>
+          <path class='total secondary area'></path>
+          <path class='total secondary line'></path>
+          <path class='height dotted secondary line'></path>
+          <path class='primary area'></path>
+          <path class='primary line'></path>
+          <circle class='circle'></circle>
       </g>
   </svg>
     
@@ -239,14 +187,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           vals.push({y: this._convertToLiters(pan.brimVolume), x: this._convertToInches(pan.brimHeight)});
           
           // Add the line
-          let lines = chart.select('.total-volume.line').data([vals]);
+          let lines = chart.select('.total.line').data([vals]);
           lines.enter()
               .merge(lines)
                   .attr("d", line);  
           lines.exit().remove();
                           
           // Add the area
-          let areas = chart.select('.total-volume.area').data([vals]);
+          let areas = chart.select('.total.area').data([vals]);
           areas.enter()
               .merge(areas)
                   .attr("d", area);  
@@ -335,14 +283,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           vals.push({y: this._convertToLiters(limitVolume), x: this._convertToInches(limitHeight)});
           
           // Add the line
-          let lines = chart.select('.working-volume.line').data([vals]);
+          let lines = chart.select('.primary.line').data([vals]);
           lines.enter()
               .merge(lines)
                   .attr("d", line);  
           lines.exit().remove();
                           
           // Add the area
-          let areas = chart.select('.working-volume.area').data([vals]);
+          let areas = chart.select('.primary.area').data([vals]);
           areas.enter()
               .merge(areas)
                   .attr("d", area);  
@@ -375,12 +323,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           
           // Add the dots
-          let circles = chart.select('.volume-circles').selectAll('circle').data(vals);
+          let circles = chart.select('.circle').data(vals);
           
           circles.enter()
                   .append('circle')
-                      .attr('r', 7)
+                      .attr('class', 'circle')
                   .merge(circles)
+                    .attr('r', 7)
                     .attr('cx', function(d) { return xScale(d.x);})
                     .attr('cy', function(d) { return yScale(d.y);});
           

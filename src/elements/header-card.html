@@ -76,9 +76,9 @@
           <div class='text'>[[contact]]</div>
         </div>
         
-        <paper-tabs selected="{{selectedPage}}" scrollable hide-scroll-buttons attr-for-selected='section'>
-          <paper-tab section='dimension'>Dimensions</paper-tab>
-          <paper-tab section='volume'>Volume</paper-tab>
+        <paper-tabs selected="[[selectedPage]]" scrollable hide-scroll-buttons attr-for-selected='section' on-selected-changed='_pageChanged'>
+          <paper-tab section='overview'>Overview</paper-tab>
+          <!--<paper-tab section='volume'>Volume</paper-tab>-->
           <paper-tab section='batch-size'>Batch Size</paper-tab>
           <paper-tab section='pan-speed'>Pan Speed</paper-tab>
         </paper-tabs>
@@ -122,6 +122,10 @@
                         notify: true
                     }
                 };
+            }
+            
+            _pageChanged(e) {
+                window.location = '#/dashboard/' + e.detail.value;
             }
         }
         window.customElements.define(HeaderCard.is, HeaderCard);

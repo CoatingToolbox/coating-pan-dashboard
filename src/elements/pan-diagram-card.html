@@ -1,0 +1,60 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="card-styles.html">
+
+<dom-module id="pan-diagram-card">
+  <template>
+    
+    <style include='card-styles'>
+      #graphic-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+      }
+      #title {
+        display: flex;
+        justify-content: space-around;
+        color: var(--text-secondary-color);
+        padding: 0px 0px 16px 0px;
+      }
+    </style>
+    
+    <div id='graphic-container'>
+      <coating-pan-graphic line-type='[[lineSelected]]'></coating-pan-graphic>
+      <coating-pan-graphic view='side' line-type='[[lineSelected]]'></coating-pan-graphic>
+    </div>
+    
+        
+    <div id='title'>
+      <div>Front View</div>
+      
+      <div>Side View</div>
+    </div>
+    
+  </template>
+
+  <script>
+    class PanDiagramCard extends Polymer.Element {
+      static get is() { return 'pan-diagram-card'; }
+      
+      static get properties() {
+        return {
+          lineSelected: {type: String, value: ""}
+        };
+      }
+    }
+
+    window.customElements.define(PanDiagramCard.is, PanDiagramCard);
+  </script>
+</dom-module>

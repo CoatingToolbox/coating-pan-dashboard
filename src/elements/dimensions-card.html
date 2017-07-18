@@ -12,29 +12,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../redux-mixin.html">
 <link rel="import" href="../elements/unit-input.html">
-<link rel="import" href="../elements/coating-pan-graphic.html">
 <link rel="import" href="card-styles.html">
 
-<dom-module id="dimension-card">
+<dom-module id="dimensions-card">
   <template>
     
     <style include='card-styles'>
-      #graphic-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-grow: 1;
+      
+      unit-input {
+        border-left: 3px solid white;
+        border-top: 1px solid var(--divider-color);
+      }
+      unit-input.iron-selected {
+        border-left: 3px solid var(--app-primary-color);
       }
     </style>
         
-    <div id='title'>Coating Pan Dimensions</div>
+    <div id='title'>Dimensions</div>
     
-    <div id='graphic-container'>
-      <coating-pan-graphic line-type='[[lineSelected]]'></coating-pan-graphic>
-      <coating-pan-graphic view='side' line-type='[[lineSelected]]'></coating-pan-graphic>
-    </div>
-    
-    <iron-selector selected='{{lineSelected}}' attr-for-selected='dimen'>
+    <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
       <unit-input 
           dimen='pan-diameter'
           value='[[diameter]]' 
@@ -45,13 +41,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           details='The diameter of the coating pan drum.'>
       </unit-input>
       <unit-input 
-          dimen='brim-width'
-          value='[[depth]]' 
+          dimen='opening-diameter'
+          value='[[diameter]]' 
           type='length'
           selected-units='{{lengthUnits}}' 
           no-input 
-          title='Brim Width' 
-          details='The width of the pan at the brim height.'>
+          title='Opening' 
+          details='The diameter of the coating pan drum.'>
       </unit-input>
       <unit-input 
           dimen='brim-height'
@@ -61,25 +57,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           no-input title='Brim Height' 
           details='The height to the brim (pan opening).'>
       </unit-input>
+      <unit-input 
+          dimen='brim-width'
+          value='[[brimWidth]]' 
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          no-input 
+          title='Brim Width' 
+          details='The width of the pan at the brim height.'>
+      </unit-input>
+      <unit-input 
+          dimen='wall-width'
+          value='[[wallWidth]]' 
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          no-input 
+          title='Wall Width' 
+          details='The width of the pan at the perforated wall.'>
+      </unit-input>
+      <unit-input 
+          dimen='side-wall'
+          value='[[sideWallLength]]' 
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          no-input 
+          title='Side Wall' 
+          details='The width of the pan along the side wall.'>
+      </unit-input>
     </iron-selector>
     
   </template>
 
   <script>
-    class DimensionCard extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'dimension-card'; }
+    class DimensionsCard extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'dimensions-card'; }
       
       static get properties() {
         return {
           diameter: { type: Number, statePath: 'pan.panDiameter'},
-          depth: { type: Number, statePath: 'pan.brimWidth'},
+          opening: {type: Number, statePath: 'pan.openingDiameter'},
+          brimWidth: { type: Number, statePath: 'pan.brimWidth'},
+          wallWidth: { type: Number, statePath: 'pan.wallWidth'},
+          sideWallLength: { type: Number, statePath: 'pan.brsideWallLengthimWidth'},
           brimHeight: { type: Number, statePath: 'pan.brimHeight'},
           lengthUnits: {type: String, value: 'in'},
-          lineSelected: {type: String, value: "pan-diameter"}
+          selected: {type: String, notify: true, value: "pan-diameter"}
         };
       }
     }
 
-    window.customElements.define(DimensionCard.is, DimensionCard);
+    window.customElements.define(DimensionsCard.is, DimensionsCard);
   </script>
 </dom-module>

@@ -1,0 +1,19 @@
+
+<link rel="import" href='../../bower_components/polymer/polymer-element/html'>
+<link rel="import" href="card-styles.html">
+<link rel="import" href="../redux-mixin.html">
+
+<dom-module id='density-card'>
+    <style include='card-styles'></style>
+    <template>
+        <div>Density Chart</div>
+    </template>
+    <script>
+        class DensityCard extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'density-card'; }
+        }
+        
+        window.customElements.define(DensityCard.is, DensityCard);
+        
+    </script>
+</dom-module>

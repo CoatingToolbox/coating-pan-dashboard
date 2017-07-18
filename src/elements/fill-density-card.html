@@ -1,93 +1,42 @@
 
 
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="d3-import.html">
-<link rel="import" href="redux-mixin.html">
-<link rel="import" href="../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
-<link rel="import" href="shared-card-style-module.html">
-<link rel="import" href="shared-chart-style-module.html">
+<link rel="import" href="../redux-mixin.html">
 <link rel="import" href="unit-input.html">
+<link rel="import" href="card-styles.html">
+<link rel="import" href="chart-styles.html">
 
 <dom-module id='fill-density-card'>
     <template>
-        <style include='shared-card-style-module'>
-            #value-container {
-                background-color: #f5f5f5;
-            }
-            
-            #graphic-container {
-                display: block;
-                position: relative;
-                background-color: white;
-                padding: 16px;
-                
-            }
-            
-            :host([horizontal-layout]) #graphic-container {
-                flex-grow: 3;
-                max-width: 75%;
-                width: 500px;
+        <style include='card-styles'></style>
+        <style include='chart-styles'>
+            .circle.fill-density {
+                stroke: var(--app-accent-color);
             }
         </style>
-        <style include='shared-chart-style-module'></style>
         
-        <div id='graphic-container'>
             
-            <div id='tooltip' class='hide'>
-                <div>Density</div>
-                <div>[[_convertToGMLString(fillDensity)]] g/ml</div>
-            </div>
-                
-            <svg id='chart' width='400'>
-                <g class='chart'>
-                    <g class='x axis'></g>
-                    <g class='y axis'></g>
-                    <text class='x title'>Product Density (g/ml)</text>
-                    <text class='y title'>Product Weight (kg)</text>
-                    <path class='line'></path>
-                    <g class='references'>
-                        <circle class='reference-point'></circle>
-                    </g>
-                    <circle class='highlight-stroke fill-density'  on-track='_trackDensity'></circle>
+        <div id='tooltip' class='hide'>
+            <div>Density</div>
+            <div>[[_convertToGMLString(fillDensity)]] g/ml</div>
+        </div>
+            
+        <svg id='chart' width='400'>
+            <g class='chart'>
+                <g class='x axis'></g>
+                <g class='y axis'></g>
+                <text class='x title'>Product Density (g/ml)</text>
+                <text class='y title'>Product Weight (kg)</text>
+                <path class='dotted line'></path>
+                <g class='references'>
+                    <circle class='circle'></circle>
+                    <text></text>
                 </g>
-            </svg>
-        </div>
-        
-        <div id='value-container'>
-            <div id='card-title'>Product Density and Weight</div>
-            <unit-input
-                value='[[fillDensity]]'
-                type='density'
-                selected-units='g/ml'
-                no-input
-                title='Product Density'
-                details='The bulk density of the product.'>
-            </unit-input>
-            <unit-input
-                value='[[fillWeight]]'
-                type='weight'
-                selected-units='[[weightUnits]]'
-                no-input
-                title='Product Fill Weight'
-                details='The weight of product based on product volume.'>
-            </unit-input>
-            <unit-input
-                value='[[maxWeight]]'
-                type='weight'
-                selected-units='[[weightUnits]]'
-                no-input
-                title='Max Pan Fill Weight'
-                details='The maximum fill weight based on pan recommendations.'>
-            </unit-input>
-            <unit-input
-                value='[[minWeight]]'
-                type='weight'
-                selected-units='[[weightUnits]]'
-                no-input
-                title='Min Pan Fill Weight'
-                details='The minimum fill weight based on pan recommendations.'>
-            </unit-input>
-        </div>
+                <circle class='circle fill-density'  on-track='_trackDensity'></circle>
+            </g>
+        </svg>
         
     </template>
     
@@ -117,7 +66,6 @@
             static get properties() {
                 return {
                     pan: {type: Object, statePath: 'pan'},
-                    horizontalLayout: {type: Boolean, reflectToAttribute: true},
                     weightUnits: {type: String, value: 'kg'},
                     minWeight: {type: Number, computed: '_computeWeight(pan.minFillVolume, fillDensity)'},
                     maxWeight: {type: Number, computed: '_computeWeight(pan.maxFillVolume, fillDensity)'},
@@ -251,9 +199,9 @@
                         
                 circle.exit().remove();
                 
-                let tooltip = d3.select(this.$.tooltip)
-                                .data(vals)
-                                .style('transform', function(d) { return 'translateX(' + xScale(d.x) + 'px) translateY(' + (yScale(d.y) - 48) + 'px)';});
+                d3.select(this.$.tooltip)
+                    .data(vals)
+                    .style('transform', function(d) { return 'translateX(' + xScale(d.x) + 'px) translateY(' + (yScale(d.y) - 48) + 'px)';});
             }
             _updateReferencePoints(references, fillVolume, chart, xScale, yScale) {
                 if(!references || !fillVolume || !chart || !xScale || !yScale) {
@@ -273,22 +221,21 @@
                     });
                 });
                 
-                let circles = chart.select('.references').selectAll('.reference-point').data(vals);
+                let circles = chart.select('.references').selectAll('circle').data(vals);
                 
                 circles.enter()
                             .append('circle')
-                            .attr('class', 'reference-point')
+                            .attr('class', 'circle')
                         .merge(circles)
                             .attr('r', 4)
                             .attr('cx', function(d) { return xScale(d.x); })
                             .attr('cy', function(d) { return yScale(d.y); });
                 circles.exit().remove();
                 
-                let text = chart.select('.references').selectAll('.reference-text').data(vals);
+                let text = chart.select('.references').selectAll('text').data(vals);
                 
                 text.enter()
                     .append('text')
-                        .attr('class', 'reference-text')
                     .merge(text)
                         .attr('x', function(d) { return xScale(d.x) + 8; })
                         .attr('y', function(d) { return yScale(d.y) + 16; })
@@ -297,6 +244,8 @@
         
             }
             _trackDensity(e) {
+                // prevent event bubble and selection during drag.
+                e.preventDefault();
                 switch(e.detail.state) {
                     case 'start':
                         this.startDensity = this.fillDensity;

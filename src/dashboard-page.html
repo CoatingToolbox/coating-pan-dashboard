@@ -12,8 +12,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="elements/header-card.html">
-<link rel="lazy-import" href="dimension-page.html">
+<link rel="lazy-import" href="overview-page.html">
 <link rel="lazy-import" href="volume-page.html">
+<link rel="lazy-import" href="batch-size-page.html">
 
 <dom-module id="dashboard-page">
   <template>
@@ -41,19 +42,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         max-width: 960px;
         margin: 0px auto;
       }
-      paper-spinner {
-        margin: 48px;
+      paper-spinner-lite {
         display: none;
       }
-      paper-spinner[active] {
+      paper-spinner-lite[active] {
         display: inline-block;
+        width: 48px;
+        height: 48px;
+        margin: 48px;
         --paper-spinner-color: var(--app-accent-color);
-        --paper-spinner-stroke-width: 5px;
+        --paper-spinner-stroke-width: 4px;
       }
     </style>
     
     <div id='header'>
-      <header-card selected-page='{{page}}'></header-card>
+      <header-card selected-page='[[page]]'></header-card>
     </div>
     
     <div id='spinner-container'>
@@ -61,8 +64,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     
     <iron-pages selected='[[page]]' attr-for-selected='id'>
-      <dimension-page id='dimension'></dimension-page>
+      <overview-page id='overview'></overview-page>
       <volume-page id='volume'></volume-page>
+      <batch-size-page id='batch-size'></batch-size-page>
     </iron-pages>
     
   </template>
@@ -73,9 +77,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       static get properties() {
         return {
-          page: {type: String, value: 'dimension', observer: '_pageChanged'}
+          page: {type: String, value: 'overview', observer: '_pageChanged'},
         };
       }
+      
       _pageChanged(page) {
         let spin = this.$.spinner;
         let off = () => {};

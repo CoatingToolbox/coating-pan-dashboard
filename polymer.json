@@ -3,7 +3,7 @@
   "shell": "src/my-app.html",
   "fragments": [
     "src/dashboard-page.html",
-    "src/dimension-page.html",
+    "src/overview-page.html",
     "src/volume-page.html"
   ],
   "builds": [

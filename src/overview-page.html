@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="elements/depth-card.html">
 <link rel="import" href="elements/pan-diagram-card.html">
 <link rel="import" href="elements/volume-card.html">
+<link rel="import" href="elements/donut-card.html">
 <link rel="import" href="elements/section-styles.html">
 
 <dom-module id="overview-page">
@@ -29,13 +30,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .side-column {
         max-width: calc(33.3% - 8px);
       }
-      .flex-grow {
-        flex-grow: 1;
-      }
       height-card,
       depth-card{
         max-width: calc(50% - 8px);
       }
+      donut-card,
       volume-card{
         margin-bottom: var(--card-margin);
       }
@@ -44,7 +43,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class='vertical-layout main-column flex-grow'>
         <div class='section-title'>Coating Pan Diagram</div>
         <pan-diagram-card line-selected='[[lineSelected]]'></pan-diagram-card>
-        
         <div class='section-title'>Dimensions</div>
         <div class='horizontal-layout'>
           <height-card selected='{{lineSelected}}'></height-card>

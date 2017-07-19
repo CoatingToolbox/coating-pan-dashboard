@@ -3,8 +3,11 @@
   "shell": "src/my-app.html",
   "fragments": [
     "src/dashboard-page.html",
-    "src/design-page.html",
-    "src/batch-size-page.html"
+    "cards/pan-dimensions-card.html",
+    "cards/batch-info-card.html",
+    "cards/pan-volume-card.html",
+    "cards/pan-fill-card.html",
+    "cards/header-card.html"
   ],
   "builds": [
     { "preset": "es6-unbundled" }

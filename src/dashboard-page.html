@@ -11,10 +11,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
-<link rel="import" href="elements/header-card.html">
-<link rel="lazy-import" href="design-page.html">
-<link rel="lazy-import" href="volume-page.html">
-<link rel="lazy-import" href="batch-size-page.html">
+<link rel="import" href="cards/header-card.html">
+<link rel="import" href="cards/pan-dimensions-card.html">
+<link rel="import" href="cards/pan-volume-card.html">
+<link rel="lazy-import" href="cards/batch-info-card.html">
+<link rel="lazy-import" href="cards/pan-fill-card.html">
+<link rel="lazy-import" href="cards/pan-speed-card.html">
 
 <dom-module id="dashboard-page">
   <template>
@@ -64,9 +66,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     
     <iron-pages selected='[[page]]' attr-for-selected='id'>
-      <design-page id='design'></design-page>
-      <volume-page id='volume'></volume-page>
-      <batch-size-page id='batch-size'></batch-size-page>
+      <pan-dimensions-card id='pan-dimensions'></pan-dimensions-card>
+      <pan-volume-card id='pan-volume'></pan-volume-card>
+      <batch-info-card id='batch-info'></batch-info-card>
+      <pan-fill-card id='pan-fill'></pan-fill-card>
+      <pan-speed-card id='pan-speed'></pan-speed-card>
     </iron-pages>
     
   </template>
@@ -77,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       static get properties() {
         return {
-          page: {type: String, value: 'design', observer: '_pageChanged'},
+          page: {type: String, value: 'pan-dimensions', observer: '_pageChanged'},
         };
       }
       
@@ -91,7 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           };
         } 
         // Load page import on demand. Show 404 page if fails
-        let resolvedPageUrl = this.resolveUrl(page + '-page.html');
+        let resolvedPageUrl = this.resolveUrl('cards/' + page + '-card.html');
         Polymer.importHref(
           resolvedPageUrl, 
           off, 

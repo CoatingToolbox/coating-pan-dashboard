@@ -1,0 +1,289 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="chart-styles.html">
+
+<dom-module id='pan-volume-chart'>
+    <template>
+        <style include='chart-styles'>
+            :host {
+                background-color: #FAFAFA;
+                border-radius: 6px;
+                margin: 24px;
+            }
+        </style>
+        
+        <div id='tooltip' class='hide'>
+            <div>Batch Volume</div>
+            <div>[[_convertToLitersString(pan.fillVolume)]] L</div>
+        </div>
+        
+        <svg id='chart'>
+                <g class='chart'>
+                    <g class='x axis'></g>
+                    <g class='y axis'></g>
+                    <text class='x title'>Product Volume (liters)</text>
+                    <text class='y title'>Product Depth (inches)</text>
+                    <path class='total-volume area'></path>
+                    <path class='total-volume line'></path>
+                    <path class='working-volume area'></path>
+                    <path class='working-volume line'></path>
+                    <g class='volume-circles'></g>
+                    <circle r='7' class='batch-volume' on-track='_trackBatch'></circle>
+                </g>
+            </svg>
+        
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer */
+        class PanVolumeChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+            
+            static get is() { return 'pan-volume-chart'; }
+            
+            connectedCallback() {
+                super.connectedCallback();
+                window.addEventListener('resize', () => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                window.requestAnimationFrame(() => {
+                    this.height = this.$.chart.clientHeight - this.margin.top - this.margin.bottom;
+                    this.width = this.$.chart.clientWidth - this.margin.left - this.margin.right;
+                });
+            }
+            
+            static get properties() {
+                return {
+                    pan: {type: Object, statePath: 'pan'},
+                    volumeUnits: {type: String, value: "l"},
+                    volumeSelected: {type: String, value: "brim"},
+                    horizontalLayout: {type: Boolean, value: true, reflectToAttribute: true},
+                    chart: {type: Object},
+                    margin: {type: Object, value: function() {
+                        return {top: 20, right: 20, bottom: 50, left: 50};
+                    }},
+                    height: {type: Number},
+                    width: {type: Number},
+                    xScale: {type: Object, computed: '_computeXScale(width, pan.brimVolume)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, pan.brimHeight)'},
+                    d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
+                    d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
+                };
+            }
+            _computeXScale(chartWidth, brimVolume) {
+                let max = this._convertToLiters(brimVolume) * 1.1;
+                return d3.scaleLinear().range([0, chartWidth]).domain([0, max]).nice();
+            }
+            _computeYScale(chartHeight, brimHeight) {
+                let max = this._convertToInches(brimHeight) * 1.1;
+                return d3.scaleLinear().range([chartHeight, 0]).domain([0, max]).nice();
+            }
+            _computeD3Line(xScale, yScale) {
+                return d3.line()
+                    .x(function(d) { return xScale(d.x); })
+                    .y(function(d) { return yScale(d.y); })
+                    .curve(d3.curveNatural);
+            }
+            _computeD3Area(xScale, yScale, height) {
+                return d3.area()
+                         .x(function(d) { return xScale(d.x); })
+                         .y0(height)
+                         .y1(function(d) { return yScale(d.y); }); 
+            }
+        
+            static get observers() {
+                return [
+                    '_initChart(margin, height, width)',
+                    '_updateAxis(xScale, yScale, chart)',
+                    '_updateTotalVolume(pan, chart, d3Line, d3Area)',
+                    '_updateWorkingVolume(pan, chart, d3Line, d3Area)',
+                    '_updateVolumePoints(pan, chart, xScale, yScale)',
+                    '_updateBatchPoint(pan, pan.fillVolume, chart, xScale, yScale)'
+                ];
+            }
+            
+            _initChart(margin, height, width) {
+                if(!margin || !height || !width) {
+                    return;
+                }
+                let chart = d3.select(this.$.chart)
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                .select(".chart")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                                
+                chart.select(".x.axis").attr("transform", "translate(0," + height + ")");
+                chart.select(".x.title").attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 25) + ")");
+                chart.select(".y.title").attr("y", 0 - margin.left).attr("x",0 - (height / 2)).attr("dy", "1em");      
+                
+                // set the chart object
+                this.chart = chart;
+            }
+            _updateAxis(xScale, yScale, chart) {
+                if(!xScale || !yScale || !chart) {
+                    return;
+                }
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+                chart.select(".y.axis").call(d3.axisLeft(yScale));  
+            }
+            _updateTotalVolume(pan, chart, line, area) {
+                if(!pan || !chart || !line || !area) {
+                    return;
+                }
+                
+                // create a new coating pan object to make changes to
+                let p = Object.assign(new CoatingPan(), pan);
+                
+                // initiate an empty array to store values in for loop
+                let vals = [];
+                let step = pan.brimVolume / 25;
+                
+                // loop through different volumes and store the volume and height values
+                for(var i=0; i < pan.brimVolume; i = i + step) {
+                    p.fillVolume = i;
+                    vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+                }
+                // finally store the max values 
+                vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+                
+                // Add the line
+                let lines = chart.select('.total-volume.line').data([vals]);
+                lines.enter()
+                    .merge(lines)
+                        .attr("d", line);  
+                lines.exit().remove();
+                                
+                // Add the area
+                let areas = chart.select('.total-volume.area').data([vals]);
+                areas.enter()
+                    .merge(areas)
+                        .attr("d", area);  
+                areas.exit().remove();
+            }
+            _updateWorkingVolume(pan, chart, line, area) {
+                if(!pan || !chart || !line || !area) {
+                    return;
+                }
+                
+                // create a new coating pan object to make changes to
+                let p = Object.assign(new CoatingPan(), pan);
+                
+                // initiate an empty array to store values in for loop
+                let vals = [];
+                let step = (pan.maxFillVolume - pan.minFillVolume) / 10;
+                
+                // loop through different volumes and store the volume and height values
+                for(var i=pan.minFillVolume; i < pan.maxFillVolume; i = i + step) {
+                    p.fillVolume = i;
+                    vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+                }
+                // finally store the max values 
+                vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+                
+                // Add the line
+                let lines = chart.select('.working-volume.line').data([vals]);
+                lines.enter()
+                    .merge(lines)
+                        .attr("d", line);  
+                lines.exit().remove();
+                                
+                // Add the area
+                let areas = chart.select('.working-volume.area').data([vals]);
+                areas.enter()
+                    .merge(areas)
+                        .attr("d", area);  
+                areas.exit().remove();
+            }
+            _updateVolumePoints(pan, chart, xScale, yScale) {
+                if(!pan || !chart || !xScale || !yScale) {
+                    return;
+                }
+                let vals = [];
+                vals.push({x: this._convertToLiters(pan.minFillVolume), y: this._convertToInches(pan.minFillHeight)});
+                vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+                vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+                
+                // Add the dots
+                let circles = chart.select('.volume-circles').selectAll('circle').data(vals);
+                
+                circles.enter()
+                        .append('circle')
+                            .attr('r', 7)
+                        .merge(circles)
+                          .attr('cx', function(d) { return xScale(d.x);})
+                          .attr('cy', function(d) { return yScale(d.y);});
+                
+                circles.exit().remove();
+            }
+            _updateBatchPoint(pan, fillVolume, chart, xScale, yScale) {
+                if(!pan || !chart || !xScale || !yScale) {
+                    return;
+                }
+                let vals = [];
+                vals.push({x: this._convertToLiters(fillVolume), y: this._convertToInches(pan.fillHeight)});
+                
+                // Add the dots
+                let circles = chart.selectAll('circle.batch-volume').data(vals);
+                
+                circles.enter()
+                        .append('circle')
+                            .attr('class', 'batch-volume')
+                        .merge(circles)
+                          .attr('r', 7)
+                          .attr('cx', function(d) { return xScale(d.x);})
+                          .attr('cy', function(d) { return yScale(d.y);});
+                    
+                circles.exit().remove();
+                
+                
+                let tooltip = d3.select(this.$.tooltip)
+                                .data(vals)
+                                    .style('transform', function(d) { return 'translateX(' + xScale(d.x) + 'px) translateY(' + (yScale(d.y) - 48) + 'px)';});
+                
+            }
+            
+            _trackBatch(e) {
+                switch(e.detail.state) {
+                    case 'start':
+                        this.startFill = this.pan.fillVolume;
+                        this.$.tooltip.classList.remove('hide');
+                        break;
+                    case 'track':
+                        let fill = this.startFill + (this.xScale.invert(e.detail.dx) * 0.001);
+                        this.set('pan.fillVolume', fill);
+                        break;
+                    case 'end':
+                        this.$.tooltip.classList.add('hide');
+                        this.dispatch({
+                            type: "SET_PAN", 
+                            value: this.pan
+                        });
+                        break;
+                }
+            }
+            
+            _convertToInches(val) {
+                return val * 39.37;
+            }
+            _convertToLiters(val) {
+                return (val / 0.001) ;
+          }
+            _convertToLitersString(val) {
+                return this._convertToLiters(val).toFixed(1);
+            }
+        }
+        
+        window.customElements.define(PanVolumeChart.is, PanVolumeChart);
+        
+    </script>
+</dom-module>

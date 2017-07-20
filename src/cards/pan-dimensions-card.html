@@ -50,7 +50,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
         <unit-input 
             dimen='pan-diameter'
-            value='[[diameter]]' 
+            value='[[pan.panDiameter]]' 
+            on-value-changed='_setPanDiameter'
             type='length'
             selected-units='{{lengthUnits}}' 
             title='Main Diameter' 
@@ -58,7 +59,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </unit-input>
         <unit-input 
             dimen='opening-diameter'
-            value='[[diameter]]' 
+            value='[[pan.openingDiameter]]' 
+            on-value-changed='_setOpeningDiameter'
             type='length'
             selected-units='{{lengthUnits}}' 
             title='Opening Diameter' 
@@ -66,7 +68,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </unit-input>
         <unit-input 
             dimen='brim-width'
-            value='[[brimWidth]]' 
+            value='[[pan.brimWidth]]' 
+            on-value-changed='_setBrimWidth'
             type='length'
             selected-units='{{lengthUnits}}' 
             title='Brim Width' 
@@ -74,7 +77,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </unit-input>
         <unit-input 
             dimen='wall-width'
-            value='[[wallWidth]]' 
+            value='[[pan.wallWidth]]'
+            on-value-changed='_setWallWidth' 
             type='length'
             selected-units='{{lengthUnits}}' 
             title='Wall Width' 
@@ -95,14 +99,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       static get properties() {
         return {
-          diameter: { type: Number, statePath: 'pan.panDiameter'},
-          opening: {type: Number, statePath: 'pan.openingDiameter'},
-          brimWidth: { type: Number, statePath: 'pan.brimWidth'},
-          wallWidth: { type: Number, statePath: 'pan.wallWidth'},
+          pan: {type: Object, statePath: 'pan'},
           lengthUnits: {type: String, value: 'in'},
           selected: {type: String, value: "pan-diameter"}
         };
       }
+      
+      _setPanDiameter(e) {
+        this.pan.panDiameter = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setOpeningDiameter(e) {
+        this.pan.openingDiameter = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setBrimWidth(e) {
+        this.pan.brimWidth = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setWallWidth(e) {
+        this.pan.wallWidth = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
     }
 
     window.customElements.define(PanDimensionsCard.is, PanDimensionsCard);

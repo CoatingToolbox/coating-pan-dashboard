@@ -10,8 +10,8 @@
     <template>
         <style include='chart-styles'>
         :host {
-            background-color: #f8fbfc;
-            border-radius: 6px;
+            /*background-color: #f8fbfc;*/
+            /*border-radius: 6px;*/
             margin: 24px;
         }
         .circle.fill-density {
@@ -21,7 +21,7 @@
             
         <div id='tooltip' class='hide'>
             <div>Density</div>
-            <div>[[_convertToGMLString(fillDensity)]] g/ml</div>
+            <div>[[_convertToGMLString(pan.fillDensity)]] g/ml</div>
         </div>
             
         <svg id='chart' width='400'>
@@ -68,10 +68,9 @@
                 return {
                     pan: {type: Object, statePath: 'pan'},
                     weightUnits: {type: String, value: 'kg'},
-                    minWeight: {type: Number, computed: '_computeWeight(pan.minFillVolume, fillDensity)'},
-                    maxWeight: {type: Number, computed: '_computeWeight(pan.maxFillVolume, fillDensity)'},
-                    fillWeight: {type: Number, computed: '_computeWeight(pan.fillVolume, fillDensity)'},
-                    fillDensity: {type: Number, notify: true, value: 760000},
+                    minWeight: {type: Number, computed: '_computeWeight(pan.minFillVolume, pan.fillDensity)'},
+                    maxWeight: {type: Number, computed: '_computeWeight(pan.maxFillVolume, pan.fillDensity)'},
+                    fillWeight: {type: Number, computed: '_computeWeight(pan.fillVolume, pan.fillDensity)'},
                     chart: {type: Object},
                     margin: {type: Object, value: function() {
                         return {top: 5, right: 25, bottom: 50, left: 25};
@@ -126,7 +125,7 @@
                     '_initChart(margin, height, width)',
                     '_updateAxis(xScale, yScale, chart)',
                     '_updateLine(pan.fillVolume, chart, d3Line)',
-                    '_updateFillDensityPoint(fillDensity, pan.fillVolume, chart, xScale, yScale)',
+                    '_updateFillDensityPoint(pan.fillDensity, pan.fillVolume, chart, xScale, yScale)',
                     '_updateReferencePoints(references, pan.fillVolume, chart, xScale, yScale)'
                 ];
             }
@@ -249,12 +248,16 @@
                 e.preventDefault();
                 switch(e.detail.state) {
                     case 'start':
-                        this.startDensity = this.fillDensity;
+                        this.startDensity = this.pan.fillDensity;
                         this.$.tooltip.classList.remove('hide');
                         break;
                     case 'track':
-                        let density = this.startDensity + (this.xScale.invert(e.detail.dx) * 1e+6);
-                        this.set('fillDensity', density);
+                        this.pan.fillDensity = this.startDensity + (this.xScale.invert(e.detail.dx) * 1e+6);
+                        this.dispatch({
+                            type: "SET_PAN",
+                            value: this.pan
+                        });
+                        // this.set('fillDensity', density);
                         break;
                     case 'end':
                         this.$.tooltip.classList.add('hide');

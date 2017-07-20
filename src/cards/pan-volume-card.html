@@ -51,8 +51,13 @@
                 color: var(--text-secondary-color);
                 
             }
+            volume-donut-chart[type="min"] {
+                --chart-color: var(--app-light-color);
+            }
+            volume-donut-chart[type="brim"] {
+                --chart-color: var(--app-dark-color);
+            }
         </style>
-        
         
         <div id='title'>Pan Volumes</div>
         
@@ -61,6 +66,7 @@
             There are several coating pan volumes to consider but each is determined 
             by the desired fill height.
         </div>
+        
         <div class='graphic-container'>
             <volume-donut-chart type='min' label='Min Working'></volume-donut-chart>
             <volume-donut-chart type='max' label='Max Working'></volume-donut-chart>

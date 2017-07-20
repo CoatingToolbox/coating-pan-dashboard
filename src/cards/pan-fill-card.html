@@ -9,10 +9,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../redux-mixin.html">
 <link rel="import" href="../elements/unit-input.html">
-<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../charts/pan-fill-chart.html">
 <link rel="import" href="card-styles.html">
 
 <dom-module id="pan-fill-card">
@@ -35,7 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
         
-    <div id='title'>Shape & Size</div>
+    <div id='title'>Product Fill</div>
     <div id='description'>
       A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
       the diameter does not provide a useful way to compare the shape and size of different coating pans.
@@ -43,48 +42,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       From these dimensions we can later explore batch size, pan speed and more.
     </div>
     <div id='content-container'>
-      <iron-selector id='input-container' selected='{{selected}}' attr-for-selected='dimen'>
+      <div id='input-container'>
         <div id='subtitle-container'>
           <!--<div>Dimensions - </div>-->
           <i>Inputs</i>
         </div>
         <unit-input 
-            dimen='pan-diameter'
-            value='[[diameter]]' 
+            value='[[pan.fillHeight]]' 
+            on-value-changed='_setFillHeight'
             type='length'
-            selected-units='{{lengthUnits}}' 
-            title='Main Diameter' 
-            details='The diameter of the coating pan drum.'>
+            selected-units='in' 
+            title='Product Bed Height' 
+            details='The maxiumum height of the bed.'>
         </unit-input>
         <unit-input 
-            dimen='opening-diameter'
-            value='[[diameter]]' 
-            type='length'
-            selected-units='{{lengthUnits}}' 
-            title='Opening Diameter' 
-            details='The diameter of the coating pan drum.'>
+            value='[[pan.fillVolume]]' 
+            on-value-changed='_setFillVolume'
+            type='volume'
+            selected-units='l' 
+            title='Product Volume' 
+            details='The volume of product.'>
         </unit-input>
         <unit-input 
-            dimen='brim-width'
-            value='[[brimWidth]]' 
-            type='length'
-            selected-units='{{lengthUnits}}' 
-            title='Brim Width' 
-            details='The width of the pan at the brim height.'>
+            value='[[pan.fillWeight]]' 
+            on-value-changed='_setFillWeight'
+            type='weight'
+            selected-units='kg' 
+            title='Product Weight' 
+            details='The weight of the product.'>
         </unit-input>
         <unit-input 
-            dimen='wall-width'
-            value='[[wallWidth]]' 
-            type='length'
-            selected-units='{{lengthUnits}}' 
-            title='Wall Width' 
-            details='The width of the pan at the perforated wall.'>
+            value='[[pan.fillCount]]' 
+            on-value-changed='_setFillCount'
+            type='count'
+            selected-units='tablets' 
+            title='Unit Count' 
+            details='The number of units to be coated.'>
         </unit-input>
-      </iron-selector>
-      <div id='graphic-container'>
-        <coating-pan-graphic line-type='[[selected]]'></coating-pan-graphic>
-        <coating-pan-graphic view='side' line-type='[[selected]]'></coating-pan-graphic>
-      </div>  
+        <div> is under filled [[pan.isUnderFilled]]</div>
+        <div> is over filled [[pan.isOverFilled]]</div>
+      </div>
+      <pan-fill-chart></pan-fill-chart> 
+      
     </div>
     
   </template>
@@ -95,13 +94,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       static get properties() {
         return {
-          diameter: { type: Number, statePath: 'pan.panDiameter'},
-          opening: {type: Number, statePath: 'pan.openingDiameter'},
-          brimWidth: { type: Number, statePath: 'pan.brimWidth'},
-          wallWidth: { type: Number, statePath: 'pan.wallWidth'},
-          lengthUnits: {type: String, value: 'in'},
-          selected: {type: String, value: "pan-diameter"}
+          pan: { type: Number, statePath: 'pan'}
         };
+      }
+      
+      _setFillHeight(e) {
+        this.pan.fillHeight = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN", 
+          value: this.pan
+        });
+      }
+      
+      _setFillVolume(e) {
+        this.pan.fillVolume = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setFillWeight(e) {
+        this.pan.fillWeight = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setFillCount(e) {
+        this.pan.fillCount = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
       }
     }
 

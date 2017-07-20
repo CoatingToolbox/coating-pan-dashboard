@@ -8,6 +8,39 @@ class CoatingPan {
     this.wallWidth = wallWidth;
     this.brimWidth = brimWidth;
     this.fillVolume = 0;
+    this.fillDensity = 760000;
+    this.tabletWeight = 0.4;
+  }
+  
+  get fillHeight(){ 
+    //we estimate the heigh that will match our fill volume
+    let saggita = 0;
+    let step = this.brimHeight / 200;
+    for(let i=0; i<this.brimHeight; i = i + step){
+      saggita = this.brimHeight - i;
+      let volume = this.calcVolume(saggita, this.wallWidth, this.panDiameter, this.sideWallSlope);
+      if(volume <= this.fillVolume){
+        break;
+      }
+    }
+    return saggita;
+  }
+  set fillHeight(val) {
+    this.fillVolume = this.calcVolume(val, this.wallWidth, this.panDiameter, this.sideWallSlope);
+  }
+  
+  get fillWeight() {
+    return this.fillVolume * this.fillDensity;
+  }
+  set fillWeight(val) {
+    this.fillVolume = val / this.fillDensity;
+  }
+  
+  get fillCount() {
+    return Math.ceil(this.fillWeight / this.tabletWeight);
+  }
+  set fillCount(val) {
+    this.fillWeight = val * this.tabletWeight;
   }
   
   get fillWidth() {
@@ -31,20 +64,6 @@ class CoatingPan {
   get fillToBrim() {
     return (this.fillHeight < this.brimHeight) ? this.brimHeight - this.fillHeight : 0;
   } 
-  
-  get fillHeight(){ 
-    //we estimate the heigh that will match our fill volume
-    let saggita = 0;
-    let step = this.brimHeight / 200;
-    for(let i=0; i<this.brimHeight; i = i + step){
-      saggita = this.brimHeight - i;
-      let volume = this.calcVolume(saggita, this.wallWidth, this.panDiameter, this.sideWallSlope);
-      if(volume <= this.fillVolume){
-        break;
-      }
-    }
-    return saggita;
-  }
   
   get brimHeight() {
     return (this.panDiameter - this.openingDiameter) / 2;
@@ -80,10 +99,26 @@ class CoatingPan {
     
   }
   
+  get maxFillWeight() {
+    return this.maxFillVolume * this.fillDensity;
+  }
+  
+  get maxFillCount() {
+    return Math.ceil(this.maxFillWeight / this.tabletWeight);
+  }
+  
   get minFillVolume() {
     
     return this.calcVolume(this.minFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
     
+  }
+  
+  get minFillWeight() {
+    return this.minFillVolume * this.fillDensity;
+  }
+  
+  get minFillCount() {
+    return Math.ceil(this.minFillWeight / this.tabletWeight);
   }
   
   get fillVolumePercent() {

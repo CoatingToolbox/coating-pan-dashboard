@@ -5,12 +5,10 @@
 <link rel="import" href="../redux-mixin.html">
 <link rel="import" href="chart-styles.html">
 
-<dom-module id='pan-volume-chart'>
+<dom-module id='pan-fill-chart'>
     <template>
         <style include='chart-styles'>
             :host {
-                background-color: #FAFAFA;
-                border-radius: 6px;
                 margin: 24px;
             }
         </style>
@@ -41,9 +39,9 @@
     <script>
         
         /*global ReduxMixin Polymer */
-        class PanVolumeChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+        class PanFillChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
             
-            static get is() { return 'pan-volume-chart'; }
+            static get is() { return 'pan-fill-chart'; }
             
             connectedCallback() {
                 super.connectedCallback();
@@ -283,7 +281,7 @@
             }
         }
         
-        window.customElements.define(PanVolumeChart.is, PanVolumeChart);
+        window.customElements.define(PanFillChart.is, PanFillChart);
         
     </script>
 </dom-module>

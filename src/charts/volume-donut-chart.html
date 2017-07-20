@@ -13,6 +13,7 @@
                 margin: 48px 16px;
                 align-items: center;
                 flex-grow: 1;
+                --chart-color: var(--app-primary-color);
             }
             #text-container {
                 display: flex;
@@ -30,7 +31,7 @@
             #full {
             }
             #partial {
-                fill: var(--app-primary-color);
+                fill: var(--chart-color);
             }
             :host(.iron-selected) #partial {
                 fill: var(--app-accent-color);

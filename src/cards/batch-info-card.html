@@ -37,21 +37,22 @@
                   <i>Inputs</i>
                 </div>
                 <unit-input 
-                    value='{{bulkDensity}}' 
+                    value='[[pan.fillDensity]]' 
+                    on-value-changed='_setFillDensity'
                     type='density'
                     selected-units='g/ml' 
                     title='Bulk Density' 
                     details='The bulk density of the product to be coated.'>
                 </unit-input>
                 <unit-input 
-                    value='{{tabletWeight}}' 
+                    value='[[pan.tabletWeight]]' 
                     type='weight'
                     selected-units='mg' 
                     title='Tablet Weight' 
                     details='The average weight of a single tablet.'>
                 </unit-input>
             </div>
-            <bulk-density-chart fill-density='{{bulkDensity}}'></bulk-density-chart>
+            <bulk-density-chart></bulk-density-chart>
         </div>
         
     </template>
@@ -66,10 +67,24 @@
             
             static get properties() {
                 return {
-                    pan: {type: Object, statePath: 'pan'},
-                    bulkDensity: {type: Number, value: 760000},
-                    tabletWeight: {type: Number, value: 0.4}
+                    pan: {type: Object, statePath: 'pan'}
                 };
+            }
+            
+            _setFillDensity(e) {
+                this.pan.fillDensity = e.detail.value;
+                this.dispatch({
+                    type: "SET_PAN",
+                    value: this.pan
+                });
+            }
+            
+            _setTabletWeight(e) {
+                this.pan.tabletWeight = e.detail.value;
+                this.dispatch({
+                    type: "SET_PAN",
+                    value: this.pan
+                });
             }
         
         }

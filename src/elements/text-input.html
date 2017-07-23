@@ -15,7 +15,6 @@
         }
         :host([focused]) {
             outline: none;
-            /*color: var(--app-primary-color);*/
         } 
         #input, 
         #input:focus {
@@ -32,15 +31,9 @@
           text-align: start;
           text-overflow: ellipsis;
         }
-        /*#input {*/
-        /*  border-bottom: 1px solid;*/
-        /*  border-bottom-color: #EFEFEF;*/
-        /*}*/
         
         #input:focus {
           color: var(--app-primary-color);
-          /*border-bottom: 1px solid;*/
-          /*border-bottom-color: var(--app-primary-color);*/
         }
         
         #input[type=number]::-webkit-inner-spin-button,
@@ -58,12 +51,10 @@
         
         #label {
             padding-bottom: 4px;
-            
           text-transform: capitalize;
           white-space: nowrap;
           font-weight: 500;
           font-size: 14px;
-            /*@apply --paper-font-caption;*/
         }
     </style>
     
@@ -74,6 +65,7 @@
             type="text" 
             value='{{value}}' 
             size='1'
+            autocapitalize='words'
             list='list'
             on-change='_inputChange'
             on-focus='_inputFocus'

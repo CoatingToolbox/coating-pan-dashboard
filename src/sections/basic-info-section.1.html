@@ -1,0 +1,41 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='-section'>
+    <template>
+        <style include='section-styles'></style>
+        
+        <div class='section-title'>Basic Info</div>
+        
+        <div id='text-container'>
+            <div id='subtitle'>Make & Model</div>
+            <div id='caption'>The difference in coating pans</div>
+            <div id='description'>
+                Keep in mind not all coating pans are the same. Beyond the range
+                of manufactures and the coating pan models they offer each pan is unqiue.
+                Even when comparing the same manufacutre and model the baffle design, 
+                the spray gun configuration and even the dimensions can be different.
+            </div>
+        </div>
+    </template>
+
+    <script>
+        class Section extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return '-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    }
+                };
+            }
+        }
+        window.customElements.define(Section.is, Section);
+    </script>
+
+</dom-module>

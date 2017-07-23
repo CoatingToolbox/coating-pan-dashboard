@@ -1,0 +1,121 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../elements/text-input.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='spray-gun-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 52px auto auto auto;
+            }
+            .section-title {
+                grid-column: 1 / 3;
+                grid-row: 1 / 2;
+            }
+            #text-container {
+                grid-column: 1 / 3;
+                grid-row: 2 / 3;
+            }
+            text-input[label='Manufacture'] {
+                grid-column: 1 / 3;
+                grid-row: 3 / 4;
+            }
+            text-input[label='Model'] {
+                grid-column: 1 / 2;
+                grid-row: 4 / 5;
+            }
+            text-input[label='# of Spray Guns'] {
+                grid-column: 2 / 3;
+                grid-row: 4 / 5;
+            }
+        </style>
+        
+        <div class='section-title'>Spray Gun Configuration<i> - Optional</i></div>
+        
+        <div id='text-container'>
+            <!--<div id='subtitle'>Make & Model</div>-->
+            <div id='caption'>Spray guns make a difference</div>
+            <div id='description'>
+                The spray gun configuration can make a difference with uniformatiy and optimized spray patterns
+            </div>
+        </div>
+        
+        <text-input
+            value='[[pan.gunType]]'
+            label='Manufacture'
+            options='[[manufactureOptions]]'
+            on-value-changed='_setGunType'>
+        </text-input>
+        
+        <text-input
+            value='[[pan.gunModel]]'
+            label='Model'
+            options='[[modelOptions]]'
+            on-value-changed='_setGunModel'>
+        </text-input>
+        
+        <text-input
+            value='[[pan.gunCount]]'
+            label='# of Spray Guns'
+            on-value-changed='_setGunCount'>
+        </text-input>
+        
+    </template>
+
+    <script>
+        class SprayGunSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'spray-gun-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    }, 
+                    manufactureOptions: {
+                        type: Array,
+                        value: function() {
+                            return [
+                                'Schlick',
+                                'Vector',
+                                'Spraying Systems',
+                                'Binks'
+                                ];
+                        }
+                    }
+                };
+            }
+            
+            _setGunType(e) {
+                this.pan.gunType = e.detail.value;
+                this.dispatch({
+                  type: "SET_PAN",
+                  value: this.pan
+                });
+            }
+            
+            _setGunModel(e) {
+                this.pan.gunModel = e.detail.value;
+                this.dispatch({
+                  type: "SET_PAN",
+                  value: this.pan
+                });
+            }
+            
+            _setGunCount(e) {
+                this.pan.gunCount = e.detail.value;
+                this.dispatch({
+                  type: "SET_PAN",
+                  value: this.pan
+                });
+            }
+        }
+        window.customElements.define(SprayGunSection.is, SprayGunSection);
+    </script>
+
+</dom-module>

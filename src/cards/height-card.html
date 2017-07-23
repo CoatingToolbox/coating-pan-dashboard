@@ -18,11 +18,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     
     <style include='card-styles'>
+      :host {
+        /*max-width: 25%;*/
+      }
+      coating-pan-graphic {
+        flex-grow: 2;
+      }
+      #input {
+        flex-grow: 1;
+      }
       
+      #content {
+        display: flex;
+      }
     </style>
         
     <div id='title'>Pan Diameter</div>
+    <div id='content'>
+      
     <coating-pan-graphic line-type='pan-diameter'></coating-pan-graphic>
+    <div id='input'>
+      
       <unit-input 
           dimen='pan-diameter'
           value='[[diameter]]' 
@@ -32,6 +48,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           title='Diameter' 
           details='The diameter of the coating pan drum.'>
       </unit-input>
+      <unit-input 
+          dimen='pan-diameter'
+          value='[[diameter]]' 
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          no-input 
+          title='Diameter' 
+          details='The diameter of the coating pan drum.'>
+      </unit-input>
+      
+    </div>
+    </div>
     
   </template>
 

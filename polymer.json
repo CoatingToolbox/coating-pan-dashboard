@@ -2,12 +2,7 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/dashboard-page.html",
-    "src/cards/pan-dimensions-card.html",
-    "src/cards/batch-info-card.html",
-    "src/cards/pan-volume-card.html",
-    "src/cards/pan-fill-card.html",
-    "src/cards/header-card.html"
+    "src/editor-page.html"
   ],
   "builds": [
     { "preset": "es6-unbundled" }

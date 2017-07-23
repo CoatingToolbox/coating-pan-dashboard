@@ -10,6 +10,7 @@ class CoatingPan {
     this.fillVolume = 0;
     this.fillDensity = 760000;
     this.tabletWeight = 0.4;
+    this.baffleHeight = 0;
   }
   
   get fillHeight(){ 
@@ -90,7 +91,11 @@ class CoatingPan {
   }
   
   get minFillHeight() {
-    return this.brimHeight * 0.6;
+    if(this.baffleHeight > 0) {
+      return this.baffleHeight;
+    } else {
+      return this.brimHeight * 0.6;
+    }
   }
   
   get maxFillVolume() {

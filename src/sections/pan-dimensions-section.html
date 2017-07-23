@@ -1,0 +1,173 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='pan-dimensions-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                grid-template-rows: 52px 1fr;
+            } 
+            .section-title {
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+            }
+            iron-pages {
+                grid-column: 2 / 3;
+                grid-row: 2 / 3;
+            }
+            .button-selector {
+                display: flex;
+                justify-content: flex-end;
+                grid-column: 2 / 3;
+                grid-row: 1 / 2;
+            }
+            paper-icon-button {
+                color: var(--app-border-color);
+            }
+            paper-icon-button.iron-selected {
+                color: var(--text-primary-color);
+            }
+            .dimen-selector {
+                grid-column: 1 / 2;
+                grid-row: 2 / span;
+            }
+            #graphic-container {
+             display: flex;   
+             justify-content: center;
+
+            }
+            unit-input + unit-input {
+                margin-top: 16px;
+            }
+        </style>
+        
+        <div class='section-title first-title'>Coating Pan Dimensions</div>
+       
+        <iron-selector class='dimen-selector' selected='{{selected}}' attr-for-selected='dimen'>
+            <unit-input 
+                dimen='pan-diameter'
+                value='[[pan.panDiameter]]' 
+                on-value-changed='_setPanDiameter'
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                title='Main Diameter' 
+                details='The diameter of the coating pan drum.'>
+            </unit-input>
+            <unit-input 
+                dimen='opening-diameter'
+                value='[[pan.openingDiameter]]' 
+                on-value-changed='_setOpeningDiameter'
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                title='Opening Diameter' 
+                details='The diameter of the coating pan drum.'>
+            </unit-input>
+            <unit-input 
+                dimen='brim-width'
+                value='[[pan.brimWidth]]' 
+                on-value-changed='_setBrimWidth'
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                title='Brim Width' 
+                details='The width of the pan at the brim height.'>
+            </unit-input>
+            <unit-input 
+                dimen='wall-width'
+                value='[[pan.wallWidth]]'
+                on-value-changed='_setWallWidth' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                title='Wall Width' 
+                details='The width of the pan at the perforated wall.'>
+            </unit-input>
+        </iron-selector>
+        
+        <iron-selector class='button-selector' selected='{{page}}'>
+            <paper-icon-button icon='my-icons:chart'></paper-icon-button>
+            <paper-icon-button icon='my-icons:info-outline'></paper-icon-button>
+        </iron-selector>
+        
+        <iron-pages selected='[[page]]' fallback-selection='0'>
+            
+            <div id='graphic-container'>
+                <coating-pan-graphic line-type='[[selected]]'></coating-pan-graphic> 
+                <coating-pan-graphic view='side' line-type='[[selected]]'></coating-pan-graphic>
+            </div>
+            
+            <div id='text-container'>
+                <div id='subtitle'>Shape & Size</div>
+                <div id='caption'>Determining pan shape, size and volume</div>
+                <div id='description'>
+                    A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
+                  the diameter does not provide a useful way to compare the shape and size of different coating pans.
+                  Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+                  From these dimensions we can later explore batch size, pan speed and more.
+                </div>
+            </div>
+            
+        </iron-pages>
+        
+    </template>
+
+    <script>
+        class PanDimensionsSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'pan-dimensions-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                    page: {type: Number, value: 0},
+                    lengthUnits: {type: String, value: 'in'},
+                    selected: {type: String, value: "pan-diameter"}
+                };
+            }
+      
+          _setPanDiameter(e) {
+            this.pan.panDiameter = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setOpeningDiameter(e) {
+            this.pan.openingDiameter = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setBrimWidth(e) {
+            this.pan.brimWidth = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setWallWidth(e) {
+            this.pan.wallWidth = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+        }
+        window.customElements.define(PanDimensionsSection.is, PanDimensionsSection);
+    </script>
+
+</dom-module>

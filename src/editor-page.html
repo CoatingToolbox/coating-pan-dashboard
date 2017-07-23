@@ -1,0 +1,74 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="sections/basic-info-section.html">
+<link rel="import" href="sections/pan-dimensions-section.html">
+<link rel="import" href="sections/spray-gun-section.html">
+<link rel="import" href="sections/baffle-info-section.html">
+
+<dom-module id="editor-page">
+  <template>
+    <style>
+      :host {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 88px auto auto auto 60px;
+        grid-gap: 16px 16px;
+        margin: 0px 16px;
+      }
+      .page-title {
+        grid-column: 1 / 3;
+        grid-row: 1 / 2;
+        @apply --paper-font-display1;
+        color: var(--text-light-color);
+        padding: 24px 0px;
+      }
+      basic-info-section {
+        grid-column: 1 / 3;
+        grid-row: 2 / 3;
+      }
+      pan-dimensions-section {
+        grid-column: 1 / 3;
+        grid-row: 3 / 4;
+      }
+      spray-gun-section,
+      baffle-info-section {
+        grid-row: 4 / 5;
+      }
+      spray-gun-section {
+        grid-column: 1 / 2;
+      }
+      baffle-info-section {
+        grid-column: 2 / 3;
+      }
+      @media(min-width: 1232px) {
+        :host {
+          margin: 0px auto;
+          max-width: 1200px;
+        }
+      }
+    </style>
+    <div class='page-title'>Customize A Coating Pan</div>
+    <basic-info-section></basic-info-section>
+    <pan-dimensions-section></pan-dimensions-section>
+    <spray-gun-section></spray-gun-section>
+    <baffle-info-section></baffle-info-section>
+    
+  </template>
+
+  <script>
+    class EditorPage extends Polymer.Element {
+      static get is() { return 'editor-page'; }
+    }
+
+    window.customElements.define(EditorPage.is, EditorPage);
+  </script>
+</dom-module>

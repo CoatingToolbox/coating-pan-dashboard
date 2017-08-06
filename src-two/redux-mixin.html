@@ -1,0 +1,58 @@
+
+<script src="../node_modules/redux/dist/redux.min.js"></script>
+
+<link rel="import" href="elements/coating-pan-class.html">
+<link rel="import" href="../bower_components/polymer-redux/polymer-redux.html">
+
+<script>
+  
+    // define the parameters for the inital pan to show on load
+    const initialPan = {
+        panDiameter: 1.2192,
+        openingDiameter: 0.4826,
+        wallWidth: 0.508,
+        brimWidth: 0.93345,
+        fillVolume: 0.15,
+        baffleCount: 0,
+        baffleHeight: 0,
+        baffleType: 'ploughshare',
+        gunType: 'Schlick',
+        gunModel: '930 Series',
+        gunCount: 3,
+        equipmentName: 'Fastcoat',
+        vendorName: "O'Hara",
+        nickname: '48" Room',
+        companyName: "Colorcon",
+        locationName: "West Point, PA",
+        contactName: "Jason Hansell",
+    };
+     
+    // create an inittal state with a pan object
+    const initialState = {
+        // create a pan object and pass the initial pan properties
+        pan: Object.assign(new CoatingPan(), initialPan)
+    };
+      
+    // create a reducer for actions
+    const reducer = (state = initialState, action) => {
+        
+        switch(action.type) {
+            
+            case 'SET_PAN':
+                // when setting a pan we create a new coating pan object and pass the pan object to set properties
+                let pan = Object.assign(new CoatingPan(), action.value);
+                return Object.assign(state, {pan: pan});
+            default: 
+                return state;
+        }
+    };
+    
+    // create the redux store
+    /* global Redux */
+    const store = Redux.createStore(reducer);
+    
+    // pass the redux store to the PolymerRedux to create a mixing which is used with other polymer elements
+    /* global PolymerRedux */
+    const ReduxMixin = PolymerRedux(store);
+    
+</script>

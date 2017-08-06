@@ -2,8 +2,10 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/editor-page.html",
-    "src/explore-page.html"
+    "src/editor-page.html"
+  ],
+  "builds": [
+    { "preset": "es6-unbundled" }
   ],
   "sources": [
     "src/**/*",
@@ -12,16 +14,11 @@
   ],
   "extraDependencies": [
     "manifest.json",
-    "node_modules/d3/build/d3.js",
-    "node_modules/redux/dist/redux.min.js",
-    "bower_components/webcomponentsjs/*.js"
+    "bower_components/webcomponentsjs/*.js",
+    "node_modules/redux/dist/redux.js",
+    "node_modules/d3/build/d3.js"
   ],
   "lint": {
     "rules": ["polymer-2"]
-  },
-  "builds": [
-    {
-      "preset": "es6-unbundled"
-    }
-  ]
+  }
 }

@@ -1,0 +1,216 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="elements/coating-pan-graphic.html">
+<link rel="import" href="redux-mixin.html">
+
+<link rel="lazy-import" href="explore-sections/dimensions-section.html">
+<link rel="lazy-import" href="explore-sections/volume-section.html">
+<link rel="lazy-import" href="explore-sections/fill-section.html">
+<link rel="lazy-import" href="explore-sections/spray-section.html">
+
+<dom-module id="explore-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: var(--app-background-color);
+        height: calc(100vh - 64px);
+      }
+      app-header {
+        background-color: white;
+      }
+      paper-tabs {
+        --paper-tabs-selection-bar-color: var(--app-primary-color);
+      }
+      paper-tab {
+        margin: 0px 32px;
+      }
+      iron-pages {
+        margin: 24px 16px;
+        min-height: calc(100vh - 48px);
+      }
+      app-toolbar {
+          @apply --paper-font-display1;
+      }
+      app-toolbar i {
+          color: var(--text-light-color);
+          font-size: 0.8em;
+          font-weight: 100;
+          padding-left: 4px;
+      }
+      paper-icon-button {
+          color: var(--text-light-color);
+      }
+      iron-collapse {
+          display: flex;
+          justify-content: space-around;
+      }
+      coating-pan-graphic {
+          max-width: 240px;
+          align-self: flex-start;
+      }
+      .section {
+          padding: 4px 32px;
+          @apply --paper-font-body2;
+          font-weight: bold;
+          color: var(--text-dark-color);
+      }
+      .label {
+          padding-top: 4px;
+          @apply --paper-font-caption;
+          color: var(--text-light-color);
+      }
+      paper-icon-button[hidden] {
+          display: none;
+      }
+      @media(min-width: 1232px) {
+        iron-pages {
+          margin: 32px auto;
+          max-width: 1000px;
+        }
+      }
+    </style>
+    <app-header-layout  id='header' has-scrolling-region>
+      <app-header slot='header' condenses fixed effects="waterfall" shadow>
+        
+        <app-toolbar>
+            <div main-title>
+              [[pan.vendorName]] [[pan.equipmentName]] <i> - [[pan.nickname]]</i>
+            </div>
+            <paper-icon-button icon='my-icons:info' hidden$='[[opened]]' on-tap='_toggleInfo'></paper-icon-button>
+            <paper-icon-button icon='my-icons:close' hidden$='[[!opened]]' on-tap='_toggleInfo'></paper-icon-button>
+        </app-toolbar>
+        
+        <iron-collapse opened='[[opened]]' on-transitioning-changed='_resetHeader'>
+            <div id='name' class='section'>
+                <div class='label'>Company</div>
+                <div>[[pan.companyName]]</div>
+                <div class='label'>Location</div>
+                <div>[[pan.locationName]]</div>
+                <div class='label'>Contact</div>
+                <div>[[pan.contactName]]</div>
+            </div>
+            <div id='volume' class='section'>
+                <div class='label'>Diameter</div>
+                <div>[[pan.panDiameter]] in</div>
+                <div class='label'>Brim Volume</div>
+                <div>[[pan.brimVolume]] L</div>
+                <div class='label'>Fill Weight</div>
+                <div>[[pan.fillWeight]] kg</div>
+                <div class='label'>Fill Percent</div>
+                <div>[[pan.fillPercent]]%</div>
+            </div>
+            <div id='gun' class='section'>
+                <div class='label'>Gun Type</div>
+                <div>[[pan.gunType]]</div>
+                <div class='label'>Gun Model</div>
+                <div>[[pan.gunModel]]</div>
+                <div class='label'># of GUns</div>
+                <div>[[pan.gunCount]]</div>
+                <div class='label'>Spray Pattern</div>
+                <div>18 in</div>
+            </div>
+            <div id='mixing' class='section'>
+                <div class='label'>Baffle Type</div>
+                <div>[[pan.baffleType]]</div>
+                <div class='label'># of Baffles</div>
+                <div>[[pan.baffleCount]]</div>
+                <div class='label'>Pan Speed</div>
+                <div>6 rpm</div>
+                <div class='label'>Mixing Value</div>
+                <div>4.5</div>
+            </div>
+            <coating-pan-graphic></coating-pan-graphic>
+            <coating-pan-graphic view='side'></coating-pan-graphic>
+        </iron-collapse>
+        
+        <paper-tabs sticky selected="{{selectedTab}}" attr-for-selected='tab'>
+          <paper-tab tab='dimensions'>Dimensions</paper-tab>
+          <paper-tab tab='volume'>Volume</paper-tab>
+          <paper-tab tab='fill'>Pan Fill</paper-tab>
+          <paper-tab tab='spray'>Spray Distribution</paper-tab>
+          <paper-tab>Pan Speed</paper-tab>
+          <paper-tab>Mixing Uniformity</paper-tab>
+        </paper-tabs>
+        
+      </app-header>
+      
+      <iron-pages selected="[[selectedTab]]" attr-for-selected='tab'>
+        <dimensions-section tab='dimensions'></dimensions-section>
+        <volume-section tab='volume'></volume-section>
+        <fill-section tab='fill'></fill-section>
+        <spray-section tab='spray'></spray-section>
+      </iron-pages>
+    </app-header-layout>
+    
+  </template>
+
+  <script>
+    class ExplorePage extends ReduxMixin(Polymer.Element) {
+      
+      static get is() { return 'explore-page'; }
+      
+      static get properties() {
+      
+        return {
+      
+          pan: {
+              type: Object,
+              statePath: 'pan'
+          }, 
+      
+          opened: {
+              type: Boolean,
+              value: false
+          },
+      
+          selectedTab: {
+            type: String,
+            value: 'spray',
+            observer: '_tabChanged'
+          }
+        };
+      }
+      
+      _tabChanged(tab) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('explore-sections/' + tab + '-section.html');
+        Polymer.importHref(
+            resolvedPageUrl,
+            null,
+            null,
+            true);
+      }
+      
+      _resetHeader(e) {
+        if(!e.detail.value){
+          this.$.header.resetLayout();
+        }
+      }
+      
+      _toggleInfo(e) {
+          this.opened = !this.opened;
+      }
+    }
+
+    window.customElements.define(ExplorePage.is, ExplorePage);
+  </script>
+</dom-module>

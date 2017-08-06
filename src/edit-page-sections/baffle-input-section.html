@@ -4,7 +4,7 @@
 <link rel="import" href="../elements/unit-input.html">
 <link rel="import" href="section-styles.html">
 
-<dom-module id='baffle-info-section'>
+<dom-module id='baffle-input-section'>
     <template>
         <style include='section-styles'>
             :host {
@@ -67,9 +67,9 @@
     </template>
 
     <script>
-        class BaffleInfoSection extends ReduxMixin(Polymer.Element) {
+        class BaffleInputSection extends ReduxMixin(Polymer.Element) {
             static get is() {
-                return 'baffle-info-section';
+                return 'baffle-input-section';
             }
 
             static get properties() {
@@ -115,7 +115,7 @@
                 });
             }
         }
-        window.customElements.define(BaffleInfoSection.is, BaffleInfoSection);
+        window.customElements.define(BaffleInputSection.is, BaffleInputSection);
     </script>
 
 </dom-module>

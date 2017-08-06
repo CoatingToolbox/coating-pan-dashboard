@@ -1,0 +1,58 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='save-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                grid-template-rows: 52px auto auto;
+            }
+            .section-title {
+                grid-column: 1 / 3;
+                grid-row: 1 / 2;
+            }
+            #text-container {
+                grid-column: 1 / 3;
+                grid-row: 2 / 3;
+            }
+            paper-button {
+                grid-column: 1 / 2;
+                grid-row: 3 / 4;
+                background-color: var(--app-primary-color);
+                color: white;
+                @apply --paper-font-button;
+            }
+        </style>
+        
+        <div class='section-title'>Save and Explore</div>
+        
+        <div id='text-container'>
+            <!--<div id='subtitle'>Update and Save</div>-->
+            <div id='caption'>Save to library or just explore</div>
+            <div id='description'>
+                You can save this coating pan to your own personal library to use again in the future. Or
+                click explore to learn about the pan speed, volume, fill and more.   
+            </div>
+        </div>
+        
+        <paper-button on-tap='_explore'>Explore</paper-button>
+        
+    </template>
+
+    <script>
+        class SaveSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'save-section';
+            }
+            
+            _explore() {
+                window.location = '#/explore'
+            }
+        }
+        window.customElements.define(SaveSection.is, SaveSection);
+    </script>
+
+</dom-module>

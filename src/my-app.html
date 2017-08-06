@@ -9,21 +9,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="my-icons.html">
 
-<link rel="lazy-import" href="editor-page.html">
+<link rel="lazy-import" href="edit-page.html">
+<link rel="lazy-import" href="explore-page.html">
 
 <dom-module id="my-app">
   <template>
@@ -45,80 +43,87 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --text-light-color: #4f4f4f;
         --text-disabled-color: #212121;
 
-        --card-margin: 16px;
-        
-        display: block;
+        --app-primary-color:#3F72AF;
+        --app-dark-color:#112D4E;
+        --app-light-color:#6f99cb;
+        /*--app-background-color:#e9ebef;*/
+        /*--app-section-color:#dfe1e4;*/
+        /*--app-border-color:#eeeeee;*/
+        /*--app-accent-color:#FF514B;*/
+        /*--app-warning-color:#c0392b;*/
+        /*--text-primary-color:#5b5b5b;*/
+        /*--text-dark-color:#353535;*/
+        /*--text-light-color:#767676;*/
+        /*--text-disabled-color:#212121;*/
+    
         color: var(--text-primary-color);
-      }
-
-      app-toolbar {
-        color: #fff;
-        background-color: var(--app-primary-color);
-      }
-
-      app-toolbar paper-icon-button {
-        --paper-icon-button-ink-color: white;
-      }
-
-      app-drawer a {
-        display: block;
-        padding: 8px 32px;
-        border-bottom: 1px solid var(--app-border-color);
-        text-decoration: none;
-        color: var(--text-primary-color);
-        line-height: 40px;
-      }
-
-      app-drawer a.iron-selected {
-        color: var(--text-dark-color);
-        font-weight: bold;
-      }
-      iron-pages,
-      iron-selector {
         background-color: var(--app-background-color);
+        height: 100vh;
       }
       
+      app-toolbar {
+        color: white;
+        background-color: var(--app-primary-color);
+        z-index: 100;
+      }
+      iron-pages {
+        max-height: calc(100vh - 64px);
+      }
+      @media(min-width: 900px) {
+        #menu-button {
+          display: none;
+        }
+      }
     </style>
 
-    <app-location route="{{route}}" use-hash-as-path></app-location>
+    <app-location route="{{route}}" use-hash-as-path url-space-regex="^[[rootPath]]"></app-location>
     <app-route
         route="{{route}}"
-        pattern="/:page"
+        pattern="[[rootPath]]:page"
         data="{{routeData}}"></app-route>
     
-    <app-drawer-layout fullbleed force-narrow>
-      
-      <app-drawer slot="drawer">
+    <app-drawer-layout force-narrow>
+      <app-drawer slot='drawer'>
         <app-toolbar>Menu</app-toolbar>
-        <iron-selector selected="[[page]]" attr-for-selected="name" role="navigation">
-          <a name="editor" href="#/editor">Pan Editor</a>
-          <a name="pan-fill" href="#/pan-fill">Product Fill</a>
-          <a name="dashboard" href="#/dashboard">Dashboard</a>
-          <a name="library" href="#/library">Library</a>
-        </iron-selector>
+        <iron-selector selected='[[page]]' attr-for-selected='page' on-selected-changed='_pageSelected'>
+          <paper-icon-item page='explore'>
+            <paper-icon-button icon='my-icons:dashboard'></paper-icon-button>
+            Dashboard
+          </paper-icon-item>
+          <paper-icon-item page='load'>
+            <paper-icon-button icon='my-icons:library'></paper-icon-button>
+            Library
+          </paper-icon-item>
+          <paper-icon-item page='edit'>
+            <paper-icon-button icon='my-icons:edit'></paper-icon-button>
+            Designer
+          </paper-icon-item>
+        </iron-selector> 
       </app-drawer>
       
-      <app-header-layout>
-
-        <app-header fixed slot='header' effects="waterfall">
-          <app-toolbar>
-            <paper-icon-button id='menu-button' icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>Coating Pan Dashboard</div>
-          </app-toolbar>
-        </app-header>
-      
-        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="editor" role="main">
-          <editor-page name="editor"></editor-page>
-        </iron-pages>
-        
-      </app-header-layout>
-    </app-drawer-layout>
+      <app-toolbar>
+        <paper-icon-button id='menu-button' icon='my-icons:menu'></paper-icon-button>
+        <div main-title>Coating Pan Dashboard</div>
+        <iron-selector class='toolbar-button-selector' selected='[[page]]' attr-for-selected='page' on-selected-changed='_pageSelected'>
+          <paper-icon-button icon='my-icons:dashboard' page='explore'></paper-icon-button>
+          <paper-icon-button icon='my-icons:library' page='load'></paper-icon-button>
+          <paper-icon-button icon='my-icons:edit' page='edit'></paper-icon-button>
+        </iron-selector> 
+      </app-toolbar>
     
+      <iron-pages selected='[[page]]' attr-for-selected='page' fallback-option='edit'>
+        <edit-page page='edit'></edit-page>
+        <explore-page page='explore'></explore-page>
+        <div page='load'>Library</div>
+      </iron-pages>
+      
+    </app-drawer-layout>  
+        
+
   </template>
 
   <script>
     class MyApp extends Polymer.Element {
-
       static get is() { return 'my-app'; }
 
       static get properties() {
@@ -128,9 +133,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
-          rootPattern: String,
           routeData: Object,
-          dashboardRouteData: Object,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
         };
       }
 
@@ -140,19 +146,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ];
       }
 
-      constructor() {
-        super();
-
-        // Get root pattern for app-route, for more info about `rootPath` see:
-        // https://www.polymer-project.org/2.0/docs/upgrade#urls-in-templates
-        this.rootPattern = (new URL(this.rootPath)).pathname;
-      }
-
       _routePageChanged(page) {
-        
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'view1' in that case.
-        this.page = page || 'editor';
+        this.page = page || 'edit';
       }
 
       _pageChanged(page) {
@@ -164,8 +161,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             null,
             true);
       }
-      
-      _tabSelected(e) {
+      _pageSelected(e) {
+        // console.log(e);
         window.location = '#/' + e.detail.value;
       }
     }

@@ -3,7 +3,7 @@
 <link rel="import" href="../elements/text-input.html">
 <link rel="import" href="section-styles.html">
 
-<dom-module id='basic-info-section'>
+<dom-module id='basic-input-section'>
     <template>
         <style include='section-styles'>
             :host {
@@ -85,9 +85,9 @@
     </template>
 
     <script>
-        class BasicInfoSection extends ReduxMixin(Polymer.Element) {
+        class BasicInputSection extends ReduxMixin(Polymer.Element) {
             static get is() {
-                return 'basic-info-section';
+                return 'basic-input-section';
             }
 
             static get properties() {
@@ -182,7 +182,7 @@
             }
                 
         }
-        window.customElements.define(BasicInfoSection.is, BasicInfoSection);
+        window.customElements.define(BasicInputSection.is, BasicInputSection);
     </script>
 
 </dom-module>

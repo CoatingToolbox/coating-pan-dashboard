@@ -1,0 +1,233 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../charts/pan-fill-chart.html">
+<link rel="import" href="../charts/bulk-density-chart.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id="fill-section">
+  <template>
+    
+    <style include='section-styles'>
+      :host {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 52px auto auto;
+      }
+      #page-title {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+      }
+      .density {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+      }
+      .fill {
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+      }
+      .card {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-template-rows: repeat(7, auto);
+        grid-gap: 16px 16px;
+        padding: 16px;
+      }
+      .intro {
+        grid-column: 1 / 3; 
+        grid-row: 1 / 2;
+      }
+      .card-title {
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+      }
+      .fill .card-title {
+        grid-column: 1 / 3;
+      }
+      unit-intro {
+        grid-column: 1 / 2;
+      }
+      bulk-density-chart {
+        grid-column: 2 / 3;
+        grid-row: 2 / 8;
+      }
+      pan-fill-chart {
+        grid-column: 2 / 3;
+        grid-row: 3 / 8;
+      }
+      
+      
+    </style>
+        
+    <div id='page-title'>Product Fill</div>
+    
+    <div class='card density'>
+      <div class='intro'>
+        <div id='subtitle'>Density and Weight</div>
+        <div id='caption'>Volume to Weight to Count</div>
+        <div id='description'>
+            A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
+          the diameter does not provide a useful way to compare the shape and size of different coating pans.
+          Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+          From these dimensions we can later explore batch size, pan speed and more.
+        </div>
+      </div>
+      <div class='card-title'>Product Details - <i>Inputs</i></div>
+      <unit-input 
+          value='[[pan.fillDensity]]' 
+          on-value-changed='_setFillDensity'
+          type='density'
+          selected-units='g/ml' 
+          title='Bulk Density' 
+          details='The bulk density of the product to be coated.'>
+      </unit-input>
+      <unit-input 
+            value='[[pan.tabletWeight]]' 
+            type='weight'
+            selected-units='mg' 
+            title='Tablet Weight' 
+            details='The average weight of a single tablet.'>
+        </unit-input>
+      <bulk-density-chart></bulk-density-chart>
+    </div>
+            
+    <div class='card fill'>
+      <div class='intro'>
+      <div id='subtitle'>Pan Fill</div>
+      <div id='caption'>Different numbers same fill</div>
+      <div id='description'>
+          A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
+        the diameter does not provide a useful way to compare the shape and size of different coating pans.
+        Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+        From these dimensions we can later explore batch size, pan speed and more.
+      </div>
+      <!--<div> is under filled [[pan.isUnderFilled]]</div>-->
+      <!--<div> is over filled [[pan.isOverFilled]]</div>-->
+    </div>
+      <div class='card-title'>Fill Values - <i>Inputs</i></div>
+      <unit-input 
+          value='[[pan.fillPercent]]' 
+          on-value-changed='_setFillPercent'
+          type='percent'
+          selected-units='%' 
+          title='Percent' 
+          details='Percent of Brim Volume.'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillHeight]]' 
+          on-value-changed='_setFillHeight'
+          type='length'
+          selected-units='in' 
+          title='Bed Height' 
+          details='The maxiumum height of the bed.'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillVolume]]' 
+          on-value-changed='_setFillVolume'
+          type='volume'
+          selected-units='l' 
+          title='Product Volume' 
+          details='The volume of product.'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillWeight]]' 
+          on-value-changed='_setFillWeight'
+          type='weight'
+          selected-units='kg' 
+          title='Weight' 
+          details='The weight of the product.'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillCount]]' 
+          on-value-changed='_setFillCount'
+          type='count'
+          selected-units='tablets' 
+          title='Unit Count' 
+          details='The number of units to be coated.'>
+      </unit-input>
+      <pan-fill-chart></pan-fill-chart> 
+    </div>
+      
+  </template>
+
+  <script>
+    class FillSection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'fill-section'; }
+      
+      static get properties() {
+        return {
+          pan: { type: Number, statePath: 'pan'}
+        };
+      }
+      
+      
+      _setFillPercent(e) {
+        this.pan.fillPercent = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN", 
+          value: this.pan
+        });
+      }
+      
+      _setFillHeight(e) {
+        this.pan.fillHeight = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN", 
+          value: this.pan
+        });
+      }
+      
+      _setFillVolume(e) {
+        this.pan.fillVolume = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setFillWeight(e) {
+        this.pan.fillWeight = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setFillCount(e) {
+        this.pan.fillCount = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+            
+      _setFillDensity(e) {
+          this.pan.fillDensity = e.detail.value;
+          this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+          });
+      }
+      
+      _setTabletWeight(e) {
+          this.pan.tabletWeight = e.detail.value;
+          this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+          });
+      }
+    }
+
+    window.customElements.define(FillSection.is, FillSection);
+  </script>
+</dom-module>

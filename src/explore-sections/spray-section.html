@@ -1,0 +1,114 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='spray-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto ;
+            }
+            #page-title {
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+            }
+        </style>
+        
+        <div id='page-title'>Spray Distribution</div>
+        
+            
+        <div id='text-container' class='card info'>
+            <div id='subtitle'></div>
+            <div id='caption'>Optimal spray rate and coating uniformity</div>
+            <div id='description'>
+                Gun configurations create different spary distributions. Depending 
+                on the spray rate and disturbition and the tablet surface area. You
+                can do different things.
+            </div>
+        </div>
+   
+        <div class='card dimens'>
+            <div class='card-title'>Spray Configuration</div>
+                <unit-input 
+                    dimen='pan-diameter'
+                    value='[[pan.panDiameter]]' 
+                    type='length'
+                    selected-units='{{lengthUnits}}' 
+                    title='Main Diameter' 
+                    details='The diameter of the coating pan drum.'
+                    no-input>
+                </unit-input>
+                <unit-input 
+                    dimen='opening-diameter'
+                    value='[[pan.openingDiameter]]' 
+                    type='length'
+                    selected-units='{{lengthUnits}}' 
+                    title='Opening Diameter' 
+                    details='The diameter of the coating pan drum.'
+                    no-input>
+                </unit-input>
+                <unit-input 
+                    dimen='brim-height'
+                    value='[[pan.brimHeight]]' 
+                    type='length'
+                    selected-units='{{lengthUnits}}' 
+                    title='Brim Height' 
+                    details='The height to the pan opening.'
+                    no-input>
+                </unit-input>
+                    <unit-input 
+                        dimen='brim-width'
+                        value='[[pan.brimWidth]]' 
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        title='Brim Width' 
+                        details='The width of the pan at the brim height.'
+                        no-input>
+                    </unit-input>
+                    <unit-input 
+                        dimen='wall-width'
+                        value='[[pan.wallWidth]]'
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        title='Wall Width' 
+                        details='The width of the pan at the perforated wall.'
+                        no-input>
+                    </unit-input><unit-input 
+                        dimen='side-wall'
+                        value='[[pan.sideWallLength]]'
+                        type='length'
+                        selected-units='{{lengthUnits}}' 
+                        title='Side Wall' 
+                        details='The length of the side wall.'
+                        no-input>
+                    </unit-input>
+                
+            </div>  
+        
+    </template>
+
+    <script>
+        class SpraySection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'spray-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                    lengthUnits: {type: String, value: 'in'},
+                    selected: {type: String, value: "pan-diameter"}
+                };
+            }
+        }
+        window.customElements.define(SpraySection.is, SpraySection);
+    </script>
+
+</dom-module>

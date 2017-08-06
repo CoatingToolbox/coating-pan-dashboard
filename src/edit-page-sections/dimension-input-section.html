@@ -3,11 +3,11 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../redux-mixin.html">
-<link rel="import" href="../elements/unit-input.html">
 <link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../elements/unit-input.html">
 <link rel="import" href="section-styles.html">
 
-<dom-module id='pan-dimensions-section'>
+<dom-module id='dimension-input-section'>
     <template>
         <style include='section-styles'>
             :host {
@@ -92,7 +92,7 @@
         
         <iron-selector class='button-selector' selected='{{page}}'>
             <paper-icon-button icon='my-icons:chart'></paper-icon-button>
-            <paper-icon-button icon='my-icons:info-outline'></paper-icon-button>
+            <paper-icon-button icon='my-icons:info'></paper-icon-button>
         </iron-selector>
         
         <iron-pages selected='[[page]]' fallback-selection='0'>
@@ -118,9 +118,9 @@
     </template>
 
     <script>
-        class PanDimensionsSection extends ReduxMixin(Polymer.Element) {
+        class DimensionInputSection extends ReduxMixin(Polymer.Element) {
             static get is() {
-                return 'pan-dimensions-section';
+                return 'dimension-input-section';
             }
 
             static get properties() {
@@ -167,7 +167,7 @@
             });
           }
         }
-        window.customElements.define(PanDimensionsSection.is, PanDimensionsSection);
+        window.customElements.define(DimensionInputSection.is, DimensionInputSection);
     </script>
 
 </dom-module>

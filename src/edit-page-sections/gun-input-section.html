@@ -3,7 +3,7 @@
 <link rel="import" href="../elements/text-input.html">
 <link rel="import" href="section-styles.html">
 
-<dom-module id='spray-gun-section'>
+<dom-module id='gun-input-section'>
     <template>
         <style include='section-styles'>
             :host {
@@ -66,9 +66,9 @@
     </template>
 
     <script>
-        class SprayGunSection extends ReduxMixin(Polymer.Element) {
+        class GunInputSection extends ReduxMixin(Polymer.Element) {
             static get is() {
-                return 'spray-gun-section';
+                return 'gun-input-section';
             }
 
             static get properties() {
@@ -115,7 +115,7 @@
                 });
             }
         }
-        window.customElements.define(SprayGunSection.is, SprayGunSection);
+        window.customElements.define(GunInputSection.is, GunInputSection);
     </script>
 
 </dom-module>

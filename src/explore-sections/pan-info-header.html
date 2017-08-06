@@ -1,0 +1,129 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../redux-mixin.html">
+
+<dom-module id='pan-info-header'>
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+            app-toolbar {
+                /*margin: 12px 0px;*/
+                color: var(--app-primary-color);
+                @apply --paper-font-headline;
+            }
+            app-toolbar i {
+                color: var(--text-light-color);
+                @apply --paper-font-headline;
+                font-weight: 100;
+                padding-left: 4px;
+            }
+            paper-icon-button {
+                color: var(--text-light-color);
+            }
+            iron-collapse {
+                display: flex;
+                justify-content: space-around;
+            }
+            coating-pan-graphic {
+                max-width: 240px;
+                align-self: flex-start;
+            }
+            .section {
+                padding: 4px 32px;
+                @apply --paper-font-body2;
+                font-weight: bold;
+                color: var(--text-dark-color);
+            }
+            .label {
+                padding-top: 4px;
+                @apply --paper-font-caption;
+                color: var(--text-light-color);
+            }
+            paper-icon-button[hidden] {
+                display: none;
+            }
+            
+        </style>
+        
+        <app-toolbar>
+            <div main-title>
+              [[pan.vendorName]] [[pan.equipmentName]] <i> - [[pan.nickname]]</i>
+            </div>
+            <paper-icon-button icon='my-icons:info' hidden$='[[opened]]' on-tap='_toggleInfo'></paper-icon-button>
+            <paper-icon-button icon='my-icons:close' hidden$='[[!opened]]' on-tap='_toggleInfo'></paper-icon-button>
+        </app-toolbar>
+        
+        <iron-collapse opened='[[opened]]'>
+            <div id='name' class='section'>
+                <div class='label'>Company</div>
+                <div>[[pan.companyName]]</div>
+                <div class='label'>Location</div>
+                <div>[[pan.locationName]]</div>
+                <div class='label'>Contact</div>
+                <div>[[pan.contactName]]</div>
+            </div>
+            <div id='volume' class='section'>
+                <div class='label'>Diameter</div>
+                <div>[[pan.panDiameter]] in</div>
+                <div class='label'>Brim Volume</div>
+                <div>[[pan.brimVolume]] L</div>
+                <div class='label'>Fill Weight</div>
+                <div>[[pan.fillWeight]] kg</div>
+                <div class='label'>Fill Percent</div>
+                <div>[[pan.fillPercent]]%</div>
+            </div>
+            <div id='gun' class='section'>
+                <div class='label'>Gun Type</div>
+                <div>[[pan.gunType]]</div>
+                <div class='label'>Gun Model</div>
+                <div>[[pan.gunModel]]</div>
+                <div class='label'># of GUns</div>
+                <div>[[pan.gunCount]]</div>
+                <div class='label'>Spray Pattern</div>
+                <div>18 in</div>
+            </div>
+            <div id='mixing' class='section'>
+                <div class='label'>Baffle Type</div>
+                <div>[[pan.baffleType]]</div>
+                <div class='label'># of Baffles</div>
+                <div>[[pan.baffleCount]]</div>
+                <div class='label'>Pan Speed</div>
+                <div>6 rpm</div>
+                <div class='label'>Mixing Value</div>
+                <div>4.5</div>
+            </div>
+            <coating-pan-graphic></coating-pan-graphic>
+            <coating-pan-graphic view='side'></coating-pan-graphic>
+        </iron-collapse>
+        
+    </template>
+    <script>
+        class PanInfoHeader extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'pan-info-header';}
+            
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object,
+                        statePath: 'pan'
+                    }, 
+                    opened: {
+                        type: Boolean,
+                        value: false
+                    }
+                };
+            }
+            
+            _toggleInfo(e) {
+                this.opened = !this.opened;
+            }
+        }
+        window.customElements.define(PanInfoHeader.is, PanInfoHeader);
+    </script>
+</dom-module>

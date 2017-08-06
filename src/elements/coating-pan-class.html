@@ -126,8 +126,12 @@ class CoatingPan {
     return Math.ceil(this.minFillWeight / this.tabletWeight);
   }
   
-  get fillVolumePercent() {
+  get fillPercent() {
     return this.fillVolume / this.brimVolume;
+  }
+  
+  set fillPercent(val) {
+    this.fillVolume = val * this.brimVolume;
   }
   
   get radius() {

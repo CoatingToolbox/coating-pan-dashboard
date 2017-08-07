@@ -2,8 +2,12 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/editor-page.html",
-    "src/explore-page.html"
+    "src/edit-page.html",
+    "src/explore-page.html",
+    "src/explore-sections/dimensions-section.html",
+    "src/explore-sections/fill-section.html",
+    "src/explore-sections/volume-section.html",
+    "src/explore-sections/spray-section.html"
   ],
   "sources": [
     "src/**/*",

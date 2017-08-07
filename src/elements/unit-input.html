@@ -108,7 +108,7 @@
       
       <div id='title'>[[title]]</div>
       
-      <input type='number' id='input' size='1' step='0.01' min='0' disabled='[[noInput]]' on-change='_userInputValue'>
+      <input type='number' id='input' size='1' step='[[step]]' min='0' disabled='[[noInput]]' on-change='_userInputValue'>
       
       <div class='dropdown-trigger' on-tap='_toggleDropdown'>
         <div>[[selectedUnits]]</div>
@@ -147,6 +147,10 @@
           },
           details: {
             type: String
+          },
+          step: {
+            type: Number,
+            computed: '_computeStep(decimals)'
           },
           value: {
             type: Number,
@@ -536,7 +540,13 @@
       }
       
       _userInputValue(e) {
+        console.log(this.value);
         this.value = this.$.input.value  * this.multiplier;
+        console.log(this.value);
+      }
+      
+      _computeStep(decimals) {
+        return 1 / Math.pow(10, this.decimals);
       }
       
     }

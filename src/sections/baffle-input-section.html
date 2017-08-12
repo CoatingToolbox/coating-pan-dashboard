@@ -100,7 +100,7 @@
             }
             
             _setBaffleCount(e) {
-                this.pan.baffleCount = e.detail.value;
+                this.pan.baffleCount = parseInt(e.detail.value);
                 this.dispatch({
                   type: "SET_PAN",
                   value: this.pan

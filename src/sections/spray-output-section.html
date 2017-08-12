@@ -1,0 +1,77 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../charts/total-spray-distribution-chart.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='spray-output-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(4, auto);
+            } 
+            
+            .text-container {
+                grid-column: 1 / 4;
+                grid-row: 1 / 2;
+            }
+            .section-title,
+            unit-input {
+                grid-column: 1 / 2;
+            }
+            total-spray-distribution-chart {
+                grid-column: 2 / 4;
+                grid-row: 2 / 5;
+            }
+        </style>
+       
+      <div class='text-container'>
+        <div class='subtitle'>Total Spray Pattern</div>
+        <div class='caption'>Optimal spray rate and coating uniformity</div>
+        <div class='description'>
+          Gun configurations create different spary distributions. Depending on the spray rate and disturbition and the tablet surface area. You can do different things.
+        </div>
+      </div>
+      
+      <div class='section-title'>Spray Pattern - <i>Calculated</i></div>
+      
+      <unit-input 
+        value='[[pan.totalSprayLength]]' 
+        type='length' 
+        selected-units='{{lengthUnits}}' 
+        decimals='1' 
+        title='Total Spray Width' 
+        details='The spray pattern width of one gun.' 
+        no-input>
+      </unit-input>
+      
+      <total-spray-distribution-chart></total-spray-distribution-chart>
+        
+      
+    </template>
+
+    <script>
+        class SprayOutputSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'spray-output-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                    lengthUnits: {
+                      type: String, 
+                      value: 'in'
+                    }
+                };
+            }
+        }
+        window.customElements.define(SprayOutputSection.is, SprayOutputSection);
+    </script>
+
+</dom-module>

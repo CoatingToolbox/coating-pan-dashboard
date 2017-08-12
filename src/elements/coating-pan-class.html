@@ -12,6 +12,9 @@ class CoatingPan {
     this.tabletWeight = 0.4;
     this.baffleHeight = 0;
     this.sprayLength = 0.1524;
+    this.gun2gun = 0;
+    this.gunCount = 0;
+    
   }
   
   get fillHeight(){ 
@@ -160,6 +163,15 @@ class CoatingPan {
   
   get isOverFilled() {
     return (this.maxFillVolume < this.fillVolume);
+  }
+  
+  get totalSprayLength() {
+    //the length of the gun manifold
+    let gunLength = (this.gunCount - 1) * this.gun2gun;
+    // the last gun on each end adds length by 1/2 spray length
+    let spray = gunLength + this.sprayLength;
+    return spray;
+    
   }
   
   calcChordLength(radius, saggita) {

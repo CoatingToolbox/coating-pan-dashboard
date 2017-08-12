@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../sections/spray-input-section.html">
+<link rel="import" href="../sections/spray-output-section.html">
 <link rel="import" href="page-styles.html">
 
 <dom-module id='spray-page'>
@@ -8,13 +9,15 @@
             :host {
                 display: grid;
                 grid-template-columns: 1fr;
-                grid-template-rows: auto auto auto;
+                grid-template-rows: repeat(3, auto);
             }
         </style>
         
         <div class='page-title'>Spray Distribution</div>
         
         <spray-input-section></spray-input-section>
+        
+        <spray-output-section></spray-output-section>
         
     </template>
 

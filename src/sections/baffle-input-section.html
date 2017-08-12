@@ -10,13 +10,13 @@
             :host {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                grid-template-rows: 52px auto auto auto;
+                grid-template-rows: repeat(4, auto);
             }
             .section-title {
                 grid-column: 1 / 3;
                 grid-row: 1 / 2;
             }
-            #text-container {
+            .text-container {
                 grid-column: 1 / 3;
                 grid-row: 2 / 3;
             }
@@ -36,9 +36,9 @@
         
         <div class='section-title'>Baffle Configuration<i> - Optional</i></div>
         
-        <div id='text-container'>
-            <div id='caption'>Baffles</div>
-            <div id='description'>
+        <div class='text-container'>
+            <div class='caption'>Mixing and Min Volume</div>
+            <div class='description'>
                 The spray gun configuration can make a difference with uniformatiy and optimized spray patterns
             </div>
         </div>

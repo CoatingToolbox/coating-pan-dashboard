@@ -180,7 +180,9 @@
             case 'brim-height':
               return this.getFrontBrimHeightLine(pan.openingDiameter, pan.panDiameter);
             case 'fill-height':
-              return this.getFrontBrimHeightLine(pan.panDiameter, pan.brimHeight);
+              return this.getFrontFillHeightLine(pan.panDiameter, pan.fillHeight);
+            case 'fill-length':
+              return this.getFrontFillLengthLine(pan.panDiameter, pan.fillLength);
             default:
               return '';
           }
@@ -384,6 +386,19 @@
                     " l " + -wallX + " " + wallY + 
                     " m " + (-capX / 2) + " " + (capY / 2) +
                     " l " + capX + " " + -capY;
+      }
+      getFrontFillLengthLine(diameter, width){
+        let svg = this.svg;
+        //helper values
+          diameter = diameter * svg.scale;
+          width = width * svg.scale;
+         
+          return "M " + (svg.center + width / 2) + ' ' + (svg.center + diameter / 2) +
+                      " l 0 " + svg.cap +
+                      " m 0 " + (-svg.cap / 2) +
+                      " l " + -width + " 0" +
+                      " m 0 " + (svg.cap / 2) +
+                      " l 0 " + -svg.cap;
       }
       
     //   getSideVolume(diameter, open, wall, brim) {

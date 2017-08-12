@@ -1,0 +1,30 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../sections/spray-input-section.html">
+<link rel="import" href="page-styles.html">
+
+<dom-module id='spray-page'>
+    <template>
+        <style include='page-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+        </style>
+        
+        <div class='page-title'>Spray Distribution</div>
+        
+        <spray-input-section></spray-input-section>
+        
+    </template>
+
+    <script>
+        class SprayPage extends Polymer.Element {
+            static get is() {
+                return 'spray-page';
+            }
+        }
+        window.customElements.define(SprayPage.is, SprayPage);
+    </script>
+
+</dom-module>

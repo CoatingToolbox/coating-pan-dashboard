@@ -1,7 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../redux-mixin.html">
 <link rel="import" href="../elements/coating-pan-graphic.html">
 <link rel="import" href="../elements/unit-input.html">
@@ -12,46 +10,32 @@
         <style include='section-styles'>
             :host {
                 display: grid;
-                grid-template-columns: 1fr 2fr;
-                grid-template-rows: 52px 1fr;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: auto auto;
             } 
             .section-title {
                 grid-column: 1 / 2;
                 grid-row: 1 / 2;
             }
-            iron-pages {
-                grid-column: 2 / 3;
+            iron-selector {
+                grid-column: 1 / 2;
                 grid-row: 2 / 3;
             }
-            .button-selector {
-                display: flex;
-                justify-content: flex-end;
+            coating-pan-graphic {
                 grid-column: 2 / 3;
-                grid-row: 1 / 2;
+                grid-row: 1 / 3;
             }
-            paper-icon-button {
-                color: var(--app-border-color);
-            }
-            paper-icon-button.iron-selected {
-                color: var(--text-primary-color);
-            }
-            .dimen-selector {
-                grid-column: 1 / 2;
-                grid-row: 2 / span;
-            }
-            #graphic-container {
-             display: flex;   
-             justify-content: center;
-
+            coating-pan-graphic[view='side'] {
+                grid-column: 3 / 4;
             }
             unit-input + unit-input {
                 margin-top: 16px;
             }
         </style>
         
-        <div class='section-title first-title'>Coating Pan Dimensions</div>
+        <div class='section-title first-title'>Pan Dimensions - <i>Inputs</i></div>
        
-        <iron-selector class='dimen-selector' selected='{{selected}}' attr-for-selected='dimen'>
+        <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
             <unit-input 
                 dimen='pan-diameter'
                 value='[[pan.panDiameter]]' 
@@ -90,30 +74,9 @@
             </unit-input>
         </iron-selector>
         
-        <iron-selector class='button-selector' selected='{{page}}'>
-            <paper-icon-button icon='my-icons:chart'></paper-icon-button>
-            <paper-icon-button icon='my-icons:info'></paper-icon-button>
-        </iron-selector>
-        
-        <iron-pages selected='[[page]]' fallback-selection='0'>
+        <coating-pan-graphic line-type='[[selected]]'></coating-pan-graphic> 
+        <coating-pan-graphic view='side' line-type='[[selected]]'></coating-pan-graphic>
             
-            <div id='graphic-container'>
-                <coating-pan-graphic line-type='[[selected]]'></coating-pan-graphic> 
-                <coating-pan-graphic view='side' line-type='[[selected]]'></coating-pan-graphic>
-            </div>
-            
-            <div id='text-container'>
-                <div id='subtitle'>Shape & Size</div>
-                <div id='caption'>Determining pan shape, size and volume</div>
-                <div id='description'>
-                    A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
-                  the diameter does not provide a useful way to compare the shape and size of different coating pans.
-                  Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
-                  From these dimensions we can later explore batch size, pan speed and more.
-                </div>
-            </div>
-            
-        </iron-pages>
         
     </template>
 

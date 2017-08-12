@@ -1,0 +1,116 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='fill-output-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(3, auto);
+            } 
+            
+            .text-container {
+                grid-column: 1 / 4;
+                grid-row: 1 / 2;
+            }
+            .section-title {
+                grid-column: 1 / 2;
+                grid-row: 2 / 3;
+            }
+            iron-selector {
+              grid-column: 1 / 2;
+              grid-row: 3 / 4;
+              padding: 16px;
+            }
+            coating-pan-graphic {
+                grid-column: 2 / 3;
+                grid-row: 2 / 4;
+            }
+            coating-pan-graphic[view='side'] {
+              grid-column: 3 / 4;
+            }
+            unit-input + unit-input {
+              margin-top: 16px;
+            }
+        </style>
+       
+      <div class='text-container'>
+        <div class='subtitle'>Pan Fill</div>
+        <div class='caption'>Different numbers same fill</div>
+        <div class='description'>
+            A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
+          the diameter does not provide a useful way to compare the shape and size of different coating pans.
+          Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+          From these dimensions we can later explore batch size, pan speed and more.
+        </div>
+      </div>
+      
+      <div class='section-title'>Fill Dimensions - <i>Calculated</i></div>
+      
+      <iron-selector selected='{{dimen}}' attr-for-selected='dimen'>
+        <unit-input 
+          value='[[pan.fillHeight]]' 
+          no-input
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          title='Bed Height' 
+          details='The maxiumum height of the bed.'
+          dimen='fill-height'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillWidth]]' 
+          no-input
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          title='Fill Width' 
+          details='The width of the tablet bed surface.'
+          dimen='fill-width'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillLength]]' 
+          no-input
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          title='Fill Length' 
+          details='The length of the tablets bed surface.'
+          dimen='fill-length'>
+      </unit-input>
+      </iron-selector>
+      
+      <coating-pan-graphic line-type='[[dimen]]'></coating-pan-graphic> 
+      <coating-pan-graphic view='side' line-type='[[dimen]]'></coating-pan-graphic>
+      
+    </template>
+
+    <script>
+        class FillOutputSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'fill-output-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                    dimen: {
+                      type: String, 
+                      value: 'fill-height'
+                    },
+                    lengthUnits: {
+                      type: String,
+                      value: 'in'
+                    }
+                };
+            }
+        }
+        window.customElements.define(FillOutputSection.is, FillOutputSection);
+    </script>
+
+</dom-module>

@@ -10,10 +10,11 @@
         background-color: var(--app-section-color);
         border-radius: 4px;
         padding: 16px;
-        /*max-width: calc(100vw - 80px);*/
       }
       .section-title {
-        padding-bottom: 7px;
+        display: flex;
+        align-items: center;
+        padding: 8px 0px;
         @apply --paper-font-title;
         border-bottom: 1px solid var(--app-border-color);
         border-bottom-color: var(--app-border-color);
@@ -21,26 +22,26 @@
         align-self: center;
       }
       .section-title i {
-        /*padding-left: 8px;*/
+        padding-left: 8px;
         font-weight: 100;
         text-transform: capitalize;
         font-size: 16px;
       }
-      #text-container {
+      .text-container {
           padding: 0px 16px 16px 16px;
       }
-      #subtitle {
+      .subtitle {
           @apply --paper-font-caption;
           text-transform: uppercase;
           color: var(--text-light-color);
       }
-      #caption {
+      .caption {
           margin: 20px 0px;
           padding-left: 16px;
           border-left: 3px solid var(--app-accent-color);
           @apply --paper-font-title;
       }
-      #description {
+      .description {
           @apply --paper-font-body2;
           text-align: justify;
       }

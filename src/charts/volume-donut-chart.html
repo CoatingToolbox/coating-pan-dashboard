@@ -10,7 +10,7 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                margin: 48px 16px;
+                /*margin: 48px 16px;*/
                 align-items: center;
                 flex-grow: 1;
                 --chart-color: var(--app-primary-color);
@@ -19,12 +19,10 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                
-                @apply --paper-font-subhead;
-                color: var(--text-third-color);
+                @apply --paper-font-title;
             }
             #chart {
-                width: 124px;
+                min-width: 124px;
                 margin-bottom: 16px;
                 fill: var(--divider-color);
             }
@@ -63,7 +61,24 @@
     
     <script>
         class VolumeDonutChart extends ReduxMixin(Polymer.Element) {
+            
             static get is() { return 'volume-donut-chart';}
+            
+            connectedCallback() {
+                super.connectedCallback();
+                window.addEventListener('resize', () => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                window.requestAnimationFrame(() => {
+                    this.height = this.$.chart.clientHeight;
+                    this.width = this.$.chart.clientWidth;
+                });
+            }
             
             static get properties() { 
                 return {

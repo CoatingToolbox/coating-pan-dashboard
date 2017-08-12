@@ -1,0 +1,97 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../charts/bulk-density-chart.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='density-input-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(5, auto);
+            } 
+            
+            .text-container {
+                grid-column: 1 / 4;
+                grid-row: 1 / 2;
+            }
+            .section-title,
+            unit-input {
+                grid-column: 1 / 2;
+            }
+            bulk-density-chart {
+                grid-column: 2 / 4;
+                grid-row: 2 / 6;
+            }
+        </style>
+       
+      <div class='text-container'>
+        <div class='subtitle'>Density and Weight</div>
+        <div class='caption'>Volume to Weight to Count</div>
+        <div class='description'>
+            A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
+          the diameter does not provide a useful way to compare the shape and size of different coating pans.
+          Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+          From these dimensions we can later explore batch size, pan speed and more.
+        </div>
+      </div>
+      
+      <div class='section-title'>Product Details - <i>Inputs</i></div>
+      <unit-input 
+          value='[[pan.fillDensity]]' 
+          on-value-changed='_setFillDensity'
+          type='density'
+          selected-units='g/ml' 
+          title='Bulk Density' 
+          details='The bulk density of the product to be coated.'>
+      </unit-input>
+      <unit-input 
+            value='[[pan.tabletWeight]]' 
+            type='weight'
+            selected-units='mg' 
+            title='Tablet Weight' 
+            details='The average weight of a single tablet.'>
+        </unit-input>
+        
+      <bulk-density-chart></bulk-density-chart>
+      
+    </template>
+
+    <script>
+        class DensityInputSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'density-input-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                };
+            }
+            
+            
+      _setFillDensity(e) {
+          this.pan.fillDensity = e.detail.value;
+          this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+          });
+      }
+      
+      _setTabletWeight(e) {
+          this.pan.tabletWeight = e.detail.value;
+          this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+          });
+      }
+        }
+        window.customElements.define(DensityInputSection.is, DensityInputSection);
+    </script>
+
+</dom-module>

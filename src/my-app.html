@@ -13,15 +13,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="my-icons.html">
 
-<link rel="lazy-import" href="edit-page.html">
-<link rel="lazy-import" href="explore-page.html">
+
+<link rel="lazy-import" href="elements/pan-summary.html">
+<link rel="lazy-import" href="pages/edit-page.html">
+<link rel="lazy-import" href="pages/volume-page.html">
+<link rel="lazy-import" href="pages/fill-page.html">
+<link rel="lazy-import" href="pages/spray-page.html">
 
 <dom-module id="my-app">
   <template>
@@ -46,32 +55,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --app-primary-color:#3F72AF;
         --app-dark-color:#112D4E;
         --app-light-color:#6f99cb;
-        /*--app-background-color:#e9ebef;*/
-        /*--app-section-color:#dfe1e4;*/
-        /*--app-border-color:#eeeeee;*/
-        /*--app-accent-color:#FF514B;*/
-        /*--app-warning-color:#c0392b;*/
-        /*--text-primary-color:#5b5b5b;*/
-        /*--text-dark-color:#353535;*/
-        /*--text-light-color:#767676;*/
-        /*--text-disabled-color:#212121;*/
     
         color: var(--text-primary-color);
         background-color: var(--app-background-color);
         height: 100vh;
       }
       
-      app-toolbar {
+      app-header {
         color: white;
         background-color: var(--app-primary-color);
-        z-index: 100;
+      }
+      paper-tabs {
+        display: none;
+        --paper-tabs-selection-bar-color: var(--app-primary-color);
+      }
+      paper-tab {
+        margin: 0px 32px;
       }
       iron-pages {
-        max-height: calc(100vh - 64px);
+        margin: 24px 16px;
+        min-height: calc(100vh - 48px);
+      }
+      paper-icon-button {
+        display: none;
       }
       @media(min-width: 900px) {
-        #menu-button {
+        paper-icon-button[icon='my-icons:menu'] {
           display: none;
+        }
+        paper-tabs {
+          display: flex;
+        }
+        paper-icon-button {
+          display: block;
+        }
+        
+      }
+      @media(min-width: 1232px) {
+        iron-pages {
+          margin: 32px auto;
+          max-width: 1000px;
         }
       }
     </style>
@@ -86,37 +109,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer slot='drawer'>
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected='[[page]]' attr-for-selected='page' on-selected-changed='_pageSelected'>
-          <paper-icon-item page='explore'>
-            <paper-icon-button icon='my-icons:dashboard'></paper-icon-button>
-            Dashboard
-          </paper-icon-item>
-          <paper-icon-item page='load'>
-            <paper-icon-button icon='my-icons:library'></paper-icon-button>
-            Library
-          </paper-icon-item>
-          <paper-icon-item page='edit'>
-            <paper-icon-button icon='my-icons:edit'></paper-icon-button>
-            Designer
-          </paper-icon-item>
+          <paper-item page='edit'>Designer</paper-item>
+          <paper-item page='volume'>Volume</paper-item>
+          <paper-item page='fill'>Pan Fill</paper-item>
+          <paper-item page='spray'>Spray Distribution</paper-item>
         </iron-selector> 
       </app-drawer>
       
-      <app-toolbar>
-        <paper-icon-button id='menu-button' icon='my-icons:menu'></paper-icon-button>
-        <div main-title>Coating Pan Dashboard</div>
-        <iron-selector class='toolbar-button-selector' selected='[[page]]' attr-for-selected='page' on-selected-changed='_pageSelected'>
-          <paper-icon-button icon='my-icons:dashboard' page='explore'></paper-icon-button>
-          <paper-icon-button icon='my-icons:library' page='load'></paper-icon-button>
-          <paper-icon-button icon='my-icons:edit' page='edit'></paper-icon-button>
-        </iron-selector> 
-      </app-toolbar>
-    
-      <iron-pages selected='[[page]]' attr-for-selected='page' fallback-option='edit'>
-        <edit-page page='edit'></edit-page>
-        <explore-page page='explore'></explore-page>
-        <div page='load'>Library</div>
-      </iron-pages>
-      
+      <app-header-layout id='header'>
+        <app-header slot='header' condenses fixed effects="waterfall" shadow>
+          
+          <app-toolbar>
+              <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
+              <div main-title>Coating Pan Dashboard</div>
+              <!--<paper-icon-button icon='my-icons:library' on-tap='_gotoLibrary'></paper-icon-button>-->
+              <paper-icon-button icon='my-icons:info' on-tap='_toggleSummary'></paper-icon-button>
+          </app-toolbar>
+          
+          <pan-summary id='summary' on-transitioning-changed='_resetHeader'></pan-summary>
+          
+          <paper-tabs sticky selected="[[page]]" attr-for-selected='page' on-selected-changed='_pageSelected'>
+            <paper-tab page='edit'>Designer</paper-tab>
+            <paper-tab page='volume'>Volume</paper-tab>
+            <paper-tab page='fill'>Pan Fill</paper-tab>
+            <paper-tab page='spray'>Spray Distribution</paper-tab>
+            <paper-tab>Pan Speed</paper-tab>
+            <paper-tab>Mixing Uniformity</paper-tab>
+          </paper-tabs>
+          
+        </app-header>
+        
+        <iron-pages selected="[[page]]" attr-for-selected='page'>
+          <edit-page page='edit'></edit-page>
+          <volume-page page='volume'></volume-page>
+          <fill-page page='fill'></fill-page>
+          <spray-page page='spray'></spray-page>
+        </iron-pages>
+      </app-header-layout>
     </app-drawer-layout>  
         
 
@@ -128,12 +157,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
         return {
+          
           page: {
             type: String,
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
+          
           routeData: Object,
+          
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
@@ -154,7 +186,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl(page + '-page.html');
+        var resolvedPageUrl = this.resolveUrl('pages/' + page + '-page.html');
         Polymer.importHref(
             resolvedPageUrl,
             null,
@@ -164,6 +196,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _pageSelected(e) {
         // console.log(e);
         window.location = '#/' + e.detail.value;
+      }
+      _gotoLibrary(e) {
+        window.location = '#/library';
+      }
+      
+      _resetHeader(e) {
+        if(!e.detail.value){
+          this.$.header.resetLayout();
+        }
+      }
+      
+      _toggleSummary() {
+          let resolvedPageUrl = this.resolveUrl('elements/pan-summary.html');
+          Polymer.importHref(
+            resolvedPageUrl, 
+            () => {
+              this.$.summary.toggle();
+              }, 
+            null, 
+            true);
+          
       }
     }
 

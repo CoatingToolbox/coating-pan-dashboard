@@ -17,7 +17,7 @@ class CoatingPan {
   get fillHeight(){ 
     //we estimate the heigh that will match our fill volume
     let saggita = 0;
-    let step = this.brimHeight / 200;
+    let step = this.brimHeight / 500;
     for(let i=0; i<this.brimHeight; i = i + step){
       saggita = this.brimHeight - i;
       let volume = this.calcVolume(saggita, this.wallWidth, this.panDiameter, this.sideWallSlope);
@@ -27,9 +27,9 @@ class CoatingPan {
     }
     return saggita;
   }
-  set fillHeight(val) {
-    this.fillVolume = this.calcVolume(val, this.wallWidth, this.panDiameter, this.sideWallSlope);
-  }
+  // set fillHeight(val) {
+  //   this.fillVolume = this.calcVolume(val, this.wallWidth, this.panDiameter, this.sideWallSlope);
+  // }
   
   get fillWeight() {
     return this.fillVolume * this.fillDensity;

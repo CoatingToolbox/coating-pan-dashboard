@@ -1,0 +1,73 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='volume-intro-section'>
+    <template>
+        <style include='section-styles'>
+            .text-container {
+                display: flex;
+                flex-direction: column;
+                
+            }
+            .item-container {
+                max-width: 600px;
+                display: flex;
+                flex-direction: column;
+                align-self: center;
+                padding-bottom: 16px;
+            }
+            .list-item {
+                align-items: baseline;
+                justify-content: flex-end;
+                display: flex;
+                padding: 8px;
+            }
+            .list-title {
+                font-weight: 500;
+                @apply --paper-font-body2;
+            }
+            .list-description {
+                flex-grow: 1;
+                max-width: 400px;
+                padding-left: 8px;
+                @apply --paper-font-body1;
+                text-align: justify;
+                
+            }
+        </style>
+        
+        <div class='section-title'>Min, Max & Brim</div>
+        <div class='text-container'>
+        <div class='caption'>Which volume to use</div>
+        <div class='description'>
+            A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the the diameter does not provide a useful way to compare the shape and size of different coating pans. Below we will use four ease to measure dimensions
+            to characterize the shape and size of a coating pan. From these dimensions we can later explore batch size, pan speed and more.
+        </div>
+        <div class='item-container'>
+            <div class='list-item'>
+                <div class='list-title'>Brim Volume:</div>
+                <div class='list-description'>The volume is determined if there is something cool to stay here. If the tablet exceed the brim height tablet fall out of the pan.</div>
+            </div>
+            <div class='list-item'>
+                <div class='list-title'>Max Working Volume:</div>
+                <div class='list-description'>When the pan is moving the tablets bed expands. To allow for this the maxiumum recommended volume is estiamted as one inch from the brim.</div>
+            </div>
+            <div class='list-item'>
+                <div class='list-title'>Min Working Volume:</div>
+                <div class='list-description'>Product movement can be effected with low man loads due to the baffles. To prevent this it is recommend the product fill exceed the baffle height.</div>
+            </div>
+        </div>
+        </div>
+            
+    </template>
+
+    <script>
+        class VolumeIntroSection extends Polymer.Element {
+            static get is() {
+                return 'volume-intro-section';
+            }
+        }
+        window.customElements.define(VolumeIntroSection.is, VolumeIntroSection);
+    </script>
+
+</dom-module>

@@ -1,0 +1,56 @@
+
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../sections/volume-intro-section.html">
+<link rel="import" href="../charts/volume-donut-chart.html">
+<link rel="import" href="page-styles.html">
+
+<dom-module id='volume-page'>
+    <template>
+        <style include='page-styles'>
+            :host {
+                grid-template-rows: repeat(2, auto);
+            }
+            .page-title,
+            volume-intro-section {
+                grid-column: 1 / 13;
+            }
+            volume-donut-chart {
+                background-color: var(--app-section-color);
+                border-radius: 4px;
+                padding: 36px 16px;
+                /*margin: 56px 0px;*/
+                grid-column: 5 / 9;
+            }
+            volume-donut-chart[type="min"] {
+                grid-column: 1 / 5;
+                --chart-color: var(--app-light-color);
+            }
+            volume-donut-chart[type="brim"] {
+                grid-column: 9 / 13;
+                --chart-color: var(--app-dark-color);
+            }
+        </style>
+        
+        <div class='page-title'>
+            Pan Volume - <i>Explore Different Pan Volumes</i>
+        </div>
+        
+        <volume-donut-chart type='min' label='Min Working'></volume-donut-chart>
+        <volume-donut-chart type='max' label='Max Working'></volume-donut-chart>
+        <volume-donut-chart type='brim' label='Brim'></volume-donut-chart>
+        <volume-intro-section></volume-intro-section>
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer */
+        class VolumePage extends Polymer.Element {
+            static get is() { return 'volume-page';}
+        }
+        
+        window.customElements.define(VolumePage.is, VolumePage);
+        
+    </script>
+</dom-module>

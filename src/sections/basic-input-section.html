@@ -9,7 +9,7 @@
             :host {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
-                grid-template-rows: 52px repeat(4, 1fr);
+                grid-template-rows: 52px repeat(4, auto);
             }
             .large, 
             .section-title {
@@ -24,7 +24,7 @@
                 grid-column-start: 2;
                 grid-column-end: 3;
             }
-            #text-container {
+            .text-container {
                 grid-column-start: 3;
                 grid-column-end: 4;
                 grid-row-start: 2;
@@ -32,7 +32,7 @@
             }
         </style>
         
-        <div class='section-title'>Basic Info</div>
+        <div class='section-title'>Basic Info - <i>Inputs</i></div>
         <text-input
             class='large'
             value='[[pan.equipmentName]]'
@@ -72,10 +72,10 @@
             on-value-changed='_setContactName'>
         </text-input>
         
-        <div id='text-container'>
-            <div id='subtitle'>Make & Model</div>
-            <div id='caption'>The difference in coating pans</div>
-            <div id='description'>
+        <div class='text-container'>
+            <div class='subtitle'>Make & Model</div>
+            <div class='caption'>The difference in coating pans</div>
+            <div class='description'>
                 Keep in mind not all coating pans are the same. Beyond the range
                 of manufactures and the coating pan models they offer each pan is unqiue.
                 Even when comparing the same manufacutre and model the baffle design, 

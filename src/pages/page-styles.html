@@ -1,0 +1,38 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="page-styles">
+  <template>
+    <style>
+    
+      :host {
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: repeat(12, 1fr);
+        grid-gap: 24px;
+        background-color: var(--app-background-color);
+        padding: 16px;
+      }
+      .page-title {
+        display: flex;
+        align-items: center;
+        @apply --paper-font-display1;
+        font-weight: 500;
+        padding: 16px 0px;
+      }
+      .page-title i {
+        font-weight: 100;
+        text-transform: capitalize;
+        font-size: 0.8em;
+        padding-left: 4px;
+      }
+      @media(min-width: 1200px) {
+        :host {
+          max-width: 1100px;
+          margin: auto;
+        }
+      }
+      
+    </style>
+  </template>
+</dom-module>

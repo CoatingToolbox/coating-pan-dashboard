@@ -1,0 +1,148 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../charts/pan-fill-chart.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='fill-input-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(7, auto);
+            } 
+            
+            .text-container {
+                grid-column: 1 / 4;
+                grid-row: 1 / 2;
+            }
+            .section-title,
+            unit-input {
+                grid-column: 1 / 2;
+            }
+            pan-fill-chart {
+                grid-column: 2 / 4;
+                grid-row: 3 / 8;
+            }
+        </style>
+       
+      <div class='text-container'>
+        <div class='subtitle'>Batch Size</div>
+      <div class='caption'>Different numbers same fill</div>
+      <div class='description'>
+          A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
+        the diameter does not provide a useful way to compare the shape and size of different coating pans.
+        Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+        From these dimensions we can later explore batch size, pan speed and more.
+      </div>
+      </div>
+      
+      <div class='section-title'>Fill Values - <i>Inputs</i></div>
+      <unit-input 
+          value='[[pan.fillPercent]]' 
+          on-value-changed='_setFillPercent'
+          type='percent'
+          selected-units='%' 
+          title='Percent' 
+          details='Percent of Brim Volume.'>
+      </unit-input>
+      <!--<unit-input -->
+      <!--    value='[[pan.fillHeight]]' -->
+      <!--    on-value-changed='_setFillHeight'-->
+      <!--    type='length'-->
+      <!--    selected-units='in' -->
+      <!--    title='Bed Height' -->
+      <!--    details='The maxiumum height of the bed.'>-->
+      <!--</unit-input>-->
+      <unit-input 
+          value='[[pan.fillVolume]]' 
+          on-value-changed='_setFillVolume'
+          type='volume'
+          selected-units='l' 
+          title='Product Volume' 
+          details='The volume of product.'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillWeight]]' 
+          on-value-changed='_setFillWeight'
+          type='weight'
+          selected-units='kg' 
+          title='Weight' 
+          details='The weight of the product.'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillCount]]' 
+          on-value-changed='_setFillCount'
+          type='count'
+          selected-units='tablets' 
+          title='Unit Count' 
+          details='The number of units to be coated.'>
+      </unit-input>
+      <pan-fill-chart></pan-fill-chart> 
+      
+    </template>
+
+    <script>
+        class FillInputSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'fill-input-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                };
+            }
+            
+            
+      
+      
+      
+      _setFillPercent(e) {
+        this.pan.fillPercent = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN", 
+          value: this.pan
+        });
+      }
+      
+      _setFillHeight(e) {
+        this.pan.fillHeight = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN", 
+          value: this.pan
+        });
+      }
+      
+      _setFillVolume(e) {
+        this.pan.fillVolume = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setFillWeight(e) {
+        this.pan.fillWeight = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      
+      _setFillCount(e) {
+        this.pan.fillCount = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+        }
+        window.customElements.define(FillInputSection.is, FillInputSection);
+    </script>
+
+</dom-module>

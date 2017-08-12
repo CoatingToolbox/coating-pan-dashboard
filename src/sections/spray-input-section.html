@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../charts/spray-distribution-chart.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='spray-input-section'>
+    <template>
+        <style include='section-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(4, auto);
+            } 
+            
+            .text-container {
+                grid-column: 1 / 4;
+                grid-row: 1 / 2;
+            }
+            .section-title,
+            unit-input {
+                grid-column: 1 / 2;
+            }
+            spray-distribution-chart {
+                grid-column: 2 / 4;
+                grid-row: 2 / 5;
+            }
+        </style>
+       
+      <div class='text-container'>
+        <div class='subtitle'>Single Gun Spray Pattern</div>
+        <div class='caption'>Optimal spray rate and coating uniformity</div>
+        <div class='description'>
+          Gun configurations create different spary distributions. Depending on the spray rate and disturbition and the tablet surface area. You can do different things.
+        </div>
+      </div>
+      
+      <div class='section-title'>Spray Configuration - <i>Inputs</i></div>
+      
+      <unit-input value='[[pan.sprayLength]]' type='length' selected-units='{{lengthUnits}}' decimals='1' title='Spray Width' details='The spray pattern width of one gun.' on-value-changed='_setSprayLength'>
+      </unit-input>
+      
+      <spray-distribution-chart></spray-distribution-chart>
+        
+      
+    </template>
+
+    <script>
+        class SprayInputSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'spray-input-section';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                    lengthUnits: {
+                      type: String, 
+                      value: 'in'
+                    }
+                };
+            }
+            
+            
+            _setSprayLength(e) {
+                this.pan.sprayLength = e.detail.value;
+                this.dispatch({
+                  type: "SET_PAN",
+                  value: this.pan
+                });
+            }
+        }
+        window.customElements.define(SprayInputSection.is, SprayInputSection);
+    </script>
+
+</dom-module>

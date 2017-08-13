@@ -5,7 +5,7 @@
 <dom-module id='overview-description-card'>
     <template>
         <style include='overview-styles'>
-            :host {
+            .card {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -41,26 +41,32 @@
                 text-transform: uppercase;
             }
             .value {
+                @apply --paper-font-body2;
                 text-transform: capitalize;
             }
             
         </style>
-        
-        <div class='flex'>
-            <div class='pan-title'>
-                [[pan.vendorName]] [[pan.equipmentName]] <i> - [[pan.nickname]]</i>
+        <div class='header large description-header'>
+            <div>Overview</div>
+            <div class='spacer'></div>
+            <paper-button on-tap='_openEditPage'>Pan Editor</paper-button>
+        </div>
+        <div class='card'>
+            <div class='flex'>
+                <div class='pan-title'>
+                    [[pan.vendorName]] [[pan.equipmentName]] <i> - [[pan.nickname]]</i>
+                </div>
             </div>
-        </div>
         
-        <div class='flex'>
-            <div class='contact'>[[pan.companyName]]</div>
-            <div class='contact'>&middot;</div>
-            <div class='contact'>[[pan.locationName]]</div>
-            <div class='contact'>&middot;</div>
-            <div class='contact'>[[pan.contactName]]</div>
-        </div>
+            <div class='flex'>
+                <div class='contact'>[[pan.companyName]]</div>
+                <div class='contact'>&middot;</div>
+                <div class='contact'>[[pan.locationName]]</div>
+                <div class='contact'>&middot;</div>
+                <div class='contact'>[[pan.contactName]]</div>
+            </div>
         
-        <div class='flex'>
+            <div class='flex'>
                 <div class='detail'>
                     <div class='label'>Dimensions</div>
                     <div class='value'>[[_diameter]] x [[_width]] in</div>
@@ -78,6 +84,7 @@
                     <div class='value'>[[pan.baffleType]]</div>
                 </div>
             </div>
+        </div>
         
     </template>
     <script>

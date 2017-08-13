@@ -6,7 +6,45 @@
   <template>
     <style>
         :host {
-            display: block;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            color: var(--text-light-color);
+            @apply --paper-font-subhead;
+        }
+        .header.large {
+            @apply --paper-font-display1;
+        }
+        .header paper-button {
+            padding: 4px 12px;
+            @apply --paper-font-button;
+            border-radius: 6px;
+            margin: 16px 0px;
+            background-color: var(--app-background-color);
+            border: 2px solid var(--app-border-color);
+            transition: all 0.25s;
+        }
+        .header paper-button:hover {
+            color: var(--app-white-color);
+            background-color: var(--app-primary-color);
+            border-color: var(--app-primary-color);
+            transition: all 0.25s;
+        }
+        .header.large paper-button {
+            padding: 8px 16px;
+        }
+        .header paper-icon-button:hover {
+            color: var(--app-primary-color);
+            transition: color 0.2s;
+        }
+        .card {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
             background-color: var(--app-white-color);
             border-radius: 6px;
             box-shadow: 
@@ -14,31 +52,44 @@
                 0 1px 5px 0 rgba(0, 0, 0, 0.12),
                 0 3px 1px -2px rgba(0, 0, 0, 0.2);
         }
-
-        .toolbar {
+        .card .toolbar {
             display: flex;
             align-items: center;
-            height: 56px;
+            height: 48px;
             padding: 8px 16px;
-            border-bottom: 1px solid var(--app-border-color);
+            /*border-bottom: 1px solid var(--app-border-color);*/
             @apply --paper-font-title;
         }
-        paper-button {
-            padding: 4px 16px;
-            @apply --paper-font-button;
-            color: white;
-            background-color: var(--app-primary-color);
-        }
-        paper-icon-button {
-            color: var(--text-light-color);
-            transition: all 0.2s;
-        }
-        paper-icon-button:hover {
-            color: var(--app-primary-color);
-            transition: color 0.2s;
+        .toolbar i {
+            font-weight: 200;
+            font-size: 0.8em;
         }
         .spacer {
             flex-grow: 1;
+        }
+        .bottom-container {
+            display: flex;
+            border-top: 1px solid var(--app-border-color);
+        }
+        .value-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            color: var(--text-light-color);
+        }
+        .label {
+            @apply --paper-font-caption;
+        }
+        .value {
+            @apply --paper-font-title;
+        }
+        .border {
+            height: 100;
+            background-color: var(--app-border-color);
+            width: 1px;
         }
       
     </style>

@@ -86,6 +86,10 @@ class CoatingPan {
     return this.calcVolume(this.brimHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
   }
   
+  get brimWeight() {
+    return this.brimVolume * this.fillDensity;
+  }
+  
   get maxFillHeight() {
     let limit = 0.0254;
     if(this.brimHeight < 0.0254 * 4) {

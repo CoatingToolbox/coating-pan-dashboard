@@ -10,9 +10,10 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                margin: 32px;
                 align-items: center;
+                margin: 32px;
                 flex-grow: 1;
+                font-size: 18px;
                 --chart-color: var(--app-primary-color);
             }
             #text-container {
@@ -25,8 +26,6 @@
                 min-width: 124px;
                 margin-bottom: 16px;
                 fill: var(--divider-color);
-            }
-            #full {
             }
             #partial {
                 fill: var(--chart-color);
@@ -82,7 +81,6 @@
                     pan: {type: Object, statePath: 'pan'},
                     type: {type: String, value: 'brim'},
                     label: {type: String},
-                    details: {type: String, value: 'Details Go Here'},
                     value: {type: Number, value: 15.0},
                     chart: {type: Object},
                     height: {type: Number, value: 124},
@@ -136,7 +134,7 @@
                 if(!w || !h) { return; }
                 
                 let radius = Math.min(h, w) / 2; 
-                return d3.arc().outerRadius(radius * 0.99).innerRadius(radius * 0.63);
+                return d3.arc().outerRadius(radius * 0.99).innerRadius(radius * 0.7);
             }
             
             _convertToLiters(val) {

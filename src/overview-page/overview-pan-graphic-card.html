@@ -5,16 +5,21 @@
 <dom-module id='overview-pan-graphic-card'>
     <template>
         <style include='overview-styles'>
-            :host {
+            .card {
                 display: flex;
+                flex-direction: row;
             }
             coating-pan-graphic {
                 flex-grow: 1;
             }
         </style>
-        
-        <coating-pan-graphic></coating-pan-graphic>
-        <coating-pan-graphic view='side'></coating-pan-graphic>
+        <div class='header'>
+            <div>Coating Pan Outline</div>
+        </div>
+        <div class='card'>
+            <coating-pan-graphic></coating-pan-graphic>
+            <coating-pan-graphic view='side'></coating-pan-graphic>
+        </div>
     </template>
     <script>
         class OverviewPanGraphicCard extends ReduxMixin(Polymer.Element) {

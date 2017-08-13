@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../redux-mixin.html">
 <link rel="import" href="overview-styles.html">
@@ -8,27 +7,27 @@
 <dom-module id='overview-dimensions-card'>
     <template>
         <style include='overview-styles'>
-            dimension-list-item:first-of-type {
-                padding-top: 16px;
-            }
-            dimension-list-item:last-of-type {
-                padding-bottom: 16px;
+            .card {
+                padding-bottom: 8px;
             }
         </style>
         
-        
-        <div class='toolbar'>
-            <div>Dimensions</div>
+        <div class='header'>
+            <div>Shape & Size</div>
             <div class='spacer'></div>
             <paper-icon-button icon='my-icons:edit' on-tap='_openEditPage'></paper-icon-button>
         </div>
-        <dimension-list-item title='Main Diameter' value='[[pan.panDiameter]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
-        <dimension-list-item title='Opening Diameter' value='[[pan.openingDiameter]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
-        <dimension-list-item title='Brim Height' value='[[pan.brimHeight]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
-        <dimension-list-item title='Brim Width' value='[[pan.brimWidth]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
-        <dimension-list-item title='Performated Wall Width' value='[[pan.wallWidth]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
-        <dimension-list-item title='Side Wall Length' value='[[pan.sideWallLength]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
-        
+        <div class='card'>
+            <div class='toolbar'>
+                <div>Dimensions</div>
+            </div>
+            <dimension-list-item title='Main Diameter' value='[[pan.panDiameter]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+            <dimension-list-item title='Opening Diameter' value='[[pan.openingDiameter]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+            <dimension-list-item title='Brim Height' value='[[pan.brimHeight]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+            <dimension-list-item title='Brim Width' value='[[pan.brimWidth]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+            <dimension-list-item title='Performated Wall Width' value='[[pan.wallWidth]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+            <dimension-list-item title='Side Wall Length' value='[[pan.sideWallLength]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+        </div>
     </template>
     <script>
         class OverviewDimensionsCard extends ReduxMixin(Polymer.Element) {

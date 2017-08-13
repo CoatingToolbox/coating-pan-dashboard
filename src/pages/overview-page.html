@@ -1,0 +1,146 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../overview-page/overview-description-card.html">
+<link rel="import" href="../overview-page/overview-dimensions-card.html">
+<link rel="import" href="../overview-page/overview-pan-graphic-card.html">
+<link rel="import" href="../overview-page/overview-volume-card.html">
+
+
+<dom-module id='overview-page'>
+    <template>
+        <style>
+            :host {
+                display: grid;
+                padding: 36px;
+                grid-template-columns: repeat(12, 1fr);
+                grid-template-rows: repeat(8, auto);
+                grid-gap: 0px 48px;
+            }
+            .description-header, 
+            overview-description-card {
+                grid-column: 1 / 10;
+            }
+            .description-header {
+                grid-row: 1 / 2;
+            }
+            overview-description-card {
+                grid-row: 2 / 3;
+            }
+            .dimension-header, 
+            .pan-graphic-header, {
+                grid-row: 3 / 4;
+            }
+            overview-dimensions-card,
+            overview-pan-graphic-card {
+                grid-row: 4 / 5;
+            }
+            .dimension-header,
+            overview-dimensions-card {
+                grid-column: 1 / 5;
+            }
+            .pan-graphic-header, 
+            overview-pan-graphic-card {
+                grid-column: 5 / 13;
+            }
+            .volume-header,
+            overview-volume-card {
+                grid-column: 1 / 5;
+            }
+            .volume-header {
+                grid-row: 5 / 6;
+            }
+            overview-volume-card {
+                grid-row: 6 / 7;
+            }
+            .header {
+                min-height: 48px;
+                margin-top: 36px;
+                display: flex;
+                align-items: center;
+                color: var(--text-light-color);
+                @apply --paper-font-subhead;
+            }
+            .header.large {
+                @apply --paper-font-display1;
+            }
+            .spacer {
+                flex-grow: 1;
+            }
+            paper-button {
+                padding: 4px 12px;
+                @apply --paper-font-button;
+                border-radius: 6px;
+                margin: 16px 0px;
+                background-color: var(--app-background-color);
+                border: 2px solid var(--app-border-color);
+                transition: all 0.25s;
+            }
+            paper-button:hover {
+                color: var(--app-white-color);
+                background-color: var(--app-primary-color);
+                border-color: var(--app-primary-color);
+                transition: all 0.25s;
+            }
+            .header.large paper-button {
+                padding: 8px 16px;
+            }
+            @media(min-width: 1200px) {
+                :host {
+                    max-width: 1200px;
+                    margin: auto;
+                }
+            }
+            
+        </style>
+            <div class='header large description-header'>
+                <div>Overview</div>
+                <div class='spacer'></div>
+                <paper-button on-tap='_openEditPage'>Pan Editor</paper-button>
+            </div>
+            <overview-description-card></overview-description-card>
+            
+            <div class='header dimension-header'>
+                <div>Shape & Size</div>
+                <!--<div class='spacer'></div>-->
+                <!--<paper-button>Edit</paper-button>-->
+            </div>
+            <overview-dimensions-card></overview-dimensions-card>
+            
+            <div class='header pan-graphic-header'>
+                <div>Coating Pan Outline</div>
+            </div>
+            <overview-pan-graphic-card></overview-pan-graphic-card>
+            
+            <div class='header volume-header'>
+                <div>Calculated Volume</div>
+            </div>
+            <overview-volume-card></overview-volume-card>
+           
+           
+           
+           
+            <!--<div class='card batch'>-->
+            <!--    Batch Size-->
+            <!--</div>-->
+            <!--<div class='card spray'>-->
+            <!--    Spray Distribution-->
+            <!--</div>-->
+            <!--<div class='card mixing'>-->
+            <!--    Mixing-->
+            <!--</div>-->
+            <!--<div class='card speed'>-->
+            <!--    Pan SPeed-->
+            <!--</div>-->
+    </template>
+    <script>
+        class OverviewPage extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'overview-page';
+            }
+            _openEditPage() {
+                window.location = '#/edit';
+            }
+        }
+        
+        window.customElements.define(OverviewPage.is, OverviewPage);
+    </script>
+</dom-module>

@@ -1,0 +1,46 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="overview-styles">
+  <template>
+    <style>
+        :host {
+            display: block;
+            background-color: var(--app-white-color);
+            border-radius: 6px;
+            box-shadow: 
+                0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            height: 56px;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--app-border-color);
+            @apply --paper-font-title;
+        }
+        paper-button {
+            padding: 4px 16px;
+            @apply --paper-font-button;
+            color: white;
+            background-color: var(--app-primary-color);
+        }
+        paper-icon-button {
+            color: var(--text-light-color);
+            transition: all 0.2s;
+        }
+        paper-icon-button:hover {
+            color: var(--app-primary-color);
+            transition: color 0.2s;
+        }
+        .spacer {
+            flex-grow: 1;
+        }
+      
+    </style>
+  </template>
+</dom-module>

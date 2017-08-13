@@ -10,6 +10,7 @@
   },
   "scripts": {
     "serve": "polymer serve --hostname 0.0.0.0",
+    "deploy": "polymer build && firebase deploy",
     "lint": "npm run lint:javascript && polymer lint",
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
     "test": "polymer test",

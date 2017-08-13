@@ -1,0 +1,111 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="overview-styles.html">
+
+<dom-module id='overview-description-card'>
+    <template>
+        <style include='overview-styles'>
+            :host {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 48px 36px;
+                color: white;
+                background-color: var(--app-primary-color);
+                @apply --paper-font-body2;
+            }
+            .flex {
+                display: flex;
+                justify-content: flex-start;
+            }
+            .pan-title {
+                @apply --paper-font-headline;
+                color: var(--app-white-color);
+                text-transform: uppercase;
+                font-weight: 800;
+            }
+            .detail {
+                display: flex;
+                flex-direction: column;
+                padding: 24px 0px;
+            }
+            .detail + .detail {
+                padding-left: 56px;
+            }
+            .contact + .contact {
+                padding-left: 12px;
+            }
+            .label {
+                @apply --paper-font-caption;
+                color: #efefef;
+                text-transform: uppercase;
+            }
+            .value {
+                text-transform: capitalize;
+            }
+            
+        </style>
+        
+        <div class='flex'>
+            <div class='pan-title'>
+                [[pan.vendorName]] [[pan.equipmentName]] <i> - [[pan.nickname]]</i>
+            </div>
+        </div>
+        
+        <div class='flex'>
+            <div class='contact'>[[pan.companyName]]</div>
+            <div class='contact'>&middot;</div>
+            <div class='contact'>[[pan.locationName]]</div>
+            <div class='contact'>&middot;</div>
+            <div class='contact'>[[pan.contactName]]</div>
+        </div>
+        
+        <div class='flex'>
+                <div class='detail'>
+                    <div class='label'>Dimensions</div>
+                    <div class='value'>[[_diameter]] x [[_width]] in</div>
+                </div>
+                <div class='detail'>
+                    <div class='label'>Perforation</div>
+                    <div class='value'>[[pan.peforationType]]</div>
+                </div>
+                <div class='detail'>
+                    <div class='label'>Spray Guns</div>
+                    <div class='value'>[[pan.gunType]] [[pan.gunModel]]</div>
+                </div>
+                <div class='detail'>
+                    <div class='label'>Baffles</div>
+                    <div class='value'>[[pan.baffleType]]</div>
+                </div>
+            </div>
+        
+    </template>
+    <script>
+        class OverviewDescriptionCard extends ReduxMixin(Polymer.Element) {
+            
+            static get is() {
+                return 'overview-description-card';
+            }
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object,
+                        statePath: 'pan'
+                    }, 
+                    _diameter: {
+                        type: String, 
+                        computed: '_convertToInches(pan.panDiameter)'
+                    }, 
+                    _width: {
+                        type: String, 
+                        computed: '_convertToInches(pan.brimWidth)'
+                    }
+                };
+            }
+            _convertToInches(val) {
+                return (val * 39.3701).toFixed(1);
+            }
+        }
+        window.customElements.define(OverviewDescriptionCard.is, OverviewDescriptionCard);
+    </script>
+</dom-module>

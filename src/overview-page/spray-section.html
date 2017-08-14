@@ -1,0 +1,112 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../charts/total-spray-distribution-chart.html">
+<link rel="import" href="../charts/spray-distribution-chart.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="overview-styles.html">
+
+<dom-module id='spray-section'>
+    <template>
+        <style include='overview-styles'>
+            :host {
+                display: grid;
+                grid-template-rows: repeat(3, auto);
+                grid-template-columns: 1fr 2fr;
+            }
+            .header {
+                grid-row: 1 / 2;
+                grid-column: 1 / 3;
+            }
+            .single-spray {
+                grid-row: 2 / 3;
+                grid-column: 2 / 3;
+            }
+            .total-spray {
+                grid-row: 3 / 4;
+                grid-column: 2 / 3;
+            }
+            .dimensions {
+                grid-column: 1 / 2;
+            }
+            .list-item {
+              display: flex;
+              align-items: baseline;
+              color: var(--text-light-color);
+              border-radius: 4px;
+              @apply --paper-font-body2;
+              padding: 12px 16px;
+            }
+        </style>
+        
+        <div class='header'>
+            <div>Spray Distribution</div>
+            <div class='spacer'></div>
+            <paper-icon-button icon='my-icons:edit'></paper-icon-button>
+        </div>
+        
+        <div class='card dimensions'>
+            <div class='toolbar'>
+                <div>Gun Configuration</div>
+            </div>
+            <div class='list-item'>
+                <div>Gun Type</div>
+                <div class='spacer'></div>
+                <div>[[pan.gunType]]</div>
+            </div><div class='list-item'>
+                <div>Gun Model</div>
+                <div class='spacer'></div>
+                <div>[[pan.gunModel]]</div>
+            </div>
+            <dimension-list-item title='Gun Count' value='[[pan.gunCount]]' decimals='0' selected-units='guns' type=''></dimension-list-item>
+            <dimension-list-item title='Gun To Gun' value='[[pan.gun2gun]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+        </div>
+        
+        <div class='card dimensions'>
+            <div class='toolbar'>
+                <div>Spray Pattern</div>
+            </div>
+            <dimension-list-item title='Brim Width' value='[[pan.brimWidth]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+            <dimension-list-item title='Product Width' value='[[pan.fillWidth]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+            <dimension-list-item title='Single Spray Gun' value='[[pan.sprayLength]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+            <dimension-list-item title='Total Spray' value='[[pan.totalSprayLength]]' selected-units='{{lengthUnits}}' type='length'></dimension-list-item>
+        </div>
+        
+        <div class='card single-spray'>
+            <div class='toolbar'>
+                <div>Single Spray Gun Pattern</div>
+            </div>
+            <spray-distribution-chart></spray-distribution-chart>
+        </div>
+        <div class='card total-spray'>
+            <div class='toolbar'>
+                <div>Total Spray Pattern</div>
+            </div>
+            <total-spray-distribution-chart></total-spray-distribution-chart>
+        </div>
+        
+    </template>
+    <script>
+        class SpraySection extends ReduxMixin(Polymer.Element) {
+            
+            static get is() {
+                return 'spray-section';
+            }
+            
+            static get properties() {
+                return {
+                    pan: {
+                        type: Number,
+                        statePath: 'pan'
+                    },
+                    lengthUnits: {
+                        type: String,
+                        value: "in"
+                    }
+                };
+            }
+        }
+        
+        window.customElements.define(SpraySection.is, SpraySection);
+    </script>
+</dom-module>

@@ -4,10 +4,23 @@
 <link rel="import" href="../redux-mixin.html">
 <link rel="import" href="overview-styles.html">
 
-<dom-module id='overview-volume-card'>
+<dom-module id='pan-volume-section'>
     <template>
         <style include='overview-styles'>
+            :host {
+                display: grid;
+                grid-template-rows: auto 1fr;
+                grid-template-columns: 1fr;
+            }
             
+            .header {
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+            }
+            .card {
+                grid-row: 2 / 3;
+                grid-column: 1 / 2;
+            }
             volume-donut-chart {
                 flex-grow: 1;
             }
@@ -40,10 +53,10 @@
         </div>
     </template>
     <script>
-        class OverviewVolumeCard extends ReduxMixin(Polymer.Element) {
+        class PanVolumeSection extends ReduxMixin(Polymer.Element) {
             
             static get is() {
-                return 'overview-volume-card';
+                return 'pan-volume-section';
             }
             
             static get properties() {
@@ -75,6 +88,6 @@
             }
         }
         
-        window.customElements.define(OverviewVolumeCard.is, OverviewVolumeCard);
+        window.customElements.define(PanVolumeSection.is, PanVolumeSection);
     </script>
 </dom-module>

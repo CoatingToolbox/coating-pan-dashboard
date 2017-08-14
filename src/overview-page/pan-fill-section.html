@@ -1,0 +1,80 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../charts/pan-fill-chart.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="overview-styles.html">
+
+<dom-module id='pan-fill-section'>
+    <template>
+        <style include='overview-styles'>
+            :host {
+                display: grid;
+                grid-template-rows: repeat(3, auto);
+                grid-template-columns: 1fr 2fr;
+            }
+            .header {
+                grid-row: 1 / 2;
+                grid-column: 1 / 3;
+            }
+            .graphic {
+                grid-row: 2 / 4;
+                grid-column: 2 / 3;
+            }
+            .dimensions {
+                grid-column: 1 / 2;
+            }
+        </style>
+        
+        <div class='header'>
+            <div>Product Fill</div>
+            <div class='spacer'></div>
+            <paper-icon-button icon='my-icons:edit'></paper-icon-button>
+        </div>
+        
+        <div class='card dimensions'>
+            <div class='toolbar'>
+                <div>Batch Details</div>
+            </div>
+            <dimension-list-item title='Bulk Density' value='[[pan.fillDensity]]' selected-units='g/ml' type='density'></dimension-list-item>
+            <dimension-list-item title='Tablet Weight' value='[[pan.tabletWeight]]' selected-units='mg' type='weight'></dimension-list-item>
+        </div>
+        
+        <div class='card dimensions'>
+            <div class='toolbar'>
+                <div>Batch Size</div>
+            </div>
+            <dimension-list-item title='Percent' value='[[pan.fillPercent]]' selected-units='%' type='percent'></dimension-list-item>
+            <dimension-list-item title='Volume' value='[[pan.fillVolume]]' selected-units='l' type='volume'></dimension-list-item>
+            <dimension-list-item title='Weigth' value='[[pan.fillWeight]]' selected-units='kg' type='weight'></dimension-list-item>
+            <dimension-list-item title='Count' value='[[pan.fillCount]]' decimals='0' selected-units='tabs' type=''></dimension-list-item>
+        </div>
+        
+        <div class='card graphic'>
+            <div class='toolbar'>
+                <div>Pan Fill</div>
+            </div>
+            <pan-fill-chart></pan-fill-chart>
+        </div>
+        
+    </template>
+    <script>
+        class PanFillSection extends ReduxMixin(Polymer.Element) {
+            
+            static get is() {
+                return 'pan-fill-section';
+            }
+            
+            static get properties() {
+                return {
+                    pan: {
+                        type: Number,
+                        statePath: 'pan'
+                    }
+                };
+            }
+        }
+        
+        window.customElements.define(PanFillSection.is, PanFillSection);
+    </script>
+</dom-module>

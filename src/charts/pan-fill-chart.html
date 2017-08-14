@@ -12,29 +12,29 @@
                 padding: 16px;
             }
 
-                    .circle.batch-volume {
-                        stroke: var(--app-accent-color);
-                    }
+            .circle.batch-volume {
+                stroke: var(--app-accent-color);
+            }
         </style>
         
         <div id='tooltip' class='hide'>
-            <div>Batch Volume</div>
-            <div>[[_convertToLitersString(pan.fillVolume)]] L</div>
+            <div>Weight</div>
+            <div>[[_convertToKGString(pan.fillWeight)]] kg</div>
         </div>
         
         <svg id="chart">
-                    <g class="chart">
-                        <g class="x axis"></g>
-                        <g class="y axis"></g>
-                        <text class="x title">Bed Depth (inches)</text>
-                        <text class="y title">Batch Size (kg)</text>
-                        <path class="total-volume dotted line"></path>
-                        <path class="working-volume area"></path>
-                        <path class="working-volume line"></path>
-                        <g class="volume-circles circle"></g>
-                        <circle r="7" class="batch-volume circle" on-track="_trackBatch"></circle>
-                    </g>
-                </svg>
+            <g class="chart">
+                <g class="x axis"></g>
+                <g class="y axis"></g>
+                <text class="x title">Bed Depth (inches)</text>
+                <text class="y title">Batch Size (kg)</text>
+                <path class="total-volume dotted line"></path>
+                <path class="working-volume area"></path>
+                <path class="working-volume line"></path>
+                <g class="volume-circles circle"></g>
+                <circle r="7" class="batch-volume circle" on-track="_trackBatch"></circle>
+            </g>
+        </svg>
         
         
     </template>
@@ -282,8 +282,8 @@
             _convertToKG(val) {
                 return (val / 1000) ;
             }
-            _convertToLitersString(val) {
-                return this._convertToLiters(val).toFixed(1);
+            _convertToKGString(val) {
+                return this._convertToKG(val).toFixed(1);
             }
         }
         

@@ -6,18 +6,21 @@
   <template>
     <style>
         :host {
-            display: flex;
-            flex-direction: column;
+            display: block;
+            grid-gap: 16px;
         }
         .header {
-            height: 56px;
             display: flex;
             align-items: center;
-            color: var(--text-light-color);
             @apply --paper-font-subhead;
+            border-bottom: 4px solid var(--text-primary-color);
+            color: var(--text-primary-color);
+            height: 36px;
+            font-weight: bold;
         }
         .header.large {
             @apply --paper-font-display1;
+            height: 56px;
         }
         .header paper-button {
             padding: 4px 12px;
@@ -34,15 +37,11 @@
             border-color: var(--app-primary-color);
             transition: all 0.25s;
         }
-        .header.large paper-button {
-            padding: 8px 16px;
-        }
         .header paper-icon-button:hover {
             color: var(--app-primary-color);
             transition: color 0.2s;
         }
         .card {
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
             background-color: var(--app-white-color);
@@ -56,8 +55,7 @@
             display: flex;
             align-items: center;
             height: 48px;
-            padding: 8px 16px;
-            /*border-bottom: 1px solid var(--app-border-color);*/
+            padding: 8px 16px 0px 16px;
             @apply --paper-font-title;
         }
         .toolbar i {
@@ -87,7 +85,7 @@
             @apply --paper-font-title;
         }
         .border {
-            height: 100;
+            height: 80px;
             background-color: var(--app-border-color);
             width: 1px;
         }

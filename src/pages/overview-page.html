@@ -1,0 +1,71 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../overview-page/pan-overview-section.html">
+<link rel="import" href="../overview-page/shape-size-section.html">
+<link rel="import" href="../overview-page/pan-volume-section.html">
+<link rel="import" href="../overview-page/pan-fill-section.html">
+<link rel="import" href="../overview-page/spray-section.html">
+
+
+<dom-module id='overview-page'>
+    <template>
+        <style>
+            :host {
+                display: grid;
+                padding: 36px;
+                grid-template-columns: repeat(12, 1fr);
+                grid-template-rows: repeat(8, auto);
+                grid-gap: 16px;
+            }
+            pan-overview-section {
+                grid-column: 1 / 13;
+                grid-row: 1 / 2;
+            }
+            shape-size-section {
+                grid-column: 1 / 9;
+                grid-row: 2 / 3;
+            }
+            pan-volume-section {
+                grid-column: 9 / 13;
+                grid-row: 2 / 3;
+            }
+            pan-fill-section {
+                grid-column: 1 / 13;
+                grid-row: 3 / 4;
+            }
+            spray-section {
+                grid-column: 1 / 13;
+                grid-row: 4 / 5;
+            }
+            
+            @media(min-width: 1200px) {
+                :host {
+                    max-width: 1200px;
+                    margin: auto;
+                }
+            }
+            
+        </style>
+            
+            <pan-overview-section></pan-overview-section>
+            
+            <shape-size-section></shape-size-section>
+            
+            <pan-volume-section></pan-volume-section>
+            
+            <pan-fill-section></pan-fill-section>
+            
+            <spray-section></spray-section>
+    </template>
+    <script>
+        class OverviewPage extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'overview-page';
+            }
+            _openEditPage() {
+                window.location = '#/edit';
+            }
+        }
+        
+        window.customElements.define(OverviewPage.is, OverviewPage);
+    </script>
+</dom-module>

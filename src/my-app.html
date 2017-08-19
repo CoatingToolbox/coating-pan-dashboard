@@ -27,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <link rel="lazy-import" href="elements/pan-summary.html">
+<link rel="lazy-import" href="pages/overview-page.html">
 <link rel="lazy-import" href="pages/edit-page.html">
 <link rel="lazy-import" href="pages/volume-page.html">
 <link rel="lazy-import" href="pages/fill-page.html">
@@ -40,8 +41,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --app-dark-color: #13596d;  
         --app-light-color: #77b9cb;
         
+        --app-white-color: #fcfcfc;
         --app-background-color: #fcfcfc;
-        --app-section-color: #ececec;
+        --app-section-color: #eeeeee;
         --app-border-color: #b4b4b4;
         
         --app-accent-color: #FF514B;
@@ -49,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         --text-primary-color: #5b5b5b;
         --text-dark-color: #353535;
-        --text-light-color: #4f4f4f;
+        --text-light-color: #818181;
         --text-disabled-color: #212121;
 
         --app-primary-color:#3F72AF;
@@ -62,41 +64,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       
       app-header {
-        color: white;
-        background-color: var(--app-primary-color);
-      }
-      paper-tabs {
-        display: none;
-        --paper-tabs-selection-bar-color: var(--app-primary-color);
-      }
-      paper-tab {
-        margin: 0px 32px;
+        background-color: var(--app-white-color);
       }
       iron-pages {
-        margin: 24px 16px;
         min-height: calc(100vh - 48px);
       }
-      paper-icon-button {
-        display: none;
+      app-toolbar {
+        @apply --paper-font-subhead;
       }
-      @media(min-width: 900px) {
-        paper-icon-button[icon='my-icons:menu'] {
-          display: none;
-        }
-        paper-tabs {
-          display: flex;
-        }
-        paper-icon-button {
-          display: block;
-        }
-        
+      [main-title] {
+        @apply --paper-font-title;
+        font-weight: bold;
       }
-      @media(min-width: 1232px) {
-        iron-pages {
-          margin: 32px auto;
-          max-width: 1000px;
-        }
+      .initial {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 14px;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        color: white;
+        margin: 12px;
+        background-color: var(--app-dark-color);
       }
+      
     </style>
 
     <app-location route="{{route}}" use-hash-as-path url-space-regex="^[[rootPath]]"></app-location>
@@ -109,37 +104,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer slot='drawer'>
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected='[[page]]' attr-for-selected='page' on-selected-changed='_pageSelected'>
-          <paper-item page='edit'>Designer</paper-item>
-          <paper-item page='volume'>Volume</paper-item>
-          <paper-item page='fill'>Pan Fill</paper-item>
+          <paper-item page='overview'>Overview</paper-item>
+          <paper-item page='volume'>Pan Volume</paper-item>
+          <paper-item page='fill'>Batch Size</paper-item>
           <paper-item page='spray'>Spray Distribution</paper-item>
+          <paper-item page='edit'>Pan Editor</paper-item>
+          <paper-item page='load'>Pan Library</paper-item>
         </iron-selector> 
       </app-drawer>
       
       <app-header-layout id='header'>
-        <app-header slot='header' condenses fixed effects="waterfall" shadow>
-          
+        <app-header slot='header' condenses fixed effects="waterfall">
           <app-toolbar>
               <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
               <div main-title>Coating Pan Dashboard</div>
-              <!--<paper-icon-button icon='my-icons:library' on-tap='_gotoLibrary'></paper-icon-button>-->
-              <paper-icon-button icon='my-icons:info' on-tap='_toggleSummary'></paper-icon-button>
+              <div class='initial'>J</div>
+              <div>Jason Hansell</div>
           </app-toolbar>
-          
-          <pan-summary id='summary' on-transitioning-changed='_resetHeader'></pan-summary>
-          
-          <paper-tabs sticky selected="[[page]]" attr-for-selected='page' on-selected-changed='_pageSelected'>
-            <paper-tab page='edit'>Designer</paper-tab>
-            <paper-tab page='volume'>Volume</paper-tab>
-            <paper-tab page='fill'>Pan Fill</paper-tab>
-            <paper-tab page='spray'>Spray Distribution</paper-tab>
-            <paper-tab>Pan Speed</paper-tab>
-            <paper-tab>Mixing Uniformity</paper-tab>
-          </paper-tabs>
-          
         </app-header>
         
         <iron-pages selected="[[page]]" attr-for-selected='page'>
+          <overview-page page='overview'></overview-page>
           <edit-page page='edit'></edit-page>
           <volume-page page='volume'></volume-page>
           <fill-page page='fill'></fill-page>
@@ -181,7 +166,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'view1' in that case.
-        this.page = page || 'edit';
+        this.page = page || 'overview';
       }
 
       _pageChanged(page) {

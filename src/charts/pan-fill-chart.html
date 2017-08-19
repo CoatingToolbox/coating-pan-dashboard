@@ -12,30 +12,29 @@
                 padding: 16px;
             }
 
-                    .circle.batch-volume {
-                        stroke: var(--app-accent-color);
-                    }
+            .circle.batch-volume {
+                stroke: var(--app-accent-color);
+            }
         </style>
         
         <div id='tooltip' class='hide'>
-            <div>Batch Volume</div>
-            <div>[[_convertToLitersString(pan.fillVolume)]] L</div>
+            <div>Weight</div>
+            <div>[[_convertToKGString(pan.fillWeight)]] kg</div>
         </div>
         
         <svg id="chart">
-                    <g class="chart">
-                        <g class="x axis"></g>
-                        <g class="y axis"></g>
-                        <text class="x title">Product Volume (liters)</text>
-                        <text class="y title">Product Depth (inches)</text>
-                        <!--<path class="total-volume area"></path>-->
-                        <path class="total-volume dotted line"></path>
-                        <path class="working-volume area"></path>
-                        <path class="working-volume line"></path>
-                        <g class="volume-circles circle"></g>
-                        <circle r="7" class="batch-volume circle" on-track="_trackBatch"></circle>
-                    </g>
-                </svg>
+            <g class="chart">
+                <g class="x axis"></g>
+                <g class="y axis"></g>
+                <text class="x title">Bed Depth (inches)</text>
+                <text class="y title">Batch Size (kg)</text>
+                <path class="total-volume dotted line"></path>
+                <path class="working-volume area"></path>
+                <path class="working-volume line"></path>
+                <g class="volume-circles circle"></g>
+                <circle r="7" class="batch-volume circle" on-track="_trackBatch"></circle>
+            </g>
+        </svg>
         
         
     </template>
@@ -76,18 +75,18 @@
                     }},
                     height: {type: Number},
                     width: {type: Number},
-                    xScale: {type: Object, computed: '_computeXScale(width, pan.brimVolume)'},
-                    yScale: {type: Object, computed: '_computeYScale(height, pan.brimHeight)'},
+                    xScale: {type: Object, computed: '_computeXScale(width, pan.brimHeight)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, pan.brimWeight)'},
                     d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
                     d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
                 };
             }
-            _computeXScale(chartWidth, brimVolume) {
-                let max = this._convertToLiters(brimVolume) * 1.1;
+            _computeXScale(chartWidth, domain) {
+                let max = this._convertToInches(domain) * 1.1;
                 return d3.scaleLinear().range([0, chartWidth]).domain([0, max]).nice();
             }
-            _computeYScale(chartHeight, brimHeight) {
-                let max = this._convertToInches(brimHeight) * 1.1;
+            _computeYScale(chartHeight, domain) {
+                let max = this._convertToKG(domain) * 1.1;
                 return d3.scaleLinear().range([chartHeight, 0]).domain([0, max]).nice();
             }
             _computeD3Line(xScale, yScale) {
@@ -110,7 +109,7 @@
                     '_updateTotalVolume(pan, chart, d3Line, d3Area)',
                     '_updateWorkingVolume(pan, chart, d3Line, d3Area)',
                     '_updateVolumePoints(pan, chart, xScale, yScale)',
-                    '_updateBatchPoint(pan, pan.fillVolume, chart, xScale, yScale)'
+                    '_updateBatchPoint(pan, pan.fillWeight, chart, xScale, yScale)'
                 ];
             }
             
@@ -148,15 +147,15 @@
                 
                 // initiate an empty array to store values in for loop
                 let vals = [];
-                let step = pan.brimVolume / 25;
+                let step = pan.brimWeight / 25;
                 
                 // loop through different volumes and store the volume and height values
-                for(var i=0; i < pan.brimVolume; i = i + step) {
-                    p.fillVolume = i;
-                    vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+                for(var i=0; i < pan.brimWeight; i = i + step) {
+                    p.fillWeight = i;
+                    vals.push({y: this._convertToKG(p.fillWeight), x: this._convertToInches(p.fillHeight)});
                 }
                 // finally store the max values 
-                vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+                vals.push({y: this._convertToKG(pan.brimWeight), x: this._convertToInches(pan.brimHeight)});
                 
                 // Add the line
                 let lines = chart.select('.total-volume.line').data([vals]);
@@ -182,15 +181,15 @@
                 
                 // initiate an empty array to store values in for loop
                 let vals = [];
-                let step = (pan.maxFillVolume - pan.minFillVolume) / 10;
+                let step = (pan.maxFillWeight - pan.minFillWeight) / 10;
                 
                 // loop through different volumes and store the volume and height values
-                for(var i=pan.minFillVolume; i < pan.maxFillVolume; i = i + step) {
-                    p.fillVolume = i;
-                    vals.push({x: this._convertToLiters(p.fillVolume), y: this._convertToInches(p.fillHeight)});
+                for(var i=pan.minFillWeight; i < pan.maxFillWeight; i = i + step) {
+                    p.fillWeight = i;
+                    vals.push({y: this._convertToKG(p.fillWeight), x: this._convertToInches(p.fillHeight)});
                 }
                 // finally store the max values 
-                vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
+                vals.push({y: this._convertToKG(pan.maxFillWeight), x: this._convertToInches(pan.maxFillHeight)});
                 
                 // Add the line
                 let lines = chart.select('.working-volume.line').data([vals]);
@@ -211,9 +210,9 @@
                     return;
                 }
                 let vals = [];
-                vals.push({x: this._convertToLiters(pan.minFillVolume), y: this._convertToInches(pan.minFillHeight)});
-                vals.push({x: this._convertToLiters(pan.maxFillVolume), y: this._convertToInches(pan.maxFillHeight)});
-                vals.push({x: this._convertToLiters(pan.brimVolume), y: this._convertToInches(pan.brimHeight)});
+                vals.push({y: this._convertToKG(pan.minFillWeight), x: this._convertToInches(pan.minFillHeight)});
+                vals.push({y: this._convertToKG(pan.maxFillWeight), x: this._convertToInches(pan.maxFillHeight)});
+                vals.push({y: this._convertToKG(pan.brimWeight), x: this._convertToInches(pan.brimHeight)});
                 
                 // Add the dots
                 let circles = chart.select('.volume-circles').selectAll('circle').data(vals);
@@ -227,12 +226,12 @@
                 
                 circles.exit().remove();
             }
-            _updateBatchPoint(pan, fillVolume, chart, xScale, yScale) {
+            _updateBatchPoint(pan, fillWeight, chart, xScale, yScale) {
                 if(!pan || !chart || !xScale || !yScale) {
                     return;
                 }
                 let vals = [];
-                vals.push({x: this._convertToLiters(fillVolume), y: this._convertToInches(pan.fillHeight)});
+                vals.push({y: this._convertToKG(fillWeight), x: this._convertToInches(pan.fillHeight)});
                 
                 // Add the dots
                 let circles = chart.selectAll('circle.batch-volume').data(vals);
@@ -257,11 +256,11 @@
             _trackBatch(e) {
                 switch(e.detail.state) {
                     case 'start':
-                        this.startFill = this.pan.fillVolume;
+                        this.startFill = this.pan.fillPercent;
                         this.$.tooltip.classList.remove('hide');
                         break;
                     case 'track':
-                        this.pan.fillVolume = this.startFill + (this.xScale.invert(e.detail.dx) * 0.001);
+                        this.pan.fillPercent = this.startFill + e.detail.dx / 600;
                         
                         this.dispatch({
                             type: "SET_PAN", 
@@ -270,10 +269,6 @@
                         break;
                     case 'end':
                         this.$.tooltip.classList.add('hide');
-                        // this.dispatch({
-                        //     type: "SET_PAN", 
-                        //     value: this.pan
-                        // });
                         break;
                 }
             }
@@ -283,9 +278,12 @@
             }
             _convertToLiters(val) {
                 return (val / 0.001) ;
-          }
-            _convertToLitersString(val) {
-                return this._convertToLiters(val).toFixed(1);
+            }
+            _convertToKG(val) {
+                return (val / 1000) ;
+            }
+            _convertToKGString(val) {
+                return this._convertToKG(val).toFixed(1);
             }
         }
         

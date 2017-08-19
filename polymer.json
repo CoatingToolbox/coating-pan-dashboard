@@ -2,7 +2,7 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/elements/pan-summary.html",
+    "src/pages/overview-page.html",
     "src/pages/edit-page.html",
     "src/pages/volume-page.html",
     "src/pages/fill-page.html",

@@ -42,7 +42,7 @@
         <div class='header'>
             <div>Spray Distribution</div>
             <div class='spacer'></div>
-            <paper-icon-button icon='my-icons:edit'></paper-icon-button>
+            <paper-icon-button icon='my-icons:edit' on-tap='_openSprayPage'></paper-icon-button>
         </div>
         
         <div class='card dimensions'>
@@ -108,6 +108,9 @@
                         value: "in"
                     }
                 };
+            }
+            _openSprayPage() {
+                window.location = '#/spray';
             }
         }
         

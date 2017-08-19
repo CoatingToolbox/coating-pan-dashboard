@@ -29,7 +29,7 @@
         <div class='header'>
             <div>Product Fill</div>
             <div class='spacer'></div>
-            <paper-icon-button icon='my-icons:edit'></paper-icon-button>
+            <paper-icon-button icon='my-icons:edit' on-tap='_openFillPage'></paper-icon-button>
         </div>
         
         <div class='card dimensions'>
@@ -72,6 +72,9 @@
                         statePath: 'pan'
                     }
                 };
+            }
+            _openFillPage() {
+                window.location = '#/fill';
             }
         }
         

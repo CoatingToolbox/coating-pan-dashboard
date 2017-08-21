@@ -1,0 +1,26 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../charts/pan-speed-chart.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='pan-speed-section'>
+    <template>
+        <style include='section-styles'>
+            
+        </style>
+            
+        <pan-speed-chart></pan-speed-chart>
+        
+        
+    </template>
+    <script>
+        class PanSpeedSection extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'pan-speed-section';
+            }
+        }
+        
+        window.customElements.define(PanSpeedSection.is, PanSpeedSection);
+    </script>
+</dom-module>

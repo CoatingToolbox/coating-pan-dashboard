@@ -1,0 +1,33 @@
+
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../sections/pan-speed-section.html">
+<link rel="import" href="page-styles.html">
+
+<dom-module id='speed-page'>
+    <template>
+        <style include='page-styles'>
+            :host {
+                display: block;
+            }
+        </style>
+        
+        <div class='page-title'>
+            Pan Speed - <i>Recommendation and Scale Up</i>
+        </div>
+        
+        <pan-speed-section></pan-speed-section>
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer */
+        class SpeedPage extends Polymer.Element {
+            static get is() { return 'speed-page';}
+        }
+        
+        window.customElements.define(SpeedPage.is, SpeedPage);
+        
+    </script>
+</dom-module>

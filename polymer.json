@@ -3,10 +3,12 @@
   "shell": "src/my-app.html",
   "fragments": [
     "src/pages/overview-page.html",
-    "src/pages/edit-page.html",
     "src/pages/volume-page.html",
     "src/pages/fill-page.html",
-    "src/pages/spray-page.html"
+    "src/pages/spray-page.html",
+    "src/pages/speed-page.html",
+    "src/pages/library-page.html",
+    "src/pages/edit-page.html"
   ],
   "sources": [
     "src/**/*",

@@ -1,0 +1,136 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="page-styles.html">
+
+<dom-module id='library-page'>
+    <template>
+        <style include='page-styles'>
+            :host {
+                display: block;
+            }
+            #table {
+                display: grid;
+                grid-template-columns: repeat(4, auto);
+                grid-auto-rows: 56px;
+                grid-gap: 2px 16px;
+                align-items: center;
+                background-color: white;
+                margin: 32px 0px;
+                padding: 8px 32px;
+                @apply --paper-font-body1;
+            }
+            .name {
+                grid-column: 1 / 2;
+            }
+            .company {
+                grid-column: 2 / 3;
+            }
+            .diameter {
+                grid-column: 3 / 4;
+            }
+            .title {
+                @apply --paper-font-body2;
+            }
+            paper-button {
+                grid-column: 4 / 5;
+                align-self: end;
+                justify-self: center;
+                @apply --paper-font-button;
+            }
+            paper-button:hover {
+                background-color: var(--app-primary-color);
+                color: var(--app-white-color);
+            }
+            
+        </style>
+        
+        <div class='page-title'>
+            Coating Pan Library - <i>Explore or Customize a Common Coating Pan</i>
+        </div>
+        <div id='table'>
+            <div class='name title'>Name</div>
+            <div class='company title'>Company</div>
+            <div class='diameter title'>Diameter</div>
+            <template is='dom-repeat' items='[[pans]]'>
+                <div class='name'>[[item.vendorName]] [[item.equipmentName]] - [[item.nickname]]</div>
+                <div class='company'>[[item.companyName]] [[item.locationName]]</div>
+                <div class='diameter'>[[_toInches(item.panDiameter)]] in</div>
+                <paper-button on-tap='_panSelected'>SELECT</paper-button>
+            </template>
+        </div>
+        
+    </template>
+    
+    <script>
+        
+        /*global Polymer */
+        class LibraryPage extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'library-page';}
+            
+            static get properties() {
+                return {
+                    pans: {
+                        type: Array,
+                        value: function() {
+                            return [
+                              {nickname: '9" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                              equipmentName: 'M Coater', panDiameter: 0.2286, openingDiameter: 0.127, brimWidth: 0.1651, wallWidth: 0.1143}, 
+                              
+                              {nickname: '12" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                              equipmentName: 'Labcoat IIX', panDiameter: 0.3048, openingDiameter: 0.1524, brimWidth: 0.2032, wallWidth: 0.1143},
+                              
+                              {nickname: '15" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                              equipmentName: 'Labcoat IIX', panDiameter: 0.381, openingDiameter: 0.2032, brimWidth: 0.31115, wallWidth: 0.2032},
+                              
+                              {nickname: '19" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                              equipmentName: 'Labcoat IIX', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794},
+                              
+                              {nickname: '24" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                              equipmentName: 'Labcoat IIX', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.508, wallWidth: 0.3302},
+                              
+                              {nickname: '30" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                              equipmentName: 'Labcoat IIX', panDiameter: 0.762, openingDiameter: 0.254, brimWidth: 0.6477, wallWidth: 0.381},
+                              
+                              {nickname: '48" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                              equipmentName: 'Fastcoat', panDiameter: 1.2192, openingDiameter: 0.4826, brimWidth: 0.93345, wallWidth: 0.508},
+                              
+                              {nickname: '15" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+                              equipmentName: 'Compu-Lab', panDiameter: 0.381, openingDiameter: 0.254, brimWidth: 0.2159, wallWidth: 0.1524}, 
+                              
+                              {nickname: '19" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+                              equipmentName: 'Compu-Lab', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794}, 
+                              
+                              {nickname: '24" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+                              equipmentName: 'Compu-Lab', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.53975, wallWidth: 0.3302},
+                              
+                              {nickname: '60" Pan', locationName: 'Irvine, CA', companyName: 'Par', vendorName: "Thomas Engineering", 
+                              equipmentName: 'Accela-Cota', panDiameter: 1.524, openingDiameter: 0.4826, brimWidth: 1.2192, wallWidth: 0.635}
+                            ];
+                        }
+                    }, 
+                };
+            }
+            
+            _panSelected(e) {
+                this.dispatch({
+                    type: 'LOAD_PAN',
+                    value: e.model.item
+                });
+                window.location = '#/edit';
+            }
+            
+            _toInches(val) {
+                return (val * 39.3701).toFixed(1);
+            }
+            _toLiters(val) {
+                return (val * 1000).toFixed(1);
+            }
+        }
+        
+        
+        window.customElements.define(LibraryPage.is, LibraryPage);
+        
+    </script>
+</dom-module>

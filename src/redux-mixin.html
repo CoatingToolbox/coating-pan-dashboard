@@ -43,6 +43,30 @@
                 // when setting a pan we create a new coating pan object and pass the pan object to set properties
                 let pan = Object.assign(new CoatingPan(), action.value);
                 return Object.assign(state, {pan: pan});
+            case 'LOAD_PAN':
+                let loadPan = Object.assign(
+                                    new CoatingPan(), 
+                                    {
+                                        panDiameter: action.value.panDiameter || 0,
+                                        openingDiameter: action.value.openingDiameter || 0,
+                                        wallWidth: action.value.wallWidth || 0,
+                                        brimWidth: action.value.brimWidth || 0,
+                                        fillVolume: action.value.fillVolume || 0,
+                                        baffleCount: action.value.baffleCount || 0,
+                                        baffleHeight: action.value.baffleHeight || 0,
+                                        baffleType: action.value.baffleType || '',
+                                        gunType: action.value.gunType || '',
+                                        gunModel: action.value.gunModel || '',
+                                        gunCount: action.value.gunCount || 1,
+                                        gun2gun: action.value.gun2gun || 0,
+                                        equipmentName: action.value.equipmentName || '',
+                                        vendorName: action.value.vendorName || '',
+                                        nickname: action.value.nickname || '',
+                                        companyName: action.value.companyName || '',
+                                        locationName: action.value.locationName || '',
+                                        contactName: action.value.contactName || '',
+                                    });
+                return Object.assign(state, {pan: loadPan});
             default: 
                 return state;
         }

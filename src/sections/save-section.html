@@ -38,7 +38,7 @@
             </div>
         </div>
         
-        <paper-button on-tap='_explore'>Pan Volume</paper-button>
+        <paper-button on-tap='_openOverview'>Pan Overview</paper-button>
         
     </template>
 
@@ -48,8 +48,8 @@
                 return 'save-section';
             }
             
-            _explore() {
-                window.location = '#/volume'
+            _openOverview() {
+                window.location = '#/overview';
             }
         }
         window.customElements.define(SaveSection.is, SaveSection);

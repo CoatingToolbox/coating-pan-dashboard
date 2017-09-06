@@ -2,13 +2,15 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/pages/overview-page.html",
+    "src/pages/library-page.html",
+    "src/pages/report-page.html",
+    "src/pages/dashboard-page.html",
+    "src/pages/info-page.html",
     "src/pages/volume-page.html",
     "src/pages/fill-page.html",
     "src/pages/spray-page.html",
     "src/pages/speed-page.html",
-    "src/pages/library-page.html",
-    "src/pages/edit-page.html"
+    "src/pages/size-page.html"
   ],
   "sources": [
     "src/**/*",

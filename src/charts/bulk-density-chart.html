@@ -68,7 +68,7 @@
                     weightUnits: {type: String, value: 'kg'},
                     minWeight: {type: Number, computed: '_computeWeight(pan.minFillVolume, pan.fillDensity)'},
                     maxWeight: {type: Number, computed: '_computeWeight(pan.maxFillVolume, pan.fillDensity)'},
-                    fillWeight: {type: Number, computed: '_computeWeight(pan.fillVolume, pan.fillDensity)'},
+                    fillVolume: {type: Number, computed: '_computeFillVolume(pan.fillVolume)'},
                     chart: {type: Object},
                     margin: {type: Object, value: function() {
                         return {top: 20, right: 20, bottom: 50, left: 20};
@@ -86,12 +86,15 @@
                     minDensity: {type: Number, value: 250000},
                     maxDensity: {type: Number, value: 1500000},
                     xScale: {type: Object, computed: '_computeXScale(width)'},
-                    yScale: {type: Object, computed: '_computeYScale(height, pan.fillVolume)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, fillVolume)'},
                     d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
                     d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
                 };
             }
             
+            _computeFillVolume(volume) {
+                return (volume > 0) ? volume : 0.001;
+            }
             _computeWeight(volume, density) {
                 return density * volume;
             }
@@ -123,8 +126,8 @@
                     '_initChart(margin, height, width)',
                     '_updateAxis(xScale, yScale, chart)',
                     '_updateLine(pan.fillVolume, chart, d3Line)',
-                    '_updateFillDensityPoint(pan.fillDensity, pan.fillVolume, chart, xScale, yScale)',
-                    '_updateReferencePoints(references, pan.fillVolume, chart, xScale, yScale)'
+                    '_updateFillDensityPoint(pan.fillDensity, fillVolume, chart, xScale, yScale)',
+                    '_updateReferencePoints(references, fillVolume, chart, xScale, yScale)'
                 ];
             }
             

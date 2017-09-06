@@ -6,7 +6,7 @@
 <link rel="import" href="../overview-page/spray-section.html">
 
 
-<dom-module id='overview-page'>
+<dom-module id='report-page'>
     <template>
         <style>
             :host {
@@ -55,17 +55,15 @@
             <pan-fill-section></pan-fill-section>
             
             <spray-section></spray-section>
+            
     </template>
     <script>
-        class OverviewPage extends ReduxMixin(Polymer.Element) {
+        class ReportPage extends Polymer.Element {
             static get is() {
-                return 'overview-page';
-            }
-            _openEditPage() {
-                window.location = '#/edit';
+                return 'report-page';
             }
         }
         
-        window.customElements.define(OverviewPage.is, OverviewPage);
+        window.customElements.define(ReportPage.is, ReportPage);
     </script>
 </dom-module>

@@ -66,6 +66,7 @@
                                         locationName: action.value.locationName || '',
                                         contactName: action.value.contactName || '',
                                     });
+                loadPan.fillVolume = (loadPan.fillVolume <= 0) ? loadPan.maxFillVolume : loadPan.fillVolume;
                 return Object.assign(state, {pan: loadPan});
             default: 
                 return state;

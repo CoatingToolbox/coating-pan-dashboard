@@ -1,0 +1,151 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../elements/pan-summary.html">
+<link rel="import" href="../my-icons.html">
+
+<link rel="lazy-import" href="info-page.html">
+<link rel="lazy-import" href="size-page.html">
+<link rel="lazy-import" href="volume-page.html">
+<link rel="lazy-import" href="fill-page.html">
+<link rel="lazy-import" href="spray-page.html">
+<link rel="lazy-import" href="speed-page.html">
+
+
+<dom-module id="dashboard-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      
+      app-toolbar {
+        color: var(--text-light-color);
+        background-color: var(--app-white-color);
+        min-height: 80px;
+      }
+      iron-selector {
+        display: flex;
+      }
+      a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--text-light-color);
+        line-height: 40px;
+      }
+      .toolbar-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 32px;
+      }
+      .toolbar-button:hover,
+      a.iron-selected {
+        color: var(--app-primary-color);
+      }
+      .toolbar-button div {
+        @apply --paper-font-body1;
+        padding-top: 4px;
+      }
+    </style>
+    
+    <app-toolbar>
+      <pan-summary></pan-summary>
+      <iron-selector id='toolbar' selected='[[pageSelected]]' attr-for-selected='page'>
+      <a href='#/dashboard/info' page='info'>
+        <div class='toolbar-button'>
+          <iron-icon icon='my-icons:info'></iron-icon>
+          <div>Info</div>
+        </div>
+      </a>
+      <a href='#/dashboard/size' page='size'>
+        <div class='toolbar-button'>
+          <iron-icon icon='my-icons:ruler'></iron-icon>
+          <div>Size</div>
+        </div>
+      </a>
+      <a href='#/dashboard/volume' page='volume'>
+        <div class='toolbar-button'>
+          <iron-icon icon='my-icons:volume'></iron-icon>
+          <div>Volume</div>
+        </div>
+      </a>
+      <a href='#/dashboard/fill' page='fill'>
+        <div class='toolbar-button'>
+          <iron-icon icon='my-icons:fill'></iron-icon>
+          <div>Fill</div>
+        </div>
+      </a>
+      <a href='#/dashboard/spray' page='spray'>
+        <div class='toolbar-button'>
+          <iron-icon icon='my-icons:spray'></iron-icon>
+          <div>Spray</div>
+        </div>
+      </a>
+      <a href='#/dashboard/speed' page='speed'>
+        <div class='toolbar-button'>
+          <iron-icon icon='my-icons:speed'></iron-icon>
+          <div>Speed</div>
+        </div>
+      </a>
+    </iron-selector>
+      <div></div>
+    </app-toolbar>
+    
+    <iron-pages selected="[[pageSelected]]" attr-for-selected='page'>
+      <info-page page='info'></info-page>
+      <size-page page='size'></size-page>
+      <volume-page page='volume'></volume-page>
+      <fill-page page='fill'></fill-page>
+      <spray-page page='spray'></spray-page>
+      <speed-page page='speed'></speed-page>
+      <library-page page='library'></library-page>
+    </iron-pages>
+    
+  </template>
+
+  <script>
+    class DashboardPage extends Polymer.Element {
+      
+      static get is() { return 'dashboard-page'; }
+      
+      static get properties() {
+        return {
+          
+          pageSelected: {
+            type: String,
+            observer: '_pageChanged',
+          },
+        };
+      }
+
+      _pageChanged(page) {
+  
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl(page + '-page.html');
+        Polymer.importHref(
+            resolvedPageUrl,
+            null,
+            null,
+            true);
+      }
+    }
+
+    window.customElements.define(DashboardPage.is, DashboardPage);
+  </script>
+</dom-module>

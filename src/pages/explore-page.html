@@ -1,0 +1,141 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<dom-module id="explore-page">
+  <template>
+    <style>
+      :host {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(6, auto);
+        grid-gap: 32px;
+        padding: 32px;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 4px;
+        padding: 8px 24px 16px 24px;
+      }
+      .card p {
+        flex-grow: 1;
+        text-align: justify;
+      }
+      .button-container {
+        display: flex;
+        justify-content: flex-end;
+      }
+      paper-button {
+        margin: 8px 0px;
+        transition: all 0.5s;
+      }
+      paper-button + paper-button {
+        margin-left: 16px;
+      }
+      paper-button:hover, 
+      paper-button.highlight {
+        color: white;
+        background-color: var(--app-primary-color);
+        transition: all 0.5s;
+      }
+      h1 {
+        margin-bottom: 0px;
+        grid-column: 1 / 3;
+      }
+      .overview {
+        grid-column: 1 / 3;
+      }
+    </style>
+    
+    <h1>Coating Pan Overview</h1>
+    
+    <div class='card overview'>
+      <h3>Coating Pan Designer</h3>
+      <p>
+        Use the Coating Pan Designer to customize the coating pan setup or design a new coating pan.
+        This includes the coating pan dimensions, spray gun setup and recommend pan volumes.
+      </p>
+      <div class='button-container'>
+        <paper-button>Library</paper-button>
+        <paper-button>Customize</paper-button>
+      </div>
+    </div>
+    
+    <h1>Explore Coating Pan Setup</h1>
+    
+    <div class='card'>
+      <h3>Pan Fill</h3>
+      <p>
+        Determine how different product properties and batch sizes effect the pan fill. Estimate the
+        range of batch sizes, calculate the optimal pan fill and determine how different batch sizes
+        effect the pan fill.
+      </p>
+      <div class='button-container'>
+        <a href='#/fill'>
+          <paper-button class='highlight'>Batch Size</paper-button>
+        </a>
+      </div>
+    </div>
+    
+    <div class='card'>
+      <h3>Spray Gun Setup</h3>
+      <p>
+        Evaluate different spray gun setups to optimize the spray pattern for maxiumum coverage.
+        Compare the spray pattern for potential overwetting, spray drying and gaps. Determine if
+        the spray pattern is at risk over causing overspray on the pan walls reducing coating effeciency
+        and extended cleaning times. 
+      </p>
+      <div class='button-container'>
+        <paper-button class='highlight'>Spray Pattern</paper-button>
+      </div>
+    </div>
+    
+    <div class='card'>
+      <h3>Tablet Movement and Mixing</h3>
+      <p>
+        Coating pan speed effects the tablet mixing and tablet movement through the spray zone. 
+        Determine optimal pan speeds for your coating pan based on linear velocity and than see how
+        these pan speeds influence tablet movement.
+      </p>
+      <div class='button-container'>
+        <paper-button class='highlight'>Pan Speed</paper-button>
+      </div>
+    </div>
+    
+    <div class='card'>
+      <h3>Coating Unformity</h3>
+      <p>
+        Coating pan speeds has a big effect on coating uniformity but total coating time also plays
+        an role. Looks at how different coating solids, spray rates and pan speeds can influence
+        tablet to tablet coating unformity.
+      </p>
+      <div class='button-container'>
+        <paper-button>Coming Soon</paper-button>
+      </div>
+    </div>
+    
+    <div class='card'>
+      <h3>Scale Up</h3>
+      <p>
+        Coating pan speed effects the tablet mixing and tablet movement through the spray zone. 
+        Determine optimal pan speeds for your coating pan based on linear velocity and than see how
+        these pan speeds influence tablet movement.
+      </p>
+      <div class='button-container'>
+        <paper-button>Coming Soon</paper-button>
+      </div>
+    </div>
+    
+  </template>
+
+  <script>
+    class ExplorePage extends Polymer.Element {
+      
+      static get is() { return 'explore-page'; }
+      
+    }
+
+    window.customElements.define(ExplorePage.is, ExplorePage);
+  </script>
+</dom-module>

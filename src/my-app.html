@@ -24,6 +24,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="pages/dashboard-page.html">
+<link rel="lazy-import" href="pages/explore-page.html">
+<link rel="lazy-import" href="pages/fill-page.html">
 <link rel="lazy-import" href="pages/library-page.html">
 <link rel="lazy-import" href="pages/report-page.html">
 
@@ -115,10 +117,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         route="{{route}}"
         pattern="[[rootPath]]:page"
         data="{{routeData}}"></app-route>
-    <app-route
-        route="{{route}}"
-        pattern="[[rootPath]]dashboard/:page"
-        data="{{dashboardRouteData}}"></app-route>
     
     <app-drawer-layout force-narrow>
       <app-drawer slot='drawer'>
@@ -174,6 +172,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
         
         <iron-pages selected="[[page]]" attr-for-selected='page'>
+          <explore-page page='explore'></explore-page>
+          <fill-page page='fill'></fill-page>
           <dashboard-page page='dashboard' page-selected='[[dashboardRouteData.page]]'></dashboard-page>
           <library-page page='library'></library-page>
           <report-page page='report'></report-page>
@@ -215,7 +215,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'view1' in that case.
-        this.page = page || 'dashboard';
+        this.page = page || 'explore';
       }
       
       _sendPageAnalytics(path) {

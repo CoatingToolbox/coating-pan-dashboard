@@ -2,20 +2,10 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/pages/library-page.html",
-    "src/pages/report-page.html",
-    "src/pages/dashboard-page.html",
-    "src/pages/info-page.html",
-    "src/pages/volume-page.html",
-    "src/pages/fill-page.html",
-    "src/pages/spray-page.html",
-    "src/pages/speed-page.html",
-    "src/pages/size-page.html"
   ],
   "sources": [
     "src/**/*",
-    "images/**/*",
-    "bower.json"
+    "images/**/*"
   ],
   "extraDependencies": [
     "manifest.json",
@@ -27,6 +17,12 @@
     "rules": ["polymer-2"]
   },
   "builds": [
+    {
+      "preset": "es5-bundled"
+    },
+    {
+      "preset": "es6-bundled"
+    },
     {
       "preset": "es6-unbundled"
     }

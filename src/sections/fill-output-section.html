@@ -11,13 +11,8 @@
             :host {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(3, auto);
+                grid-template-rows: repeat(2, auto);
             } 
-            
-            .text-container {
-                grid-column: 1 / 4;
-                grid-row: 1 / 2;
-            }
             .section-title {
                 grid-column: 1 / 2;
                 grid-row: 2 / 3;
@@ -25,7 +20,7 @@
             iron-selector {
               grid-column: 1 / 2;
               grid-row: 3 / 4;
-              padding: 16px;
+              /*padding: 16px;*/
             }
             coating-pan-graphic {
                 grid-column: 2 / 3;
@@ -38,17 +33,6 @@
               margin-top: 16px;
             }
         </style>
-       
-      <div class='text-container'>
-        <div class='subtitle'>Pan Fill</div>
-        <div class='caption'>Different numbers same fill</div>
-        <div class='description'>
-            A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
-          the diameter does not provide a useful way to compare the shape and size of different coating pans.
-          Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
-          From these dimensions we can later explore batch size, pan speed and more.
-        </div>
-      </div>
       
       <div class='section-title'>Fill Dimensions - <i>Calculated</i></div>
       

@@ -1,0 +1,30 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="section-styles.html">
+
+<dom-module id='fill-intro-section'>
+    <template>
+        <style include='section-styles'></style>
+       
+      <div class='section-title'>Pan Fill</div>
+      <div class='text-container'>
+        <div class='caption'>Different numbers same fill</div>
+        <div class='description'>
+            A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
+          the diameter does not provide a useful way to compare the shape and size of different coating pans.
+          Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+          From these dimensions we can later explore batch size, pan speed and more.
+        </div>
+      </div>
+      
+    </template>
+
+    <script>
+        class FillIntroSection extends Polymer.Element {
+            static get is() {
+                return 'fill-intro-section';
+            }
+        }
+        window.customElements.define(FillIntroSection.is, FillIntroSection);
+    </script>
+
+</dom-module>

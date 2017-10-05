@@ -9,34 +9,22 @@
         <style include='section-styles'>
             :host {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(5, auto);
+                grid-template-columns: 1fr 2fr;
+                grid-template-rows: repeat(4, auto);
             } 
-            
-            .text-container {
-                grid-column: 1 / 4;
-                grid-row: 1 / 2;
-            }
             .section-title,
+            .spacer,
             unit-input {
                 grid-column: 1 / 2;
             }
             bulk-density-chart {
-                grid-column: 2 / 4;
-                grid-row: 2 / 6;
+                grid-column: 2 / 3;
+                grid-row: 1 / 5;
+            }
+            .spacer {
+                min-height: 75px;
             }
         </style>
-       
-      <div class='text-container'>
-        <div class='subtitle'>Density and Weight</div>
-        <div class='caption'>Volume to Weight to Count</div>
-        <div class='description'>
-            A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, the
-          the diameter does not provide a useful way to compare the shape and size of different coating pans.
-          Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
-          From these dimensions we can later explore batch size, pan speed and more.
-        </div>
-      </div>
       
       <div class='section-title'>Product Details - <i>Inputs</i></div>
       <unit-input 
@@ -54,6 +42,7 @@
             title='Tablet Weight' 
             details='The average weight of a single tablet.'>
         </unit-input>
+        <div class='spacer'></div>
         
       <bulk-density-chart></bulk-density-chart>
       

@@ -9,8 +9,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../sections/volume-intro-section.html">
+<link rel="import" href="../charts/volume-donut-chart.html">
+<link rel="import" href="../sections/density-intro-section.html">
 <link rel="import" href="../sections/density-input-section.html">
-<link rel="import" href="../sections/fill-input-section.html">
+<link rel="import" href="../sections/batch-intro-section.html">
+<link rel="import" href="../sections/batch-input-section.html">
+<link rel="import" href="../sections/fill-intro-section.html">
 <link rel="import" href="../sections/fill-output-section.html">
 <link rel="import" href="page-styles.html">
 
@@ -20,15 +25,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include='page-styles'>
       :host {
         display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, auto);
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: repeat(12, auto);
       }
-      
+      .page-title, 
+      volume-intro-section,
+      density-input-section,
+      density-intro-section,
+      batch-input-section,
+      batch-intro-section,
+      fill-intro-section,
+      fill-output-section {
+        grid-column: 1 / 4;
+      }
+      volume-donut-chart {
+          background-color: var(--app-section-color);
+          border-radius: 4px;
+          padding: 36px 16px;
+          /*margin: 56px 0px;*/
+          grid-column: 2 / 3;
+      }
+      volume-donut-chart[type="min"] {
+          grid-column: 1 / 2;
+          --chart-color: var(--app-light-color);
+      }
+      volume-donut-chart[type="brim"] {
+          grid-column: 3 / 4;
+          --chart-color: var(--app-dark-color);
+      }
     </style>
-        
-    <div class='page-title'>Product Fill - <i>What Is The Batch Size</i></div>
+    
+    
+    <div class='page-title'>Step One <i> - What pan volume to use</i></div>
+    <volume-intro-section></volume-intro-section>
+    <volume-donut-chart type='min' label='Min Working'></volume-donut-chart>
+    <volume-donut-chart type='max' label='Max Working'></volume-donut-chart>
+    <volume-donut-chart type='brim' label='Brim'></volume-donut-chart>
+    
+    
+    <div class='page-title'>Step Two <i> - Provide details about the product</i></div>
+    <density-intro-section></density-intro-section>
     <density-input-section></density-input-section>
-    <fill-input-section></fill-input-section>
+    
+    
+    <div class='page-title'>Step Three <i> - Set the target batch size</i></div>
+    <batch-intro-section></batch-intro-section>
+    <batch-input-section></batch-input-section>
+    
+    <div class='page-title'>Step Four <i> - Calculated pan fill</i></div>
+    <fill-intro-section></fill-intro-section>
     <fill-output-section></fill-output-section>
       
   </template>

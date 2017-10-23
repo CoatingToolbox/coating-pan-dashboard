@@ -23,9 +23,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="my-icons.html">
 
-<link rel="lazy-import" href="pages/dashboard-page.html">
 <link rel="lazy-import" href="pages/explore-page.html">
 <link rel="lazy-import" href="pages/fill-page.html">
+<link rel="lazy-import" href="pages/spray-page.html">
+<link rel="lazy-import" href="pages/speed-page.html">
 <link rel="lazy-import" href="pages/library-page.html">
 <link rel="lazy-import" href="pages/report-page.html">
 
@@ -87,11 +88,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-item {
         font-weight: bold;
       }
-      .sub-item {
-        margin-left: 24px;
-        font-weight: normal;
-        color: var(--text-light-color);
-      }
       .initial {
         display: flex;
         flex-direction: column;
@@ -122,26 +118,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer slot='drawer'>
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected='[[page]]' attr-for-selected='page' fallback-selection='dashboard'>
-          <a href='#/dashboard/info' page='dashboard'>
+          <a href='#/explore/' page='dashboard'>
             <paper-item>Pan Dashboard</paper-item>
           </a>
-          <a href='#/dashboard/info'>
-            <paper-item class='sub-item'>Pan Info</paper-item>
+          <a href='#/fill/' page='fill'>
+            <paper-item>Product Fill</paper-item>
           </a>
-          <a href='#/dashboard/size'>
-            <paper-item class='sub-item'>Shape & Size</paper-item>
+          <a href='#/spray/' page='spray'>
+            <paper-item>Spray Distribution</paper-item>
           </a>
-          <a href='#/dashboard/volume'>
-            <paper-item class='sub-item'>Pan Volumes</paper-item>
-          </a>
-          <a href='#/dashboard/fill'>
-            <paper-item class='sub-item'>Product Fill</paper-item>
-          </a>
-          <a href='#/dashboard/spray'>
-            <paper-item class='sub-item'>Spray Distribution</paper-item>
-          </a>
-          <a href='#/dashboard/speed'>
-            <paper-item class='sub-item'>Pan Speed</paper-item>
+          <a href='#/speed/' page='speed'>
+            <paper-item>Pan Speed</paper-item>
           </a>
           <a href='#/report/' page='report'>
             <paper-item>Report</paper-item>
@@ -157,7 +144,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
               <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
               <div main-title>Coating Pan Dashboard</div>
-              <a href='#/dashboard/info'>
+              <a href='#/explore'>
                 <paper-icon-button icon='my-icons:dashboard'></paper-icon-button>
               </a>
               <a href='#/library/'>
@@ -171,10 +158,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
         </app-header>
         
-        <iron-pages selected="[[page]]" attr-for-selected='page'>
+        <iron-pages selected="[[page]]" attr-for-selected='page' fallback-selection='explore'>
           <explore-page page='explore'></explore-page>
           <fill-page page='fill'></fill-page>
-          <dashboard-page page='dashboard' page-selected='[[dashboardRouteData.page]]'></dashboard-page>
+          <spray-page page='spray'></spray-page>
+          <speed-page page='speed'></speed-page>
           <library-page page='library'></library-page>
           <report-page page='report'></report-page>
         </iron-pages>
@@ -191,14 +179,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       static get properties() {
         return {
           
-          page: {
-            type: String,
-            reflectToAttribute: true,
-            observer: '_pageChanged',
-          },
-          
+          page: String,
           routeData: Object,
-          
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
@@ -208,14 +190,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       static get observers() {
         return [
           '_routePageChanged(routeData.page)',
-          '_sendPageAnalytics(route.path)'
+          '_sendPageAnalytics(route.path)',
+          '_pageChanged(page)'
         ];
       }
 
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'view1' in that case.
-        this.page = page || 'explore';
+        if(page == '' || !page) {
+          window.location = '#/explore';
+        }
+        this.page = page;
       }
       
       _sendPageAnalytics(path) {

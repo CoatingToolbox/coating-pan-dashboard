@@ -17,14 +17,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="pan-summary">
   <template>
     <style>
-        :host {
-            display: flex;
-            flex-direction: column;
-            justify-items: center;
-            margin: 16px 0px;
-            padding: 0px 32px 0px 16px;
-            border-right: 2px solid var(--app-border-color);
-        }
+        /*:host {*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*    justify-items: center;*/
+        /*    padding: 0px 32px 0px 16px;*/
+        /*}*/
         
         /*iron-collapse {*/
         /*    display: grid;*/
@@ -32,18 +30,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /*    grid-template-columns: repeat(2, 3fr) repeat(4, 2fr);*/
         /*}*/
         
-        /*app-toolbar {*/
-        /*    grid-row: 1 / 2;*/
-        /*    grid-column: 3 / 7;*/
-        /*    @apply --paper-font-display1; */
-        /*    padding: 0px;*/
-        /*}*/
+        :host {
+            display: grid;
+            grid-template-rows: repeat(2, auto);
+            grid-template-columns: repeat(2, 3fr) repeat(4, 2fr);
+            grid-gap: 8px 16px;
+            background-color: white;
+            border-radius: 4px;
+            padding: 8px 24px 16px 24px;
+        }
         
-        /*.section {*/
-        /*    padding: 16px 0px;*/
-        /*    @apply --paper-font-body2;*/
-        /*    font-weight: bold;*/
-        /*}*/
+        app-toolbar {
+            grid-row: 1 / 2;
+            grid-column: 1 / 7;
+            @apply --paper-font-display1; 
+            padding: 0px;
+        }
+        
+        .section {
+            padding: 16px 0px;
+            @apply --paper-font-body2;
+            font-weight: bold;
+        }
         .label {
             @apply --paper-font-caption;
         }
@@ -62,8 +70,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
     </style>
     
-    <div class='subtitle'>[[pan.vendorName]] </div>
-    <div class='title'>[[pan.equipmentName]] <i> - [[pan.nickname]]</i></div>
+    <!--<div class='subtitle'>[[pan.vendorName]] </div>-->
+    <!--<div class='title'>[[pan.equipmentName]] <i> - [[pan.nickname]]</i></div>-->
     <!--<iron-collapse opened='{{open}}' transitioning='{{transitioning}}'>-->
     <!--    <coating-pan-graphic></coating-pan-graphic>-->
     <!--    <coating-pan-graphic view='side'></coating-pan-graphic>-->
@@ -112,6 +120,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--    </div>-->
     <!--</iron-collapse>-->
     
+     
+    <coating-pan-graphic></coating-pan-graphic>
+    <coating-pan-graphic view='side'></coating-pan-graphic>
+    <app-toolbar>
+        <div main-title>
+            [[pan.vendorName]] [[pan.equipmentName]] <i> - [[pan.nickname]]</i>
+        </div>
+    </app-toolbar>
+    <div id='name' class='section'>
+        <div class='label'>Company</div>
+        <div>[[pan.companyName]]</div>
+        <div class='label'>Location</div>
+        <div>[[pan.locationName]]</div>
+        <div class='label'>Contact</div>
+        <div>[[pan.contactName]]</div>
+    </div>
+    <div id='volume' class='section'>
+        <div class='label'>Diameter</div>
+        <div>[[pan.panDiameter]] in</div>
+        <div class='label'>Brim Volume</div>
+        <div>[[pan.brimVolume]] L</div>
+        <div class='label'>Fill Weight</div>
+        <div>[[pan.fillWeight]] kg</div>
+        <div class='label'>Fill Percent</div>
+        <div>[[pan.fillPercent]]%</div>
+    </div>
+    <div id='gun' class='section'>
+        <div class='label'>Gun Type</div>
+        <div>[[pan.gunType]]</div>
+        <div class='label'>Gun Model</div>
+        <div>[[pan.gunModel]]</div>
+        <div class='label'># of GUns</div>
+        <div>[[pan.gunCount]]</div>
+        <div class='label'>Spray Pattern</div>
+        <div>18 in</div>
+    </div>
+    <div id='mixing' class='section'>
+        <div class='label'>Baffle Type</div>
+        <div>[[pan.baffleType]]</div>
+        <div class='label'># of Baffles</div>
+        <div>[[pan.baffleCount]]</div>
+        <div class='label'>Pan Speed</div>
+        <div>6 rpm</div>
+        <div class='label'>Mixing Value</div>
+        <div>4.5</div>
+    </div>
+    
   </template>
 
   <script>
@@ -130,11 +185,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
           open: {
               type: Boolean,
-              value: false,
-          }, 
-          transitioning: {
-              type: Boolean, 
-              notify: true
+              value: true,
           }
         };
       }

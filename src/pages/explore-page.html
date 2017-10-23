@@ -1,6 +1,9 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../elements/pan-summary.html">
+<link rel="import" href="../redux-mixin.html">
 <dom-module id="explore-page">
   <template>
     <style>
@@ -26,6 +29,7 @@
         display: flex;
         justify-content: flex-end;
       }
+      
       paper-button {
         margin: 8px 0px;
         transition: all 0.5s;
@@ -39,28 +43,33 @@
         background-color: var(--app-primary-color);
         transition: all 0.5s;
       }
+      a {
+        text-decoration: none;
+      }
       h1 {
         margin-bottom: 0px;
         grid-column: 1 / 3;
       }
-      .overview {
+      pan-summary {
         grid-column: 1 / 3;
       }
     </style>
     
     <h1>Coating Pan Overview</h1>
     
-    <div class='card overview'>
-      <h3>Coating Pan Designer</h3>
-      <p>
-        Use the Coating Pan Designer to customize the coating pan setup or design a new coating pan.
-        This includes the coating pan dimensions, spray gun setup and recommend pan volumes.
-      </p>
-      <div class='button-container'>
-        <paper-button>Library</paper-button>
-        <paper-button>Customize</paper-button>
-      </div>
-    </div>
+    <!--<div class='card overview'>-->
+    <!--  <h3>Coating Pan Designer</h3>-->
+    <!--  <p>-->
+    <!--    Use the Coating Pan Designer to customize the coating pan setup or design a new coating pan.-->
+    <!--    This includes the coating pan dimensions, spray gun setup and recommend pan volumes.-->
+    <!--  </p>-->
+    <!--  <div class='button-container'>-->
+    <!--    <paper-button>Library</paper-button>-->
+    <!--    <paper-button>Customize</paper-button>-->
+    <!--  </div>-->
+    <!--</div>-->
+    
+    <pan-summary></pan-summary>
     
     <h1>Explore Coating Pan Setup</h1>
     
@@ -87,7 +96,9 @@
         and extended cleaning times. 
       </p>
       <div class='button-container'>
-        <paper-button class='highlight'>Spray Pattern</paper-button>
+        <a href='#/spray'>
+          <paper-button class='highlight'>Spray Pattern</paper-button>
+        </a>
       </div>
     </div>
     
@@ -99,7 +110,9 @@
         these pan speeds influence tablet movement.
       </p>
       <div class='button-container'>
-        <paper-button class='highlight'>Pan Speed</paper-button>
+        <a href='#/speed'>
+          <paper-button class='highlight'>Pan Speed</paper-button>
+        </a>
       </div>
     </div>
     
@@ -130,9 +143,18 @@
   </template>
 
   <script>
-    class ExplorePage extends Polymer.Element {
+    class ExplorePage extends ReduxMixin(Polymer.Element) {
       
       static get is() { return 'explore-page'; }
+      
+      static get properties() {
+        return {
+          pan: {
+            type: Object,
+            statePath: 'pan'
+          }
+        };
+      }
       
     }
 
